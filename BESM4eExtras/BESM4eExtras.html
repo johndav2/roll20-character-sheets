@@ -1614,18 +1614,31 @@
 							<div class="col-1"><span class="col-1 header border">Active Attributes</span></div>
 						</div>
 					</div>
+					<!--
+					<div class="flex-container-evenlyspace">"
+						<div class="flex-9-10">
+							<button type="action" name="act_testactive"></button>
+							<select name="attr_activetype">
+								<option value="plain">Plain</option>
+								<option value="rollable">Rollable</option>
+								<option value="reloadable">Reloadable</option>
+								<option value="tracker">Tracker</option>
+							</select>
+						</div>
+					</div>
+					-->
 					<div class="flex-container-evenlyspace">
 						<div class="flex-9-10">
 							<fieldset class="repeating_active">
 								<div>
 									<input type="checkbox" class="block-switch" name="attr_plain" value="1" />
 									<div class="block-a"></div>
-									<div class="block-b">
+									<div class="block-b padb">
 										<h4 class="center border">
 											<div class="flex-container-evenlyspace">
 												<div class="flex-19-20 tooltip">
 													<span name="attr_name"></span>
-													<input type="hidden" name="attr_name" value="Passive Attribute" />
+													<input type="hidden" name="attr_name" value="Plain Attribute" />
 													<input type="text" class="center" name="attr_characteristic" value="Characteristic" readonly />
 													<span class="tooltip">
 														<textarea class="tooltip" name="attr_description" value="" readonly ></textarea>
@@ -1638,12 +1651,12 @@
 								<div>
 									<input type="checkbox" class="block-switch" name="attr_rollable" value="1" />
 									<div class="block-a"></div>
-									<div class="block-b">
+									<div class="block-b padb">
 										<h4 class="center border">
 											<div class="flex-container-evenlyspace">
 												<div class="flex-5-6 tooltip">
 													<span name="attr_name"></span>
-													<input type="hidden" name="attr_name" value="Actvie Attribute" />
+													<input type="hidden" name="attr_name" value="Rollable Attribute" />
 													<input type="text" class="center" name="attr_characteristic" value="Characteristic" readonly />
 													<span class="tooltip">
 														<textarea class="tooltip" name="attr_description" value="" readonly ></textarea>
@@ -1660,26 +1673,13 @@
 								</div>
 								<div>
 									<input type="checkbox" class="block-switch" name="attr_reloadable" value="1" />
-									<div class="block-a">
-										<h4 class="center border">
-											<div class="flex-container-evenlyspace">
-												<div class="flex-19-20 tooltip">
-													<span name="attr_name"></span>
-													<input type="hidden" name="attr_name" value="Passive Attribute" />
-													<input type="text" class="center" name="attr_characteristic" value="Characteristic" readonly />
-													<span class="tooltip">
-														<textarea class="tooltip" name="attr_description" value="" readonly ></textarea>
-													</span>
-												</div>
-											</div>
-										</h4>
-									</div>
-									<div class="block-b">
+									<div class="block-a"></div>
+									<div class="block-b padb">
 										<h4 class="center border">
 											<div class="flex-container-evenlyspace">
 												<div class="flex-5-6 tooltip">
 													<span name="attr_name"></span>
-													<input type="hidden" name="attr_name" value="Actvie Attribute" />
+													<input type="hidden" name="attr_name" value="Reloadable Attribute" />
 													<input type="text" class="center" name="attr_characteristic" value="Characteristic" readonly />
 													<span class="tooltip">
 														<textarea class="tooltip" name="attr_description" value="" readonly ></textarea>
@@ -1687,8 +1687,29 @@
 												</div>
 												<div class="flex-1-24">
 													<span>&nbsp;</span>
-													<button style='align-self: flex-end;' class="button d6button" type="roll" name="roll_activeattribute" value="@{rollvalue}"></button>
-													<input type="hidden" name="attr_rollvalue" value="" readonly />
+													<button style='width: 20px; height: 25px;' type='action' name='act_regenerate'><span style="font-family: Pictos; font-size: large;">1</span></button>
+												</div>
+											</div>
+										</h4>
+									</div>
+								</div>
+								<div>
+									<input type="checkbox" class="block-switch" name="attr_tracker" value="1" />
+									<div class="block-a"></div>
+									<div class="block-b padb">
+										<h4 class="center border">
+											<div class="flex-container-evenlyspace">
+												<div class="flex-5-6 tooltip">
+													<span name="attr_name"></span>
+													<input type="hidden" name="attr_name" value="Tracker Attribute" />
+													<input type="text" class="center" name="attr_characteristic" value="Characteristic" readonly />
+													<span class="tooltip">
+														<textarea class="tooltip" name="attr_description" value="" readonly ></textarea>
+													</span>
+												</div>
+												<div class="flex-1-8">
+													<span>&nbsp;</span>
+													<input type="number" style="width: 90%;" name="attr_pointvalue" value=0 />
 												</div>
 											</div>
 										</h4>
@@ -11901,6 +11922,7 @@
 				const activeID = generateRowID();
 				const name = value[`repeating_attr_${rowID}_name`] || "";
 				const characteristic = value[`repeating_attr_${rowID}_characteristic`] || "";
+				const isRollable = rollable_attributes_regex.test(attribute);
 				let source = setObj[`repeating_attr_${rowID}_source`] || value[`repeating_attr_${rowID}_source`] || '';
 				source = (source.length > 0) ? source + ',' + activeID : activeID;
 				clog(debug, timer, 'activeID =', activeID);
@@ -11911,10 +11933,18 @@
 				setObj[`${target}_${activeID}_name`] = `${name} (${attribute})`;
 				setObj[`${target}_${activeID}_characteristic`] = characteristic;
 				setObj[`${target}_${activeID}_description`] = buildActiveAttrTooltip(debug, timer, attrdb, attribute, rowID);
+				if(attribute !== 'supersense') {
+					const activeType = 
+						isRollable ? 'rollable' :
+						attribute === 'forcefield' ? 'reloadable' :
+						attribute === 'conversion' ? 'tracker' :
+						'plain';
+					setObj[`${target}_${activeID}_${activeType}`] = 1;
+				}
 				if (attribute == 'telepathy' && level > 3) {
-					setRollable(debug, timer, value, rowID, activeID, setObj, attribute);
+					setRollable(debug, timer, value, rowID, activeID, setObj, attribute, isRollable);
 				} else if (attribute != 'telepathy' && attribute != 'supersense') {
-					setRollable(debug, timer, value, rowID, activeID, setObj, attribute);
+					setRollable(debug, timer, value, rowID, activeID, setObj, attribute, isRollable);
 				}
 			} else {
 				const source = setObj[`repeating_attr_${rowID}_source`] || value[`repeating_attr_${rowID}_source`] || "";
@@ -11927,9 +11957,8 @@
 			}
 		}
 		
-		function setRollable(debug, timer, value, rowID, activeID, setObj, attribute) {
-			const isRollable = rollable_attributes_regex.test(attribute);
-			const rollable = (isRollable) ? 1 : 0;
+		function setRollable(debug, timer, value, rowID, activeID, setObj, attribute, isRollable) {
+			//const rollable = (isRollable) ? 1 : 0;
 			const attrstat = value[`repeating_attr_${rowID}_stat`] || '';
 			const base = isRollable ? `@{stat_total_${attrstat}}` : '';
 			const target = isRollable ? targetable_attributes_regex.test(attribute) ? 
@@ -11942,7 +11971,7 @@
 				`|Minor Edge, ${setDice(rollmod, 1)}|Minor Obstacle, ${setDice(rollmod, -1)}` +
 				`|Major Edge, ${setDice(rollmod, 2)}|Major Obstacle, ${setDice(rollmod, -2)}}]]+[[${base}]]]]}} ` +
 				`{{roll=$[[0]]}}${target}` : '';
-			setObj[`repeating_active_${activeID}_rollable`] = rollable;
+			//setObj[`repeating_active_${activeID}_rollable`] = rollable;
 			setObj[`repeating_active_${activeID}_rollvalue`] = rollstring;
 			clog(debug, timer, 'isRollable =', isRollable,'setRollable()');
 			clog(debug, timer, 'rollstring =', rollstring);
@@ -11954,10 +11983,15 @@
 			switch (attribute) {
 				case "absorption":
 				case "armor": 
-				case "forcefield":
 				case "mindshield":
 					setAttrdb(isActive, debug, timer, value, attrdb, attrIDs, rowID, sourceAttr, attribute, setObj);
 					setProtection(isActive, debug, timer, value, rowID, attribute, setObj);
+				break;
+				case "forcefield":
+					const hasRegenerating = getCustomizationValue(debug, timer, value, rowID, 'rank', 'regenerating');
+					setAttrdb(isActive, debug, timer, value, attrdb, attrIDs, rowID, sourceAttr, attribute, setObj);
+					setProtection(isActive, debug, timer, value, rowID, attribute, setObj);
+					if(hasRegenerating) setActiveAttribute(isActive, debug, timer, value, rowID, attrdb, setObj, attribute, level);
 				break;
 				case "attackmastery":
 				case "defensemastery":
@@ -13565,6 +13599,18 @@
 			}
 		}
 		
+		function doRegenerateForcefield(debug, timer, value, attrdb, setObj) {
+			const source = value.protection_forcefield_source;
+			const forcefield = _.find(attrdb.forcefield, ff => {
+				if(ff.source === source) return true;
+			});
+			const max = forcefield.level * 10;
+			const regen = value.protection_forcefield_ar > max ?
+				value.protection_forcefield_ar += 10 :
+				max;
+			writeValues(debug, timer, value, 'protection_forcefield_ar', regen, setObj);
+		}
+		
 		function getWeaponDamageCategory(debug, timer, damagetype) {
 			const damageCategory = 
 				damage_category_physical.indexOf(damagetype) !== -1 ? 'physical' :
@@ -13671,6 +13717,7 @@
 					getSumOfActiveAttrLevels(attrdb, 'superstrength') || 0;
 				clog(debug, timer, 'superstrength =', superstrength);
 				roll.damage.base = 
+					roll.weapon.level === -1 ? 0 :
 					roll.weapon.isswarm ?
 						Math.round(weapon.weapon.critters / 10) :
 					roll.weapon.istelekinesis ?
@@ -14598,6 +14645,7 @@
 		function registerActions() {
 			const statButtons = getStatButtons().concat(getSkillStatButtons()),
 				buttonsToRegister = [
+					"repeating_active",
 					"repeating_attr:setlock",
 					"repeating_attr:activate",
 					"repeating_attr:options",
@@ -14620,7 +14668,7 @@
 			return buttonString;
 		}
 		
-		const events = `change:${registerEvents()} clicked:${registerActions()} remove:${registerRemoved()}`;
+		const events = `change:${registerEvents()} ${registerActions()} remove:${registerRemoved()}`;
 		const buttons = [
 			"attrgroup1",
 			"attrgroup2",
@@ -14789,7 +14837,7 @@
 					eventInfo.sourceAttribute = eventInfo.triggerName.substring(8, eventInfo.triggerName.length);
 				}
 		
-				if(eventInfo.triggerName.indexOf('repeating_skill_') !== -1 && eventInfo.htmlAttributes !== undefined){
+				if(eventInfo.triggerName.indexOf('repeating_skill_') !== -1 || eventInfo.triggerName.indexOf('repeating_active_') !== -1 && eventInfo.htmlAttributes !== undefined){
 					const button = eventInfo.htmlAttributes.name.substring(3,eventInfo.htmlAttributes.name.length);
 					eventInfo.sourceAttribute = `${eventInfo.sourceAttribute}${button}`;
 				}
@@ -14991,6 +15039,10 @@
 									break;
 								}
 							break;
+							case 'active':
+								//regenerate
+								doRegenerateForcefield(debug, timer, value, attrdb, setObj);
+							break;
 							case `skilltemplate`:
 								switch(sourceAttr){
 									case `addskill`:
@@ -15137,6 +15189,18 @@
 					}
 				//});
 			//});
+		});
+		
+		on('clicked:testactive', ()=>{
+			console.log('[TEST Active Attribute Types Fired!]');
+			getAttrs(['activetype'], v=>{
+				console.log('values retrieved:'); console.log(v);
+				setObj = {};
+				const rowID = generateRowID();
+				setObj[`repeating_active_${rowID}_characteristic`] = v.activetype;
+				setObj[`repeating_active_${rowID}_${v.activetype}`] = 1;
+				setAttrs(setObj,{silent:true});
+			});
 		});
 	</script>
 

@@ -48,6 +48,18 @@ textarea {
 	background: #fcfcfc;
 }
 
+/* Remove number input arrows */
+/* Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 /* Section Overrides */
 
 .sheet-header {
@@ -60,6 +72,22 @@ textarea {
 span.sheet-variable-header {
 	font-size: 32px;
 	font-weight: bold;
+}
+
+button.sheet-d6button[type=action]{
+	padding-top: 4px;
+}
+
+button.sheet-d6button[type=roll]{
+	padding-top: 4px;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+button.sheet-d6button[type=action]::before{
+	font-family: 'dicefontd6';
+	content: "F " !important;
+	font-size: 24px;
 }
 
 button.sheet-d6button[type=roll]::before{
@@ -1514,6 +1542,7 @@ input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > div >
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > h4 > div > div > div > div > div > button[type="action"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > h4 > div > div > div > div > div > button[type="action"],
+input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="action"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > h4 > div > div > div > div > div > div > div > button[type="action"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > span > div > div > button[type="action"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > h4 > div > div > div > div > div > div > div > button[type="action"],
@@ -1974,6 +2003,7 @@ input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > button[type
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > button[type="roll"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > button[type="roll"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > h4 > span > div > div > button[type="roll"],
+input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > h4 > span > div > div > button[type="action"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > h5 > div > div > div > div > div > div > button[type="roll"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.sheet-theme[value="1"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
