@@ -380,10 +380,22 @@
 						<div class="col-1 padb"><span class="col-1 header border">Conditions</span></div>
 						<div class="row padb">
 							<div class="col-1-2">
-								<input type="checkbox" class="push-button" name="attr_bleedingstate" value="1" />
-								<button type="action" class="condition push-button" name="act_static_button_stat_bleeding">
-								<span name="attr_bleeding_label"></span>
-								<input type="hidden" name="attr_bleeding_label" value="Bleeding" />
+								<input type="checkbox" class="push-button" name="attr_seriousinjurystate" value="1" />
+								<button type="action" class="condition push-button" name="act_static_button_stat_seriousinjury">
+									<span name="attr_seriousinjury_label"></span>
+									<input type="hidden" name="attr_seriousinjury_label" value="Serious Injury" />
+								</button>
+								<div>
+									<input type="checkbox" class="block-switch" name="attr_showseriousinjury" value="1" />									
+									<div class="block-a"></div>
+									<div class="block-b">
+										<div class="flex-container-evenlyspace">
+											<div class="flex-1-2">
+												<input type="number" class="center border" name="attr_stat_total_seriousinjuries" value=0 />
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div class="col-1-2">
 								<input type="checkbox" class="push-button" name="attr_fracturedstate" value="1" />
@@ -7195,13 +7207,14 @@
 		</div>
 	</div>
 
-	<!--************************* Hidden Values *************************-->
+	<!--************************* Hidden Values *************************
 
 	<div>
 		<input type="hidden" name="attr_stat_cost_body" value=0 />
 		<input type="hidden" name="attr_stat_cost_mind" value=0 />
 		<input type="hidden" name="attr_stat_cost_soul" value=0 />
 	</div>
+	-->
 
 	<!-- ************************ Roll Templates ************************ -->
 
@@ -7582,8 +7595,12 @@
 				</div>
 				{{/conversion}}
 				<div class="row">
-					<div class="col-5-12 padl padr rt-key">Shock Value</div>
-					<div class="col-7-12 padr rt-value center">{{shockvalue}}</div>
+					<div class="col-5-12 padl padr rt-key">Wounds</div>
+					<div class="col-7-12 padr rt-value center">{{damage}}</div>
+				</div>
+				<div class="row">
+					<div class="col-5-12 padl padr rt-key">Shock TN</div>
+					<div class="col-7-12 padr rt-value center">{{shock}}</div>
 				</div>
 				{{/defense}} {{#doesnothing}}
 				<div class="rt-emote"><i>{{character_name}} does nothing...</i></div>
@@ -7829,8 +7846,8 @@
 			"mind":["cre","int","pre","rea"],
 			"soul":["awa","cha","com","wil"]
 		};
-		const conditions_array = ['bleeding', 'blinded', 'contagious', 'continuing', 'dead', 'drained', 'fractured', 'incurable', 'prone', 'stunned', 'tangled', 'unconscious'];
-		const conditions_regex = /(bleeding|blinded|contagious|continuing|dead|drained|fractured|incurable|prone|stunned|tangled|unconscious)/i;
+		const conditions_array = ['seriousinjury', 'blinded', 'contagious', 'continuing', 'dead', 'drained', 'fractured', 'incurable', 'prone', 'stunned', 'tangled', 'unconscious'];
+		//const conditions_regex = /(bleeding|blinded|contagious|continuing|dead|drained|fractured|incurable|prone|stunned|tangled|unconscious)/i;
 		const heightenedsense_array = ['heightenedsight', 'heightenedhearing', 'heightenedtouch', 'heightenedsmell', 'heightenedtaste'];
 		const sense_array = ['sight', 'hearing', 'touch', 'smell', 'taste'];
 		const attack_manuevers_array = ['attack', 'bite', 'bypassarmor', 'disarm', 'grab', 'lock', 'pin', 'reducearmor', 'throw', 'vitalspot', 'weakpoint'];
@@ -7845,7 +7862,7 @@
 		const major_obstacle_maneuvers_array = ['bypassarmor','vitalspot'];
 		const weapon_customizations_array = ['accurate', 'area', 'duration', 'range', 'aura', 'autofire', 'blight', 'contact', 'contageous', 'continuing', 'drain', 'enervation', 'flare', 'flexible', 'homing', 'inaccurate', 'incapacitating', 'incurable', 'insidious', 'irritant', 'knockback', 'multidimensional', 'penetrating', 'piercing', 'psychic', 'quake', 'reach', 'selective', 'spreading', 'stun', 'tangle', 'trap', 'vampiric'];
 		const combattechniques_array = ['blackout','blindfighting','blindshooting','brutal','concealment','criticalstrike','deadeye','defelction','enhancedknockback','extendedrange','farshot','hardboiled','judgeopponent','lethalblow','lightningreflexes','multipletargets','portablearmory','preciseaim','reflection','rushattack','steadyhand','tournamentencyclopedia','twoweapons','weaponsencyclopedia'];
-		const stats_array = ['static_stat_type_set', 'static_stat_temp_energy', 'static_stat_temp_health', 'stat_total_social', 'static_stat_total_shame', 'stat_total_sanity', 'static_stat_total_maddness', 'stat_total_energy', 'static_stat_total_fatigue', 'stat_total_health', 'static_stat_total_wounds', 'stat_total_shock', 'static_character_points_spent', 'bodystate', 'mindstate', 'soulstate', 'static_stat_base_body', 'static_stat_base_mind', 'static_stat_base_soul', 'stat_total_body', 'stat_total_mind', 'stat_total_soul', 'stat_total_acv', 'stat_total_dcv', 'stat_total_str', 'stat_total_cre', 'stat_total_com', 'stat_total_awa', 'stat_total_dex', 'stat_total_agi', 'stat_total_con', 'stat_total_int', 'stat_total_per', 'stat_total_rea', 'stat_total_wil', 'stat_total_cha', 'strstate', 'agistate', 'dexstate', 'constate', 'intstate', 'reastate', 'perstate', 'crestate', 'wilstate', 'chastate', 'awastate', 'comstate'];
+		const stats_array = ['stat_total_seriousinjuries','static_stat_type_set', 'static_stat_temp_energy', 'static_stat_temp_health', 'stat_total_social', 'static_stat_total_shame', 'stat_total_sanity', 'static_stat_total_maddness', 'stat_total_energy', 'static_stat_total_fatigue', 'stat_total_health', 'static_stat_total_wounds', 'static_character_points_spent', 'bodystate', 'mindstate', 'soulstate', 'static_stat_base_body', 'static_stat_base_mind', 'static_stat_base_soul', 'stat_total_body', 'stat_total_mind', 'stat_total_soul', 'stat_total_acv', 'stat_total_dcv', 'stat_total_str', 'stat_total_cre', 'stat_total_com', 'stat_total_awa', 'stat_total_dex', 'stat_total_agi', 'stat_total_con', 'stat_total_int', 'stat_total_per', 'stat_total_rea', 'stat_total_wil', 'stat_total_cha', 'strstate', 'agistate', 'dexstate', 'constate', 'intstate', 'reastate', 'perstate', 'crestate', 'wilstate', 'chastate', 'awastate', 'comstate'];
 		const rolls_array = ['static_roll_type_selection','static_button_personal_defense','static_button_movement_defense'];
 		const combat_stats_array = ['static_weapon_autofire_selection','weapon_ammo_capacity','weapon_ammo_reloads','static_weapon_range_selection','mainhand_state', 'offhand_state', 'mainhand_source', 'offhand_source', 'extraarms', 'extraarms_inuse', 'static_button_targeted_rushdamage', 'static_button_targeted_damage', 'static_button_targeted_attack', 'static_button_targeted_defense', 'massivedamage_targeted', 'massivedamage', 'enemyattack', 'enemydefense'];
 		const size_template_values_array = ['size', 'height', 'mass', 'size_lift', 'size_strdmg', 'size_ar', 'size_extradmg', 'size_rnghitdef', 'size_rngspd'];
@@ -7853,11 +7870,11 @@
 		const all_attributes_array = ['absorption','alternate form','alternate identity','armor','attack mastery','augmented','capacity','change state','cognition','combat technique','companion','connected','control environment','conversion','data access','defect','defense mastery','dimension walk','dynamic powers','elasticity','enemy attack','enemy defense','energized','exorcism','extra actions','extra arms','extra defenses','features','flight','forcefield','gear','ground speed','healing','heightened awareness','heightened senses','illusion','immovable','immunity','immutable','inspire','jumping','massive damage','melee attack','melee defense','merge','metamorphosis','mimic','mind control','mind shield','minions','mulligan','nullify','plant control','pocket dimension','portal','power flux','power variation','projection','ranged attack','ranged defense','regeneration','reincarnation','resilient','sensory block','shield','sixth sense','size change','skill','social mastery','spaceflight','special movement','summon creatures','supersense','superspeed','superstrength','swarm','telekinesis','telepathy','teleport','tough','transfer','transmute','tunneling','unaffected','unassailable','undetectable','unique attribute','unknown power','water speed','wealth','weapon'];
 		const all_attributes_regex = /(absorption|alternate form|alternate identity|armor|attack mastery|augmented|capacity|change state|cognition|combat technique|companion|connected|control environment|conversion|data access|defect|defense mastery|dimension walk|dynamic powers|elasticity|enemy attack|enemy defense|energized|exorcism|extra actions|extra arms|extra defenses|features|flight|forcefield|gear|ground speed|healing|heightened awareness|heightened senses|illusion|immovable|immunity|immutable|inspire|jumping|massive damage|melee attack|melee defense|merge|metamorphosis|mimic|mind control|mind shield|minions|mulligan|nullify|plant control|pocket dimension|portal|power flux|power variation|projection|ranged attack|ranged defense|regeneration|reincarnation|resilient|sensory block|shield|sixth sense|size change|skill|social mastery|spaceflight|special movement|summon creatures|supersense|superspeed|superstrength|swarm|telekinesis|telepathy|teleport|tough|transfer|transmute|tunneling|unaffected|unassailable|undetectable|unique attribute|unknown power|water speed|wealth|weapon)/i;
 		const all_defects_array = ["achilles heel","awkward size","bane","blind fury","conditional ownership","confined","cursed","demure","easily distracted","fragile","hounded","impaired manipulation","impaired speech","inept attack","inept defense","involuntary change","ism","magnet","marked","nemesis","nightmares","no healing","obligated","phobia","physical impairment","red tape","reduced damage","sensory impairment","shortcoming","significant other","skeleton in the closet","social fault","special requirement","unappealing","unique defect","unsettled","vulnerability","wanted","weak point"];
-		const all_defects_regex = /(achilles heel|awkward size|bane|blind fury|conditional ownership|confined|cursed|demure|easily distracted|fragile|hounded|impaired manipulation|impaired speech|inept attack|inept defense|involuntary change|ism|magnet|marked|nemesis|nightmares|no healing|obligated|phobia|physical impairment|red tape|reduced damage|sensory impairment|shortcoming|significant other|skeleton in the closet|social fault|special requirement|unappealing|unique defect|unsettled|vulnerability|wanted|weak point)/i;
+		//const all_defects_regex = /(achilles heel|awkward size|bane|blind fury|conditional ownership|confined|cursed|demure|easily distracted|fragile|hounded|impaired manipulation|impaired speech|inept attack|inept defense|involuntary change|ism|magnet|marked|nemesis|nightmares|no healing|obligated|phobia|physical impairment|red tape|reduced damage|sensory impairment|shortcoming|significant other|skeleton in the closet|social fault|special requirement|unappealing|unique defect|unsettled|vulnerability|wanted|weak point)/i;
 		const lesser_defects_regex = /(conditionalownership|demure|easilydistracted|fragile|ineptattack|ineptdefense|involuntarychange|magnet|marked|nemesis|nightmares|phobia|redtape|shortcoming|significantother|socialfault|unappealing|unsettled)/i;
 		const serious_defects_regex = /(confined|impairedmanipulation|impairedspeech|nohealing|physicalimpairment|reduceddamage|sensoryimpairment|specialrequirement)/i;
 		const greater_defects_regex = /(achillesheel|awkwardsize|bane|blindfury|cursed|hounded|ism|obligated|skeletoninthecloset|vulnerability|wanted|weakpoint)/i;
-		const special_defects_regex = /uniquedefect/i;
+		//const special_defects_regex = /uniquedefect/i;
 		const rollable_attributes_regex = /(healing|inspire|unaffected|exorcism|illusion|metamorphosis|mimic|mindcontrol|nullify|powerflux|powervariation|projection|sixthsense|supersense|telepathy|transfer|transmute)/i;
 		const targetable_attributes_regex = /(healing|exorcism|illusion|metamorphosis|mimic|mindcontrol|nullify|telepathy|transfer)/i;
 		const dymanicGrouRegex = /(flux|variation)/i;
@@ -9109,6 +9126,16 @@
 			return parseInt(value[`static_stat_base_${stat}`]) || 0;
 		}
 		
+		function getShockValue(debug, timer, value, attrdb) {
+			const health = parseInt(value.stat_total_health);
+			const hardboiled = 
+				getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'hardboiled') || 0;
+			const shock = Math.round(health / 5) + (hardboiled * 10);
+			const shockValue = shock > Math.round(health/2) ? health : shock;
+			clog(debug, timer, 'shockValue =', shockValue, 'getShockValue()');
+			return shockValue;
+		}
+		
 		function getShortcomingRank(debug, timer, attrdb, value, stat) {
 			const defectdb = attrdb.defect;
 			const aggregateRank = _.chain(defectdb)
@@ -9154,7 +9181,10 @@
 			value[lowerkey] = result;
 		}
 		
-		async function commitChanges(debug, timer, value, keys, values, isSilent = true) {
+		//async function commitChanges(debug, timer, value, keys, values, isSilent = true) {
+		async function commitChanges(debug, timer, value, commits, isSilent = true) {
+			const keys = _.keys(commits);
+			const values = _.values(commits);
 			const commitObj = {};
 			//clog(debug, timer, 'keys:', keys, 'commitChanges()');
 			//clog(debug, timer, 'values:', values);
@@ -9188,10 +9218,13 @@
 				if(key !== false && validValues[i] !== false) {
 					//clog(debug, timer, 'key =', key);//, 'commitChanges()');
 					//clog(debug, timer, 'value =', values[i]);
-					const keyLowerCase = key.toLowerCase();
+					const sheetOnly = key.indexOf('_sheetonly') !== -1;
+					const keyLowerCase = sheetOnly ? 
+						key.slice(0, key.length - 10).toLowerCase() : key.toLowerCase();
+					//const keyLowerCase = key.toLowerCase();
 					//clog(debug, timer, 'keyLowerCase =', keyLowerCase);
 					commitObj[`${keyLowerCase}`] = validValues[i];
-					value[`${keyLowerCase}`] = validValues[i];
+					if(!sheetOnly) value[`${keyLowerCase}`] = validValues[i];
 				}
 			})
 			clog(debug, timer, 'commitObj:', commitObj, 'commitChanges()');
@@ -9383,7 +9416,7 @@
 			writeValues(debug, timer, value, `stat_total_${derivedvalue}`, result, setObj);
 			clog(debug, timer, derivedvalue, result, 'setDerivedValue()');
 		}
-		
+		/*
 		function setTotalShock(debug, timer, value, attrdb, setObj) {
 			const health = 
 				parseInt(setObj.stat_total_health) || 
@@ -9394,7 +9427,7 @@
 			writeValues(debug, timer, value, 'stat_total_shock', result, setObj);
 			clog(debug, timer, 'result =', result, 'setTotalShock()');
 		}
-		
+		*/
 		function setTotalMovement(debug, timer, value, attrdb, setObj) {
 			const body = 
 				parseInt(setObj.stat_total_body) || 
@@ -10876,7 +10909,7 @@
 					drv.title = '{{title=Roll DCV}}';
 					drv.stat = `{{dcv=${cv}}}`;
 					drv.base = cv;
-					drv.rolltemplate += ` ${buildProtectionsString(debug, timer, value)}`;
+					drv.rolltemplate += ` ${buildProtectionsString(debug, timer, value, attrdb)}`;
 					break;
 				case 'initiative':
 					drv.cv = getCV(debug, timer, value, attrdb, setObj, 'acv', '');
@@ -13253,8 +13286,9 @@
 			return result;
 		}
 		
-		function buildProtectionsString(debug, timer, value, maneuver='') {
-			const shockvalue = parseInt(value.stat_total_shock) || 0;
+		function buildProtectionsString(debug, timer, value, attrdb, maneuver='') {
+			//const shockvalue = parseInt(value.stat_total_shock) || 0;
+			const shockvalue = getShockValue(debug, timer, value, attrdb) || 0;
 			const forcefield = parseInt(value.protection_forcefield_ar) || 0;
 			const shield = parseInt(value.protection_shield_ar) || 0;
 			const armor1 = parseInt(value.protection_armor1_ar) || 0;
@@ -13373,9 +13407,11 @@
 				break;
 				case 2://defense
 					const last = Object.assign({}, await asw.getAttrs(['attacker']));
+					const commits = {};
 					clog(debug, timer, 'last:', last);
 					
 					setProtectionValues(debug, timer, roll, last, value, attrdb);
+					await calculateDamage(debug, timer, roll, last, value, attrdb, commits);
 					
 					if(roll.maneuver.name === 'doesnothing') {
 						roll.template += `{{doesnothing=1}} {{title=Does Nothing}} {{maneuver=does nothing}} ` +
@@ -13388,12 +13424,16 @@
 							`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
 					}
 					
+					roll.template += ` {{damage=${roll.outcome.damage}}} {{shock=${roll.outcome.shocktn}}}`
+					
+					
 					const defenseRoll = await startRoll(roll.template);
 					clog(debug, timer, 'defenseRoll:', defenseRoll);
-					roll.results.roll1 = parseInt(defenseRoll.results.roll1.result) + roll.results.cv;
 					
-					const defenseSuccess =  roll.results.roll1 > last.attacker.results.total ?
-						true : await calculateDamage(debug, timer, roll, last, value, attrdb, setObj);
+					roll.results.roll1 = parseInt(defenseRoll.results.roll1.result) + roll.results.cv;
+					if(last.attacker.results.total > roll.results.roll1) {
+						await commitChanges(debug, timer, value, commits, false);
+					}
 					
 					clog(debug, timer, 'roll.results.roll1 =', roll.results.roll1);
 					finishRoll(defenseRoll.rollId,{
@@ -13410,7 +13450,7 @@
 			clog(debug, timer, 'roll:', roll);
 		}
 		
-		async function calculateDamage(debug, timer, roll, last, value, attrdb, setObj) {
+		async function calculateDamage(debug, timer, roll, last, value, attrdb, commits) {
 			const outcome = {};
 			outcome.damage = last.attacker.damage.total || 0;
 			outcome.converted = 0;
@@ -13425,11 +13465,31 @@
 			
 			if(outcome.damage !== 0) {
 				const wounds = parseInt(value.static_stat_total_wounds) + outcome.damage;
-				await commitChanges(debug, timer, value, ['static_stat_total_wounds'], [wounds], false);
+				const shockValue = getShockValue(debug, timer, value, attrdb);
+				const seriousInjuries = parseInt(value.stat_total_seriousinjuries) || 0;
+				const seriousInjury = 
+					last.attacker.weapon.isstun ? 0 + seriousInjuries : 
+					outcome.damage > shockValue ? 
+						seriousInjuries + 1 : 0 + seriousInjuries;
+				/*
+				const shockTN = outcome.damage > (shockValue * 2) ? 18 :
+					outcome.damage > shockValue ? 12 : 0;
+				*/
+				const hasSeriousInjury = seriousInjury !== 0 ? 1 : 0;
+				outcome.shocktn = outcome.damage > (shockValue * 2) ? 18 : 
+					outcome.damage > shockValue ? 12 : 0;
+		
+				commits.outcome = outcome;
+				commits.static_stat_total_wounds = wounds;
+				commits.stat_total_seriousinjuries = seriousInjury;
+				commits.showseriousinjury_sheetonly = hasSeriousInjury;
+				commits.seriousinjurystate_sheetonly = hasSeriousInjury;
+				//const keys = ['static_stat_total_wounds','stat_total_seriousinjuries'];
+				//const values = [wounds, seriousInjury];
 			}
 		
 			roll.outcome = Object.assign(roll.outcome, outcome);
-			return false;
+			//return false;
 		}
 		
 		function getIsStun(debug, timer, roll, value, attrdb, isNaturalWeapon, weapon) {
@@ -13457,7 +13517,8 @@
 			clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
 			clog(debug, timer, 'convertedCP =', convertedCP);
 			//setObj[`repeating_active_${conversion.activeid}_pointvalue`] = convertedDamage;
-			await commitChanges(debug, timer, value, ['protection_conversion1_cp'], [convertedCP]);
+			//await commitChanges(debug, timer, value, ['protection_conversion1_cp'], [convertedCP]);
+			await commitChanges(debug, timer, value, { protection_conversion1_cp: convertedCP });
 			//clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
 		}
 		
@@ -13601,7 +13662,8 @@
 					const newForcefieldAR = //isSpecific === 0 ? 
 						//roll.protection.forcefield.ar : 
 						roll.protection.forcefield.ar - 10;
-					await commitChanges(debug, timer, value, ['protection_forcefield_ar'], [newForcefieldAR]);
+					//await commitChanges(debug, timer, value, ['protection_forcefield_ar'], [newForcefieldAR]);
+					await commitChanges(debug, timer, value, { protection_forcefield_ar: newForcefieldAR });
 					if(roll.protection.conversion.type === 0 && roll.protection.conversion.hasescalate) {
 						outcome.converted += outcome.damage - damageRemainder;
 						clog(debug, timer, 'outcome.converted =', outcome.converted);
@@ -14124,11 +14186,11 @@
 					`{{total=[[[[?{Roll is|Normal, ${setDice(rollmod)}` +
 					`|Minor Edge, ${setDice(rollmod, 1)}|Minor Obstacle, ${setDice(rollmod, -1)}` +
 					`|Major Edge, ${setDice(rollmod, 2)}|Major Obstacle, ${setDice(rollmod, -2)}}]]+` +
-					`[[${dcv}]]]]}} {{roll=$[[0]]}} ${buildProtectionsString(debug, timer, value, maneuver)}`;
+					`[[${dcv}]]]]}} {{roll=$[[0]]}} ${buildProtectionsString(debug, timer, value, attrdb, maneuver)}`;
 			} else {
 				result = `&{template:besmDefault} {{character_name=@{charactername}}} ` +
 					`{{maneuver=does nothing}} {{doesnothing=1}} {{title=Does Nothing}} ` +
-					`${buildProtectionsString(debug, timer, value, maneuver)}`;
+					`${buildProtectionsString(debug, timer, value, attrdb, maneuver)}`;
 			}
 			clog(debug, timer, 'result =', result, 'setCombatRoll()');
 			setObj.maneuverroll = result;
@@ -14671,6 +14733,7 @@
 					"repeating_skilltemplate:addskill",
 					"repeating_extraarm:armedstate",
 					"repeating_skill",
+					//"static_button_stat_seriousinjury",
 					"static_button_forcefield_regenerate",
 					"static_button_combat_roll",
 					"static_button_ammo_reload",
@@ -14759,7 +14822,8 @@
 					'static_options_selection_gamegenre',
 					'previous_weapon',
 					'static_rules_deplete_alt',
-					'attacker'
+					'attacker',
+					'outcome'
 				]);
 				getAttrsString = getAttrsString.concat(size_template_values_array);
 				getAttrsString = getAttrsString.concat(buildStatButtonStatesArray());
@@ -15121,7 +15185,7 @@
 										setDerivedValue(debug, timer, attrdb, value, setObj, 'energy');
 										setDerivedValue(debug, timer, attrdb, value, setObj, 'sanity');
 										setDerivedValue(debug, timer, attrdb, value, setObj, 'social');
-										setTotalShock(debug, timer, value, attrdb, setObj);
+										//setTotalShock(debug, timer, value, attrdb, setObj);
 										setTotalMovement(debug, timer, value, attrdb, setObj);
 										updateSkillRolls(debug, timer, value, skillIDs, sourceAttr, setObj);
 										setTotalLift(debug, timer, attrdb, value, setObj);
@@ -15176,6 +15240,15 @@
 									break;
 									case 'regenerate':
 										doRegenerateForcefield(debug, timer, value, attrdb, setObj);
+									break;
+									case 'seriousinjury':
+										clog(debug, timer, 'setObj.seriousinjurystate =', setObj.seriousinjurystate, '>>>>Serious Injury TEST<<<<')
+										if(setObj.seriousinjurystate) {
+											setObj.showseriousinjury = 1;
+										} else {
+											setObj.showseriousinjury = 0;
+											setObj.stat_total_seriousinjuries = 0;
+										}
 									break;
 								}
 							break;
