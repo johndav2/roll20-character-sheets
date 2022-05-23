@@ -472,27 +472,49 @@
 					<div class="row padb">
 						<input type="hidden" class="protectionstate" name="attr_protection_forcefield_state" value="" />
 						<input type="hidden" class="protectionstate" name="attr_protection_forcefield_source" value="" />
+						<!--
 						<input type="hidden" class="protectionstate" name="attr_protection_forcefield_limiteddefense" value="" />
 						<input type="hidden" class="protectionstate" name="attr_protection_forcefield_limitedcoverage" value="" />
 						<input type="hidden" class="protectionstate" name="attr_protection_forcefield_limiteddamtype" value="" />
+						-->
 						<div class="col-5-6">
-							<input type="checkbox" class="protectionstate" name="attr_protection_forcefield_state" value="1" />
-							<h4 class="center border protection">
-								<div class="col-12-17">
-									<span class="protection" name="attr_protection_forcefield_name"></span>
-									<input type="hidden" name="attr_protection_forcefield_name" value="Forcefield" />
+							<div>
+								<input type="checkbox" class="block-switch" name="attr_enable_regenerating" value="1" checked />
+								<div class="block-a">
+									<input type="checkbox" class="protectionstate" name="attr_protection_forcefield_state" value="1" />
+									<h4 class="center border protection">
+										<div class="col-12-17">
+											<span class="protection" name="attr_protection_forcefield_name"></span>
+											<input type="hidden" name="attr_protection_forcefield_name" value="Forcefield" />
+										</div>
+										<div class="col-1-4">
+											<input type="text" class="protection" name="attr_protection_forcefield_ar" value="0" readonly />
+										</div>
+									</h4>
 								</div>
-								<div class="col-1-4">
-									<input type="text" class="protection" name="attr_protection_forcefield_ar" value="0" readonly />
+								<div class="block-b">
+									<input type="checkbox" class="protectionstate" name="attr_protection_forcefield_state" value="1" />
+									<h4 class="center border protection">
+										<div class="col-7-13">
+											<span class="protection" name="attr_protection_forcefield_name"></span>
+											<input type="hidden" name="attr_protection_forcefield_name" value="Forcefield" />
+										</div>
+										<div class="col-1-6">
+											<button type='action' style='margin-top: 2px;' name='act_static_button_forcefield_regenerate'><span style="font-family: Pictos; font-size: large;">1</span></button>
+										</div>
+										<div class="col-1-4">
+											<input type="text" class="protection" name="attr_protection_forcefield_ar" value="0" readonly />
+										</div>
+									</h4>
 								</div>
-							</h4>
+							</div>
 						</div>
 					</div>
 					
 					<div class="row padb">
 						<input type="hidden" class="protectionstate" name="attr_protection_shield_state" value="" />
 						<input type="hidden" class="protectionstate" name="attr_protection_shield_source" value="" />
-						<input type="hidden" class="protectionstate" name="attr_protection_shield_dcv" value="" />
+						<!--<input type="hidden" class="protectionstate" name="attr_protection_shield_dcv" value="" />-->
 						<div class="col-5-6">
 							<input type="checkbox" class="protectionstate" name="attr_protection_shield_state" value="1" />
 							<h4 class="center border protection">
@@ -511,8 +533,10 @@
 					<div class="row padb">
 						<input type="hidden" class="protectionstate" name="attr_protection_armor1_source" value="" />
 						<input type="hidden" class="protectionstate" name="attr_protection_armor1_specialized" value="0" />
+						<!--
 						<input type="hidden" class="protectionstate" name="attr_protection_armor1_gap" value="0" />
 						<input type="hidden" class="protectionstate" name="attr_protection_armor1_damagetype" value="" />
+						-->
 						<div class="col-5-6">
 							<input type="checkbox" class="protectionstate" name="attr_protection_armor1_state" value="1" />
 							<h4 class="center border protection">
@@ -531,8 +555,10 @@
 					<div class="row padb">
 						<input type="hidden" class="protectionstate" name="attr_protection_armor2_source" value="" />
 						<input type="hidden" class="protectionstate" name="attr_protection_armor2_specialized" value="0" />
+						<!--
 						<input type="hidden" class="protectionstate" name="attr_protection_armor2_gap" value="0" />
 						<input type="hidden" class="protectionstate" name="attr_protection_armor2_damagetype" value="" />
+						-->
 						<div class="col-5-6">
 							<input type="checkbox" class="protectionstate" name="attr_protection_armor2_state" value="1" />
 							<h4 class="center border protection">
@@ -551,8 +577,10 @@
 					<div class="row padb">
 						<input type="hidden" class="protectionstate" name="attr_protection_armor3_source" value="" />
 						<input type="hidden" class="protectionstate" name="attr_protection_armor3_specialized" value="0" />
+						<!--
 						<input type="hidden" class="protectionstate" name="attr_protection_armor3_gap" value="0" />
 						<input type="hidden" class="protectionstate" name="attr_protection_armor3_damagetype" value="" />
+						-->
 						<div class="col-5-6">
 							<input type="checkbox" class="protectionstate" name="attr_protection_armor3_state" value="1" />
 							<h4 class="center border protection">
@@ -619,8 +647,27 @@
 							</h4>
 						</div>
 					</div>
+
+					<div class="row padb">
+						<input type="hidden" class="protectionstate" name="attr_protection_conversion1_state" value="" />
+						<input type="hidden" class="protectionstate" name="attr_protection_conversion1_source" value="" />
+						<div class="col-5-6">
+							<input type="checkbox" class="protectionstate" name="attr_protection_conversion1_state" value="1" />
+							<h4 class="center border protection">
+								<div class="col-12-17">
+									<span class="protection" name="attr_protection_conversion1_name"></span>
+									<input type="hidden" name="attr_protection_conversion1_name" value="Conversion, Damage" />
+								</div>
+								<div class="col-1-4">
+									<input type="number" class="protection" name="attr_protection_conversion1_cp" value=0 />
+								</div>
+							</h4>
+						</div>
+					</div>
+					<!--
 					<input type="hidden" class="protectionstate" name="attr_protection_conversion_ar" value=0 />
 					<input type="hidden" class="protectionstate" name="attr_protection_conversion_escalate" value=0 />
+					-->
 				</div>
 			</div>
 			
@@ -1666,50 +1713,6 @@
 													<span>&nbsp;</span>
 													<button style='align-self: flex-end;' class="button d6button" type="roll" name="roll_activeattribute" value="@{rollvalue}"></button>
 													<input type="hidden" name="attr_rollvalue" value="" readonly />
-												</div>
-											</div>
-										</h4>
-									</div>
-								</div>
-								<div>
-									<input type="checkbox" class="block-switch" name="attr_reloadable" value="1" />
-									<div class="block-a"></div>
-									<div class="block-b padb">
-										<h4 class="center border">
-											<div class="flex-container-evenlyspace">
-												<div class="flex-5-6 tooltip">
-													<span name="attr_name"></span>
-													<input type="hidden" name="attr_name" value="Reloadable Attribute" />
-													<input type="text" class="center" name="attr_characteristic" value="Characteristic" readonly />
-													<span class="tooltip">
-														<textarea class="tooltip" name="attr_description" value="" readonly ></textarea>
-													</span>
-												</div>
-												<div class="flex-1-24">
-													<span>&nbsp;</span>
-													<button style='width: 20px; height: 25px;' type='action' name='act_regenerate'><span style="font-family: Pictos; font-size: large;">1</span></button>
-												</div>
-											</div>
-										</h4>
-									</div>
-								</div>
-								<div>
-									<input type="checkbox" class="block-switch" name="attr_tracker" value="1" />
-									<div class="block-a"></div>
-									<div class="block-b padb">
-										<h4 class="center border">
-											<div class="flex-container-evenlyspace">
-												<div class="flex-5-6 tooltip">
-													<span name="attr_name"></span>
-													<input type="hidden" name="attr_name" value="Tracker Attribute" />
-													<input type="text" class="center" name="attr_characteristic" value="Characteristic" readonly />
-													<span class="tooltip">
-														<textarea class="tooltip" name="attr_description" value="" readonly ></textarea>
-													</span>
-												</div>
-												<div class="flex-1-8">
-													<span>&nbsp;</span>
-													<input type="number" style="width: 90%;" name="attr_pointvalue" value=0 />
 												</div>
 											</div>
 										</h4>
@@ -8285,13 +8288,14 @@
 		}
 		
 		function buildProtectionValuesArray() {
-			var protections = ["forcefield", "shield", "armor1", "armor2", "armor3", "mindshield", "absorption1", "absorption2", "conversion"],
-				result = [];
+			const protections = ["forcefield", "shield", "armor1", "armor2", "armor3", "mindshield", "absorption1", "absorption2", "conversion1"];
+			let result = [];
 			_.each(protections, (protection) => {
+				const suffix = protection !== 'conversion' ? 'ar' : 'cp';
 				result[result.length] = `protection_${protection}_state`;
 				result[result.length] = `protection_${protection}_source`;
-				result[result.length] = `protection_${protection}_name`;
-				result[result.length] = `protection_${protection}_ar`;
+				//result[result.length] = `protection_${protection}_name`;
+				result[result.length] = `protection_${protection}_${suffix}`
 			});
 			return result;
 		}
@@ -8694,7 +8698,7 @@
 		}
 		
 		function getStandardGroupCost(debug, timer, attrIDs, value, rowID, isLevelChange, groupid, setObj, isVariationPool = false) {
-			const result = 
+			const groupCost = 
 				_.chain(attrIDs)
 				.map(id=>{
 					const attribute = value[`repeating_attr_${id}_attribute`];
@@ -8716,8 +8720,8 @@
 				.reduce((memo, num)=>{ return memo + num; }, 0)
 				.value();
 			clog(debug, timer, 'groupid =', groupid, 'getStandardGroupCost()');
-			clog(debug, timer, 'result =', result);
-			return result;
+			clog(debug, timer, 'groupCost =', groupCost);
+			return groupCost;
 		}
 		
 		function getPowerFluxGroupCost(debug, timer, value, groupSourceID) {
@@ -11143,6 +11147,7 @@
 				setObj[`repeating_attr_${source}_activate`] = 0;
 				clog(debug, timer, 'attrstate =', attrstate);
 			}
+			/*
 			if (attr == `armor`) {
 				const specialized = (isActive) ? getCustomizationValue(debug, timer, value, rowID, 'rank', "specialized") : 0,
 					gap = (isActive) ? getCustomizationValue(debug, timer, value, rowID, 'rank', "gap") : 0,
@@ -11154,11 +11159,15 @@
 				clog(debug, timer, 'damagetype =', damagetype);
 				clog(debug, timer, 'gap =', gap);
 			}
+			*/
 			if (attr == `forcefield`) {
-				const impacting = (isActive) ? getCustomizationValue(debug, timer, value, rowID, 'rank', "impacting") : 0;
-				setObj[`protection_${attr}_impacting`] = impacting;
-				clog(debug, timer, 'impacting =', impacting);
+				const regenerating = (isActive) ? 
+					getCustomizationValue(debug, timer, value, rowID, 'rank', "regenerating") !== 0 ?
+						1 : 0 : 0;
+				setObj.enable_regenerating = regenerating;
+				clog(debug, timer, 'regenerating =', regenerating);
 			}
+			/*
 			if (attr == `absorption`) {
 				const synergistic = (isActive) ? getCustomizationValue(debug, timer, value, rowID, 'rank', "synergistic") : 0,
 					capped = (isActive) ? getCustomizationValue(debug, timer, value, rowID, 'rank', "capped") : 0;
@@ -11172,10 +11181,12 @@
 				setObj[`protection_${attr}_escalate`] = escalate;
 				clog(debug, timer, 'escalate =', escalate);
 			}
+			*/
+			const suffix = attr !== 'conversion' ? 'ar' : 'cp';
 			setObj[`protection_${attr}${layer}${type}_state`] = state;
 			setObj[`protection_${attr}${layer}${type}_name`] = name;
 			setObj[`protection_${attr}${layer}${type}_source`] = rowID;
-			setObj[`protection_${attr}${layer}${type}_ar`] = rating;
+			setObj[`protection_${attr}${layer}${type}_${suffix}`] = rating;
 		}
 		
 		function setAugmented(isActive, debug, timer, value, attrdb, rowID, setObj) {
@@ -11936,10 +11947,21 @@
 				if(attribute !== 'supersense') {
 					const activeType = 
 						isRollable ? 'rollable' :
-						attribute === 'forcefield' ? 'reloadable' :
-						attribute === 'conversion' ? 'tracker' :
+						//attribute === 'forcefield' ? 'reloadable' :
+						//attribute === 'conversion' ? 'tracker' :
 						'plain';
 					setObj[`${target}_${activeID}_${activeType}`] = 1;
+					/*
+					if(activeType === 'tracker') {
+						const tracker = _.find(attrdb[`${attribute}`], t => {
+							if(t.source === rowID) return true;
+						});
+						if(getIsObject(tracker)) {
+							tracker.activeid = activeID.toLowerCase();
+							setObj[`${target}_${activeID}_pointvalue`] = 0;
+						}
+					}
+					*/
 				}
 				if (attribute == 'telepathy' && level > 3) {
 					setRollable(debug, timer, value, rowID, activeID, setObj, attribute, isRollable);
@@ -11983,15 +12005,11 @@
 			switch (attribute) {
 				case "absorption":
 				case "armor": 
+				case "conversion":
+				case "forcefield":
 				case "mindshield":
 					setAttrdb(isActive, debug, timer, value, attrdb, attrIDs, rowID, sourceAttr, attribute, setObj);
 					setProtection(isActive, debug, timer, value, rowID, attribute, setObj);
-				break;
-				case "forcefield":
-					const hasRegenerating = getCustomizationValue(debug, timer, value, rowID, 'rank', 'regenerating');
-					setAttrdb(isActive, debug, timer, value, attrdb, attrIDs, rowID, sourceAttr, attribute, setObj);
-					setProtection(isActive, debug, timer, value, rowID, attribute, setObj);
-					if(hasRegenerating) setActiveAttribute(isActive, debug, timer, value, rowID, attrdb, setObj, attribute, level);
 				break;
 				case "attackmastery":
 				case "defensemastery":
@@ -12011,11 +12029,6 @@
 					if (value.static_roll_type_selection == 'initiative') {
 						setDynamicRollValue(debug, timer, false, value, attrdb, rowID, sourceAttr, setObj);
 					}
-					setActiveAttribute(isActive, debug, timer, value, rowID, attrdb, setObj, attribute, level);
-				break;
-				case "conversion":
-					setAttrdb(isActive, debug, timer, value, attrdb, attrIDs, rowID, sourceAttr, attribute, setObj);
-					setProtection(isActive, debug, timer, value, rowID, attribute, setObj);
 					setActiveAttribute(isActive, debug, timer, value, rowID, attrdb, setObj, attribute, level);
 				break;
 				case "defect":
@@ -13380,7 +13393,7 @@
 					roll.results.roll1 = parseInt(defenseRoll.results.roll1.result) + roll.results.cv;
 					
 					const defenseSuccess =  roll.results.roll1 > last.attacker.results.total ?
-						true : await calculateDamage(debug, timer, roll, last, value, setObj);
+						true : await calculateDamage(debug, timer, roll, last, value, attrdb, setObj);
 					
 					clog(debug, timer, 'roll.results.roll1 =', roll.results.roll1);
 					finishRoll(defenseRoll.rollId,{
@@ -13397,7 +13410,7 @@
 			clog(debug, timer, 'roll:', roll);
 		}
 		
-		async function calculateDamage(debug, timer, roll, last, value, setObj) {
+		async function calculateDamage(debug, timer, roll, last, value, attrdb, setObj) {
 			const outcome = {};
 			outcome.damage = last.attacker.damage.total || 0;
 			outcome.converted = 0;
@@ -13408,7 +13421,7 @@
 			if(outcome.damage !== 0) applyArmorToDamage(debug, timer, roll, outcome, last);
 			if(outcome.damage !== 0) applyMindShieldToDamage(debug, timer, roll, outcome);
 			if(outcome.damage !== 0) await applyAbsorptionToDamage(debug, timer, roll, value, outcome);
-			if(roll.protection.conversion.type === 0) applyConversionToDamage(debug, timer, roll, outcome);
+			if(roll.protection.conversion.type === 0) await applyConversionToDamage(debug, timer, value, outcome, attrdb);
 			
 			if(outcome.damage !== 0) {
 				const wounds = parseInt(value.static_stat_total_wounds) + outcome.damage;
@@ -13438,9 +13451,14 @@
 			return isStun;
 		}
 		
-		function applyConversionToDamage(debug, timer, roll, outcome) {
-			const convertedDamage = Math.floor((outcome.damage + outcome.converted) /10);
+		async function applyConversionToDamage(debug, timer, value, outcome, attrdb, setObj) {
+			const convertedDamage = Math.floor((outcome.damage + outcome.converted) /10) || 0;
+			const convertedCP = (parseInt(value.protection_conversion1_cp) || 0) + convertedDamage;
 			clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
+			clog(debug, timer, 'convertedCP =', convertedCP);
+			//setObj[`repeating_active_${conversion.activeid}_pointvalue`] = convertedDamage;
+			await commitChanges(debug, timer, value, ['protection_conversion1_cp'], [convertedCP]);
+			//clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
 		}
 		
 		async function applyAbsorptionToDamage(debug, timer, roll, value, outcome) {
@@ -13605,7 +13623,7 @@
 				if(ff.source === source) return true;
 			});
 			const max = forcefield.level * 10;
-			const regen = value.protection_forcefield_ar > max ?
+			const regen = value.protection_forcefield_ar < max ?
 				value.protection_forcefield_ar += 10 :
 				max;
 			writeValues(debug, timer, value, 'protection_forcefield_ar', regen, setObj);
@@ -14645,7 +14663,7 @@
 		function registerActions() {
 			const statButtons = getStatButtons().concat(getSkillStatButtons()),
 				buttonsToRegister = [
-					"repeating_active",
+					//"repeating_active",
 					"repeating_attr:setlock",
 					"repeating_attr:activate",
 					"repeating_attr:options",
@@ -14653,6 +14671,7 @@
 					"repeating_skilltemplate:addskill",
 					"repeating_extraarm:armedstate",
 					"repeating_skill",
+					"static_button_forcefield_regenerate",
 					"static_button_combat_roll",
 					"static_button_ammo_reload",
 					"static_button_targeted_rushdamage",
@@ -15039,10 +15058,6 @@
 									break;
 								}
 							break;
-							case 'active':
-								//regenerate
-								doRegenerateForcefield(debug, timer, value, attrdb, setObj);
-							break;
 							case `skilltemplate`:
 								switch(sourceAttr){
 									case `addskill`:
@@ -15158,6 +15173,9 @@
 									break;
 									case 'roll':
 										await doCombatRoll(debug, timer, value, attrdb, rowID, setObj);
+									break;
+									case 'regenerate':
+										doRegenerateForcefield(debug, timer, value, attrdb, setObj);
 									break;
 								}
 							break;
