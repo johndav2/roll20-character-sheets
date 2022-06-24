@@ -1,6 +1,9 @@
 /* === VERSION === */
 /*      1.8.0      */
 
+/* === FONTS === */
+@import url('https://fonts.googleapis.com/css2?family=Long+Cang&display=swap');
+
 /* === GENERAL === */
 .charsheet {
     min-width: 850px;
@@ -2741,8 +2744,13 @@ div.sheet-flex-skillchild-button {
 /***************** New CSS *****************/
 
 .sheet-rolltemplate-besmDefault .sheet-rt-card {
+	background-color: #fff;
+}
+
+/*
+.sheet-rolltemplate-besmDefault .sheet-rt-card {
 	width: 95%;
-	background-color: #FFFFFF;
+	background-color: #fff;
 	font-size: 11px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
@@ -2753,10 +2761,11 @@ div.sheet-flex-skillchild-button {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
-
+*/
 
 /* Generic header */
 
+/*
 .sheet-rolltemplate-besmDefault .sheet-rt-header {
 	text-align: center;
 	position: relative;
@@ -2790,9 +2799,23 @@ div.sheet-flex-skillchild-button {
 	border-left-color: #222;
 	right: 0;
 }
+*/
+
+.sheet-rolltemplate-besmDefault .sheet-rt-header {
+	border: solid #000;
+	border-width: 5px 0 5px 0;
+	text-align: center;
+	position: relative;
+	color: #fff;
+	margin: 0 -10px 10px -10px;
+	padding: 15px 0;
+	background-color: #E83278;
+}
 
 .sheet-rolltemplate-besmDefault .sheet-rt-title {
-	font-size: 1.5em;
+	font-family: 'Long Cang', cursive;
+	font-weight: bold;
+	font-size: 3em;
 }
 
 .sheet-rolltemplate-besmDefault .sheet-rt-subheader {}
@@ -2800,6 +2823,13 @@ div.sheet-flex-skillchild-button {
 
 /* Melee header*/
 
+.sheet-rolltemplate-besmDefault .sheet-rt-header.sheet-attack
+{
+	background-color: #E83278;
+}
+
+
+/*
 .sheet-rolltemplate-besmDefault .sheet-rt-header.sheet-weapon,
 .sheet-rolltemplate-besmDefault .sheet-rt-header.sheet-attack
 {
@@ -2817,28 +2847,25 @@ div.sheet-flex-skillchild-button {
 {
 	border-left-color: #375035;
 }
+*/
 
+/* Reaction header */
 
-/* Spell header */
-
-.sheet-rolltemplate-besmDefault .sheet-rt-header.sheet-spell,
 .sheet-rolltemplate-besmDefault .sheet-rt-header.sheet-defense
 {
-	background-color: #45285D;
+	background-color: #786DA1;
 }
-
-.sheet-rolltemplate-besmDefault .sheet-rt-header.sheet-spell:before,
+/*
 .sheet-rolltemplate-besmDefault .sheet-rt-header.sheet-defense:before
 {
 	border-right-color: #443550;
 }
 
-.sheet-rolltemplate-besmDefault .sheet-rt-header.sheet-spell:after,
 .sheet-rolltemplate-besmDefault .sheet-rt-header.sheet-defense:after
 {
 	border-left-color: #443550;
 }
-
+*/
 
 /* Ability check header */
 
@@ -2916,6 +2943,23 @@ div.sheet-flex-skillchild-button {
 	margin-top: 2px;
 }
 
+.sheet-rolltemplate-besmDefault .inlinerollresult,
+.sheet-rolltemplate-besmDefault .inlinerollresult.fullcrit,
+.sheet-rolltemplate-besmDefault .inlinerollresult.fullfail,
+.sheet-rolltemplate-besmDefault .inlinerollresult.importantroll {
+    background-color: transparent;
+    color: #000;
+    border: none;
+}
+
+.sheet-rolltemplate-besmDefault .sheet-rt-hideroll {
+    pointer-events: none;
+}
+
+.sheet-rolltemplate-besmDefault .sheet-rt-noncomputedvalue {
+	font-weight: bold;
+}
+/*
 .sheet-rolltemplate-besmDefault .sheet-ignored-roll .inlinerollresult {
 	opacity: 0.5;
 }
@@ -2932,9 +2976,11 @@ div.sheet-flex-skillchild-button {
 .sheet-rolltemplate-besmDefault .sheet-rt-value .sheet-no-roll-highlight .inlinerollresult .fullfail . .sheet-rolltemplate-besmDefault .sheet-rt-value .sheet-no-roll-highlight .inlinerollresult .fullcrit {
 	border: 0;
 }
-
-.sheet-rolltemplate-besmDefault .sheet-main-content {}
-
+*/
+.sheet-rolltemplate-besmDefault .sheet-main-content {
+	background-color: #fff;
+}
+/*
 .sheet-rolltemplate-besmDefault .sheet-main-content hr.sheet-roll {
 	width: 80%;
 	margin-left: auto;
@@ -2943,16 +2989,28 @@ div.sheet-flex-skillchild-button {
 	background-color: #D64541;
 	height: 1px;
 }
-
+*/
 .sheet-rolltemplate-besmDefault .sheet-rt-emote {
 	font-style: italic;
-	font-size: 11px;
+	font-weight: bold;
+	font-size: 14px;
 	font-family: Arial;
 	text-align: center;
-	border: green 1px dashed;
-	border-radius: 5px;
 	padding: 0px 5px;
 	margin: 0px 5px 5px 5px;
+	background: #fff;
+}
+
+.sheet-rolltemplate-besmDefault .sheet-actionrow:nth-child(even) {
+	background: #FBDFE7;
+}
+.sheet-rolltemplate-besmDefault .sheet-reactionrow:nth-child(even) {
+	background: #CECAE0;
+}
+
+.sheet-rolltemplate-besmDefault .sheet-reactionrow:nth-child(odd),
+.sheet-rolltemplate-besmDefault .sheet-actionrow:nth-child(odd) {
+	background: #fff;
 }
 
 

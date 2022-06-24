@@ -30,7 +30,7 @@
 											<div class="row padt padb"><h3 class="col-1 center border"><span>Sheet Options</span></h3></div>
 											<div class="row center padb">
 												<div class="col-1-5 padr"><h4 class="center border"><span>Sheet Version
-													<input type="text" class="center" name="attr_version" value="1.9.0" readonly />
+													<input type="text" class="center" name="attr_version" value="2.0.0" readonly />
 													<input type="hidden" name="attr_global_version" value="0.0.0" readonly />
 												</span></h4></div>
 												<div class="col-1-5 padr"><h4 class="center border"><span>Sheet Type
@@ -46,12 +46,6 @@
 													<select name="attr_show_debug_messages"><option value="0">Off</option><option value="1">Information</option><option value="2">Events</option><option value="3">Performance</option></select>
 												</span></h4></div>
 											</div>
-											<div class="row center padb">
-												<div class="col-1-5"><h4 class="center border"><span name="attr_label_beacon">Beacon ID
-													<input type="text" class="border center" name="attr_beacon_id" value="" />
-												</span></h4></div>
-											</div>
-											<div class="row padt padb"><h3 class="col-1 center border"><span>House Rules</span></h3></div>
 											<div>
 												<div class="col-1-5"><h4 class="center border"><span>Game Genre
 													<select name="attr_static_options_selection_gamegenre">
@@ -92,6 +86,9 @@
 														<option value="0">False</option>
 														<option value="1">True</option>
 													</select>
+												</span></h4></div>
+												<div class="col-1-5"><h4 class="center border"><span>Database Name
+													<input type="text" name="attr_besmdb_name" value="besm4eextrasdb" />
 												</span></h4></div>
 											</div>
 											<div class="row center padb padt">
@@ -3115,7 +3112,7 @@
 									<input type="hidden" name="attr_customizations" readonly />
 									<input type="hidden" name="attr_group" value=0 readonly />
 									<input type="hidden" name="attr_source" value="" readonly />
-									<!--<input type="hidden" name="attr_new" value=1 readonly />-->
+									<input type="hidden" name="attr_new" value=1 readonly />
 
 									<div class="flex-1-13 flex-center">
 										<input type="checkbox" class="border lock" name="attr_lock" value="1" /><span></span>
@@ -7216,610 +7213,604 @@
 	<!--************************* Hidden Values *************************-->
 
 	<div>
-		<input type="hidden" name="attr_attack_roll" value="" />
-		<input type="hidden" name="attr_attack_damage" value="" />
-		<input type="hidden" name="attr_attack_damagetype" value="" />
-		<input type="hidden" name="attr_attack_knockback" value="" />
-		<input type="hidden" name="attr_attack_isstun" value="" />
-		<input type="hidden" name="attr_attack_hasinsidious" value="" />
-		<input type="hidden" name="attr_attack_haspsychic" value="" />
+		<input type="hidden" name="attr_besmdb_id" value="" />
 	</div>
-	
 
 	<!-- ************************ Roll Templates ************************ -->
 
 	<rolltemplate class="sheet-rolltemplate-besmDefault">
-		<div class="rt-card">
+		<div class="sheet-rt-card">
 			<div class="rt-header{{#attack}} attack{{/attack}}{{#defense}}  defense{{/defense}}{{#rolls}} rolls{{/rolls}}{{#save}} save{{/save}}{{#deathsave}} deathsave{{/deathsave}}">
-				<div class="sheet-rt-title"><b>{{title}}</b></div>
+				<div class="sheet-rt-title">{{title}}</div>
 			</div>
 			<div class="sheet-main-content">
 				{{#attack}}
 				<div class="rt-emote"><i>{{character_name}} attacks {{target_name}} with {{pronoun}} {{weapon_name}}!</i></div>
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Maneuver</div>
-					<div class="col-7-12 padr rt-value center">{{maneuver}}</div>
+					<div class="col-7-12 padr rt-value right rt-noncomputedvalue">{{maneuver}}</div>
 				</div>
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">ACV</div>
-					<div class="col-7-12 padr rt-value center"><b>{{acv}}</b></div>
+					<div class="col-7-12 padr rt-value right rt-hideroll">{{acv}}</div>
 				</div>
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Roll</div>
-					<div class="col-7-12 padr rt-value center">{{roll1}}</div>
+					<div class="col-7-12 padr rt-value right">{{roll1}}</div>
 				</div>
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{computed::roll1}}</div>
+					<div class="col-7-12 padr rt-value right rt-hideroll">{{computed::roll1}}</div>
 				</div>
-				<div class="row">
+				<!--
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Damage{{#stunonly}} (Stun){{/stunonly}}</div>
-					<div class="col-7-12 padr rt-value center">{{computed::roll2}}</div>
+					<div class="col-7-12 padr rt-value right rt-hideroll">{{computed::roll2}}</div>
 					<!--
 					{{#rollTotal() roll 2}}
-					<div class="col-7-12 padr rt-value center">{{damage2}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage2}}</div>
 					{{/rollTotal() roll 2}} {{#rollTotal() roll 3}}
-					<div class="col-7-12 padr rt-value center">{{damage3}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage3}}</div>
 					{{/rollTotal() roll 3}} {{#rollTotal() roll 4}}
-					<div class="col-7-12 padr rt-value center">{{damage4}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage4}}</div>
 					{{/rollTotal() roll 4}} {{#rollTotal() roll 5}}
-					<div class="col-7-12 padr rt-value center">{{damage5}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage5}}</div>
 					{{/rollTotal() roll 5}} {{#rollTotal() roll 6}}
-					<div class="col-7-12 padr rt-value center">{{damage6}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage6}}</div>
 					{{/rollTotal() roll 6}} {{#rollTotal() roll 7}}
-					<div class="col-7-12 padr rt-value center">{{damage7}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage7}}</div>
 					{{/rollTotal() roll 7}} {{#rollTotal() roll 8}}
-					<div class="col-7-12 padr rt-value center">{{damage8}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage8}}</div>
 					{{/rollTotal() roll 8}} {{#rollTotal() roll 9}}
-					<div class="col-7-12 padr rt-value center">{{damage9}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage9}}</div>
 					{{/rollTotal() roll 9}} {{#rollTotal() roll 10}}
-					<div class="col-7-12 padr rt-value center">{{damage10}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage10}}</div>
 					{{/rollTotal() roll 10}} {{#rollTotal() roll 11}}
-					<div class="col-7-12 padr rt-value center">{{damage11}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage11}}</div>
 					{{/rollTotal() roll 11}} {{#rollTotal() roll 12}}
-					<div class="col-7-12 padr rt-value center">{{damage12}}</div>
+					<div class="col-7-12 padr rt-value right">{{damage12}}</div>
 					{{/rollTotal() roll 12}}
-					-->
 				</div>
+				-->
 				{{/attack}} {{#area}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Area</div>
-					<div class="col-7-12 padr rt-value center">{{radius}} m radius</div>
+					<div class="col-7-12 padr rt-value right">{{radius}} m radius</div>
 				</div>
 				{{/area}} {{#duration}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Duration</div>
-					<div class="col-7-12 padr rt-value center">{{time}}</div>
+					<div class="col-7-12 padr rt-value right">{{time}}</div>
 				</div>
 				{{/duration}} {{#range}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Range</div>
-					<div class="col-7-12 padr rt-value center">{{range}}</div>
+					<div class="col-7-12 padr rt-value right">{{range}}</div>
 				</div>
 				{{/range}} {{#autofire}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Autofire</div>
 					{{#rollTotal() roll 2}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits2}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits2}}/{{rof}}</div>
 					{{/rollTotal() roll 2}} {{#rollTotal() roll 3}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits3}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits3}}/{{rof}}</div>
 					{{/rollTotal() roll 3}} {{#rollTotal() roll 4}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits4}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits4}}/{{rof}}</div>
 					{{/rollTotal() roll 4}} {{#rollTotal() roll 5}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits5}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits5}}/{{rof}}</div>
 					{{/rollTotal() roll 5}} {{#rollTotal() roll 6}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits6}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits6}}/{{rof}}</div>
 					{{/rollTotal() roll 6}} {{#rollTotal() roll 7}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits7}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits7}}/{{rof}}</div>
 					{{/rollTotal() roll 7}} {{#rollTotal() roll 8}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits8}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits8}}/{{rof}}</div>
 					{{/rollTotal() roll 8}} {{#rollTotal() roll 9}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits9}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits9}}/{{rof}}</div>
 					{{/rollTotal() roll 9}} {{#rollTotal() roll 10}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits10}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits10}}/{{rof}}</div>
 					{{/rollTotal() roll 10}} {{#rollTotal() roll 11}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits11}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits11}}/{{rof}}</div>
 					{{/rollTotal() roll 11}} {{#rollTotal() roll 12}}
-					<div class="col-7-12 padr rt-value center">hits: {{hits12}}/{{rof}}</div>
+					<div class="col-7-12 padr rt-value right">hits: {{hits12}}/{{rof}}</div>
 					{{/rollTotal() roll 12}}
 				</div>
 				{{/autofire}} {{#blight}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Blight</div>
-					<div class="col-7-12 padr rt-value center">Body vs TN{{blight}}</div>
+					<div class="col-7-12 padr rt-value right">Body vs TN{{blight}}</div>
 				</div>
 				{{/blight}} {{#contact}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Contact</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/contact}} {{#contagious}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Contagious</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/contagious}} {{#continuing}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Continuing Damage</div>
 					{{#rollTotal() roll 2}}
-					<div class="col-7-12 padr rt-value center">{{continuing2}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing2}}</div>
 					{{/rollTotal() roll 2}} {{#rollTotal() roll 3}}
-					<div class="col-7-12 padr rt-value center">{{continuing3}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing3}}</div>
 					{{/rollTotal() roll 3}} {{#rollTotal() roll 4}}
-					<div class="col-7-12 padr rt-value center">{{continuing4}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing4}}</div>
 					{{/rollTotal() roll 4}} {{#rollTotal() roll 5}}
-					<div class="col-7-12 padr rt-value center">{{continuing5}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing5}}</div>
 					{{/rollTotal() roll 5}} {{#rollTotal() roll 6}}
-					<div class="col-7-12 padr rt-value center">{{continuing6}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing6}}</div>
 					{{/rollTotal() roll 6}} {{#rollTotal() roll 7}}
-					<div class="col-7-12 padr rt-value center">{{continuing7}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing7}}</div>
 					{{/rollTotal() roll 7}} {{#rollTotal() roll 8}}
-					<div class="col-7-12 padr rt-value center">{{continuing8}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing8}}</div>
 					{{/rollTotal() roll 8}} {{#rollTotal() roll 9}}
-					<div class="col-7-12 padr rt-value center">{{continuing9}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing9}}</div>
 					{{/rollTotal() roll 9}} {{#rollTotal() roll 10}}
-					<div class="col-7-12 padr rt-value center">{{continuing10}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing10}}</div>
 					{{/rollTotal() roll 10}} {{#rollTotal() roll 11}}
-					<div class="col-7-12 padr rt-value center">{{continuing11}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing11}}</div>
 					{{/rollTotal() roll 11}} {{#rollTotal() roll 12}}
-					<div class="col-7-12 padr rt-value center">{{continuing12}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing12}}</div>
 					{{/rollTotal() roll 12}}
 				</div>
 				{{/continuing}} {{#drain}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Drain</div>
-					<div class="col-7-12 padr rt-value center">{{draintype}} -{{drain}}</div>
+					<div class="col-7-12 padr rt-value right">{{draintype}} -{{drain}}</div>
 				</div>
 				{{/drain}} {{#enervation}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Enervation</div>
-					<div class="col-7-12 padr rt-value center">Energy -{{enervation}}</div>
+					<div class="col-7-12 padr rt-value right">Energy -{{enervation}}</div>
 				</div>
 				{{/enervation}} {{#flare}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Flare ({{sense}})</div>
-					<div class="col-7-12 padr rt-value center">{{obstacle}} Obstacle vs. TN 12</div>
+					<div class="col-7-12 padr rt-value right">{{obstacle}} Obstacle vs. TN 12</div>
 				</div>
 				{{/flare}} {{#flexible}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Flexible</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/flexible}} {{#helper}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Helper</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/helper}} {{#homing}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Homing</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/homing}} {{#incapacitating}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Incapacitating</div>
-					<div class="col-7-12 padr rt-value center">{{obstacle}} vs. TN 12</div>
+					<div class="col-7-12 padr rt-value right">{{obstacle}} vs. TN 12</div>
 				</div>
 				{{/incapacitating}} {{#inconspicuous}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Inconspicuous</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/inconspicuous}} {{#incurable}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Incurable</div>
-					<div class="col-7-12 padr rt-value center">{{recovery}}</div>
+					<div class="col-7-12 padr rt-value right">{{recovery}}</div>
 				</div>
 				{{/incurable}} {{#irritant}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Irritant</div>
-					<div class="col-7-12 padr rt-value center">{{obstacle}} vs. TN 12</div>
+					<div class="col-7-12 padr rt-value right">{{obstacle}} vs. TN 12</div>
 				</div>
 				{{/irritant}} {{#knockback}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Knockback</div>
-					<div class="col-7-12 padr rt-value center">x{{kb}}</div>
+					<div class="col-7-12 padr rt-value right">x{{kb}}</div>
 				</div>
 				{{/knockback}} {{#multidimensional}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Multidimensional</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/multidimensional}} {{#pen}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">{{pentype}}</div>
-					<div class="col-7-12 padr rt-value center">{{penname}} -{{pen}}</div>
+					<div class="col-7-12 padr rt-value right">{{penname}} -{{pen}}</div>
 				</div>
 				{{/pen}} {{#psychic}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Psychic</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/psychic}} {{#quake}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Quake</div>
-					<div class="col-7-12 padr rt-value center">{{fissure}} m deep fissure</div>
+					<div class="col-7-12 padr rt-value right">{{fissure}} m deep fissure</div>
 				</div>
 				{{/quake}} {{#reach}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Reach</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/reach}} {{#selective}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Selective</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/selective}} {{#spreading}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Spreading</div>
-					<div class="col-7-12 padr rt-value center">{{spreading}} additional target</div>
+					<div class="col-7-12 padr rt-value right">{{spreading}} additional target</div>
 				</div>
 				{{/spreading}} {{#tangle}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Tangle</div>
-					<div class="col-7-12 padr rt-value center">{{tangle}} HP</div>
+					<div class="col-7-12 padr rt-value right">{{tangle}} HP</div>
 				</div>
 				{{/tangle}} {{#targeted}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Targeted</div>
-					<div class="col-7-12 padr rt-value center">x2 vs {{hasenemy}}</div>
+					<div class="col-7-12 padr rt-value right">x2 vs {{hasenemy}}</div>
 				</div>
 				{{/targeted}} {{#vampiric}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Vampiric</div>
-					<div class="col-7-12 padr rt-value center">{{stolenhealth}} health</div>
+					<div class="col-7-12 padr rt-value right">{{stolenhealth}} health</div>
 				</div>
 				{{/vampiric}} {{#ammo}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Ammo</div>
-					<div class="col-7-12 padr rt-value center">{{ammunition}}</div>
+					<div class="col-7-12 padr rt-value right">{{ammunition}}</div>
 				</div>
 				{{/ammo}} {{#backblast}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Backblast Affects</div>
-					<div class="col-7-12 padr rt-value center">{{bystander}}</div>
+					<div class="col-7-12 padr rt-value right">{{bystander}}</div>
 				</div>
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Backblast Damage</div>
 					{{#rollTotal() roll 2}}
-					<div class="col-7-12 padr rt-value center">{{continuing2}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing2}}</div>
 					{{/rollTotal() roll 2}} {{#rollTotal() roll 3}}
-					<div class="col-7-12 padr rt-value center">{{continuing3}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing3}}</div>
 					{{/rollTotal() roll 3}} {{#rollTotal() roll 4}}
-					<div class="col-7-12 padr rt-value center">{{continuing4}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing4}}</div>
 					{{/rollTotal() roll 4}} {{#rollTotal() roll 5}}
-					<div class="col-7-12 padr rt-value center">{{continuing5}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing5}}</div>
 					{{/rollTotal() roll 5}} {{#rollTotal() roll 6}}
-					<div class="col-7-12 padr rt-value center">{{continuing6}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing6}}</div>
 					{{/rollTotal() roll 6}} {{#rollTotal() roll 7}}
-					<div class="col-7-12 padr rt-value center">{{continuing7}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing7}}</div>
 					{{/rollTotal() roll 7}} {{#rollTotal() roll 8}}
-					<div class="col-7-12 padr rt-value center">{{continuing8}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing8}}</div>
 					{{/rollTotal() roll 8}} {{#rollTotal() roll 9}}
-					<div class="col-7-12 padr rt-value center">{{continuing9}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing9}}</div>
 					{{/rollTotal() roll 9}} {{#rollTotal() roll 10}}
-					<div class="col-7-12 padr rt-value center">{{continuing10}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing10}}</div>
 					{{/rollTotal() roll 10}} {{#rollTotal() roll 11}}
-					<div class="col-7-12 padr rt-value center">{{continuing11}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing11}}</div>
 					{{/rollTotal() roll 11}} {{#rollTotal() roll 12}}
-					<div class="col-7-12 padr rt-value center">{{continuing12}}</div>
+					<div class="col-7-12 padr rt-value right">{{continuing12}}</div>
 					{{/rollTotal() roll 12}}
 				</div>
 				{{/backblast}} {{#exclusive}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Exclusive</div>
-					<div class="col-7-12 padr rt-value center">{{hasenemy}}</div>
+					<div class="col-7-12 padr rt-value right">{{hasenemy}}</div>
 				</div>
 				{{/exclusive}} {{#fieldless}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Fieldless</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/fieldless}} {{#nostun}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">No Stun</div>
-					<div class="col-7-12 padr rt-value center"></div>
+					<div class="col-7-12 padr rt-value right"></div>
 				</div>
 				{{/nostun}} {{#nonpenetrating}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Non-penetrating</div>
-					<div class="col-7-12 padr rt-value center">AR +{{wontpenetrate}}</div>
+					<div class="col-7-12 padr rt-value right">AR +{{wontpenetrate}}</div>
 				</div>
 				{{/nonpenetrating}} {{#stoppable}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Stoppable</div>
-					<div class="col-7-12 padr rt-value center">{{timetostop}}</div>
+					<div class="col-7-12 padr rt-value right">{{timetostop}}</div>
 				</div>
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Stoppable</div>
-					<div class="col-7-12 padr rt-value center">{{stopdamage}}</div>
+					<div class="col-7-12 padr rt-value right">{{stopdamage}}</div>
 				</div>
 				{{/stoppable}} {{#toxic}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Toxic</div>
-					<div class="col-7-12 padr rt-value center">{{escapable}}</div>
+					<div class="col-7-12 padr rt-value right">{{escapable}}</div>
 				</div>
 				{{/toxic}} {{#unreliable}}
-				<div class="row">
+				<div class="row actionrow">
 					<div class="col-5-12 padl padr rt-key">Unreliable</div>
-					<div class="col-7-12 padr rt-value center">Die roll of {{failure}}</div>
+					<div class="col-7-12 padr rt-value right">Die roll of {{failure}}</div>
 				</div>
 				{{/unreliable}} {{#defense}}
 				<div class="rt-emote"><i>{{character_name}} defends{{#target_name}} {{target_name}}{{/target_name}} with {{pronoun}} {{weapon_name}}!</i></div>
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Maneuver</div>
-					<div class="col-7-12 padr rt-value center">{{maneuver}}</div>
+					<div class="col-7-12 padr rt-value right rt-noncomputedvalue">{{maneuver}}</div>
 				</div>
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">DCV</div>
-					<div class="col-7-12 padr rt-value center"><b>{{dcv}}</b></div>
+					<div class="col-7-12 padr rt-value right rt-hideroll">{{dcv}}</div>
 				</div>
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Roll</div>
-					<div class="col-7-12 padr rt-value center">{{roll1}}</div>
+					<div class="col-7-12 padr rt-value right">{{roll1}}</div>
 				</div>
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{computed::roll1}}</div>
+					<div class="col-7-12 padr rt-value right rt-hideroll">{{computed::roll1}}</div>
 				</div>
 				{{#forcefield}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Forcefield</div>
-					<div class="col-7-12 padr rt-value center">{{forcefield}}</div>
+					<div class="col-7-12 padr rt-value right">{{forcefield}}</div>
 				</div>
 				{{/forcefield}} {{#armor1}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Primary Armor</div>
-					<div class="col-7-12 padr rt-value center">{{armor1}}</div>
+					<div class="col-7-12 padr rt-value right">{{armor1}}</div>
 				</div>
 				{{/armor1}} {{#armor2}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Secondary Armor</div>
-					<div class="col-7-12 padr rt-value center">{{armor2}}</div>
+					<div class="col-7-12 padr rt-value right">{{armor2}}</div>
 				</div>
 				{{/armor2}} {{#armor3}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Tertiary Armor</div>
-					<div class="col-7-12 padr rt-value center">{{armor3}}</div>
+					<div class="col-7-12 padr rt-value right">{{armor3}}</div>
 				</div>
 				{{/armor3}} {{#mindshield}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Mind Shield</div>
-					<div class="col-7-12 padr rt-value center">{{mindshield}}</div>
+					<div class="col-7-12 padr rt-value right">{{mindshield}}</div>
 				</div>
 				{{/mindshield}} {{#absorption1}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Absorption - Health</div>
-					<div class="col-7-12 padr rt-value center">{{absorption1}}</div>
+					<div class="col-7-12 padr rt-value right">{{absorption1}}</div>
 				</div>
 				{{/absorption1}} {{#absorption2}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Absorption - Energy</div>
-					<div class="col-7-12 padr rt-value center">{{absorption2}}</div>
+					<div class="col-7-12 padr rt-value right">{{absorption2}}</div>
 				</div>
 				{{/absorption2}} {{#conversion}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Conversion</div>
-					<div class="col-7-12 padr rt-value center">{{conversion}}</div>
+					<div class="col-7-12 padr rt-value right">{{conversion}}</div>
 				</div>
 				{{/conversion}}
-				<div class="row">
-					<div class="col-5-12 padl padr rt-key">{{damageclass}}Damage</div>
-					<div class="col-7-12 padr rt-value center">{{damage}}</div>
+				<div class="row reactionrow">
+					<div class="col-5-12 padl padr rt-key">Wounds</div>
+					<div class="col-7-12 padr rt-value right">{{damage}}</div>
 				</div>
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Shock TN</div>
-					<div class="col-7-12 padr rt-value center">{{shock}}</div>
+					<div class="col-7-12 padr rt-value right">{{shock}}</div>
 				</div>
 				{{/defense}} {{#doesnothing}}
 				<div class="rt-emote"><i>{{character_name}} does nothing...</i></div>
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Melee</div>
-					<div class="col-7-12 padr rt-value center">TN 0</div>
+					<div class="col-7-12 padr rt-value right">TN 0</div>
 				</div>
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Ranged</div>
-					<div class="col-7-12 padr rt-value center">TN 12</div>
+					<div class="col-7-12 padr rt-value right">TN 12</div>
 				</div>
 				{{#forcefield}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Forcefield</div>
-					<div class="col-7-12 padr rt-value center">{{forcefield}}</div>
+					<div class="col-7-12 padr rt-value right">{{forcefield}}</div>
 				</div>
 				{{/forcefield}} {{#shield}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Shield</div>
-					<div class="col-7-12 padr rt-value center">{{shield}}</div>
+					<div class="col-7-12 padr rt-value right">{{shield}}</div>
 				</div>
 				{{/shield}} {{#armor1}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Primary Armor</div>
-					<div class="col-7-12 padr rt-value center">{{armor1}}</div>
+					<div class="col-7-12 padr rt-value right">{{armor1}}</div>
 				</div>
 				{{/armor1}} {{#armor2}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Secondary Armor</div>
-					<div class="col-7-12 padr rt-value center">{{armor2}}</div>
+					<div class="col-7-12 padr rt-value right">{{armor2}}</div>
 				</div>
 				{{/armor2}} {{#armor3}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Tertiary Armor</div>
-					<div class="col-7-12 padr rt-value center">{{armor3}}</div>
+					<div class="col-7-12 padr rt-value right">{{armor3}}</div>
 				</div>
 				{{/armor3}} {{#mindshield}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Mind Shield</div>
-					<div class="col-7-12 padr rt-value center">{{mindshield}}</div>
+					<div class="col-7-12 padr rt-value right">{{mindshield}}</div>
 				</div>
 				{{/mindshield}} {{#absorption1}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Absorption - Health</div>
-					<div class="col-7-12 padr rt-value center">{{absorption1}}</div>
+					<div class="col-7-12 padr rt-value right">{{absorption1}}</div>
 				</div>
 				{{/absorption1}} {{#absorption2}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Absorption - Energy</div>
-					<div class="col-7-12 padr rt-value center">{{absorption2}}</div>
+					<div class="col-7-12 padr rt-value right">{{absorption2}}</div>
 				</div>
 				{{/absorption2}} {{#conversion}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Conversion</div>
-					<div class="col-7-12 padr rt-value center">{{conversion}}</div>
+					<div class="col-7-12 padr rt-value right">{{conversion}}</div>
 				</div>
 				{{/conversion}}
-				<div class="row">
+				<div class="row reactionrow">
 					<div class="col-5-12 padl padr rt-key">Shock Value</div>
-					<div class="col-7-12 padr rt-value center">{{shockvalue}}</div>
+					<div class="col-7-12 padr rt-value right">{{shockvalue}}</div>
 				</div>
 				{{/doesnothing}} {{#twodsix}}
 				<div class="rt-emote"><i>{{character_name}} rolls 2d6...</i></div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{total}}</div>
+					<div class="col-7-12 padr rt-value right">{{total}}</div>
 				</div>
 				{{/twodsix}} {{#acvroll}}
 				<div class="rt-emote"><i>{{character_name}} rolls {{pronoun}} ACV</i></div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">ACV</div>
-					<div class="col-7-12 padr rt-value center"><b>{{acv}}</b></div>
+					<div class="col-7-12 padr rt-value right"><b>{{acv}}</b></div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Roll</div>
-					<div class="col-7-12 padr rt-value center">{{roll}}</div>
+					<div class="col-7-12 padr rt-value right">{{roll}}</div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{total}}</div>
+					<div class="col-7-12 padr rt-value right">{{total}}</div>
 				</div>
 				{{/acvroll}} {{#dcvroll}}
 				<div class="rt-emote"><i>{{character_name}} rolls {{pronoun}} DCV</i></div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">DCV</div>
-					<div class="col-7-12 padr rt-value center"><b>{{dcv}}</b></div>
+					<div class="col-7-12 padr rt-value right"><b>{{dcv}}</b></div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Roll</div>
-					<div class="col-7-12 padr rt-value center">{{roll}}</div>
+					<div class="col-7-12 padr rt-value right">{{roll}}</div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{total}}</div>
+					<div class="col-7-12 padr rt-value right">{{total}}</div>
 				</div>
 				{{#forcefield}}
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Forcefield</div>
-					<div class="col-7-12 padr rt-value center">{{forcefield}}</div>
+					<div class="col-7-12 padr rt-value right">{{forcefield}}</div>
 				</div>
 				{{/forcefield}} {{#armor1}}
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Primary Armor</div>
-					<div class="col-7-12 padr rt-value center">{{armor1}}</div>
+					<div class="col-7-12 padr rt-value right">{{armor1}}</div>
 				</div>
 				{{/armor1}} {{#armor2}}
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Secondary Armor</div>
-					<div class="col-7-12 padr rt-value center">{{armor2}}</div>
+					<div class="col-7-12 padr rt-value right">{{armor2}}</div>
 				</div>
 				{{/armor2}} {{#armor3}}
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Tertiary Armor</div>
-					<div class="col-7-12 padr rt-value center">{{armor3}}</div>
+					<div class="col-7-12 padr rt-value right">{{armor3}}</div>
 				</div>
 				{{/armor3}} {{#mindshield}}
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Mind Shield</div>
-					<div class="col-7-12 padr rt-value center">{{mindshield}}</div>
+					<div class="col-7-12 padr rt-value right">{{mindshield}}</div>
 				</div>
 				{{/mindshield}} {{#absorption1}}
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Absorption - Health</div>
-					<div class="col-7-12 padr rt-value center">{{absorption1}}</div>
+					<div class="col-7-12 padr rt-value right">{{absorption1}}</div>
 				</div>
 				{{/absorption1}} {{#absorption2}}
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Absorption - Energy</div>
-					<div class="col-7-12 padr rt-value center">{{absorption2}}</div>
+					<div class="col-7-12 padr rt-value right">{{absorption2}}</div>
 				</div>
 				{{/absorption2}} {{#conversion}}
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Conversion</div>
-					<div class="col-7-12 padr rt-value center">{{conversion}}</div>
+					<div class="col-7-12 padr rt-value right">{{conversion}}</div>
 				</div>
 				{{/conversion}}
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Shock Value</div>
-					<div class="col-7-12 padr rt-value center">{{shockvalue}}</div>
+					<div class="col-7-12 padr rt-value right">{{shockvalue}}</div>
 				</div>
 				{{/dcvroll}} {{#initiative}}
 				<div class="rt-emote"><i>{{character_name}} rolls {{pronoun}} initiative</i></div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Base</div>
-					<div class="col-7-12 padr rt-value center"><b>{{acv}}</b></div>
+					<div class="col-7-12 padr rt-value right"><b>{{acv}}</b></div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Roll</div>
-					<div class="col-7-12 padr rt-value center">{{roll}}</div>
+					<div class="col-7-12 padr rt-value right">{{roll}}</div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{total}}</div>
+					<div class="col-7-12 padr rt-value right">{{total}}</div>
 				</div>
 				{{/initiative}} {{#perception}}
 				<div class="rt-emote"><i>{{character_name}} rolls {{pronoun}} perception</i></div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Base</div>
-					<div class="col-7-12 padr rt-value center"><b>{{perception}}</b></div>
+					<div class="col-7-12 padr rt-value right"><b>{{perception}}</b></div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Roll</div>
-					<div class="col-7-12 padr rt-value center">{{roll}}</div>
+					<div class="col-7-12 padr rt-value right">{{roll}}</div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{total}}</div>
+					<div class="col-7-12 padr rt-value right">{{total}}</div>
 				</div>
 				{{/perception}} {{#statroll}}
 				<div class="rt-emote"><i>{{character_name}} rolls {{pronoun}} stat(s)</i></div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Base</div>
-					<div class="col-7-12 padr rt-value center"><b>{{base}}</b></div>
+					<div class="col-7-12 padr rt-value right"><b>{{base}}</b></div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Roll</div>
-					<div class="col-7-12 padr rt-value center">{{roll}}</div>
+					<div class="col-7-12 padr rt-value right">{{roll}}</div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{total}}</div>
+					<div class="col-7-12 padr rt-value right">{{total}}</div>
 				</div>
 				{{/statroll}} {{#skillroll}}
 				<div class="rt-emote"><i>{{character_name}} rolls {{pronoun}} skill</i></div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Base</div>
-					<div class="col-7-12 padr rt-value center"><b>{{base}}</b></div>
+					<div class="col-7-12 padr rt-value right"><b>{{base}}</b></div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Roll</div>
-					<div class="col-7-12 padr rt-value center">{{roll}}</div>
+					<div class="col-7-12 padr rt-value right">{{roll}}</div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{total}}</div>
+					<div class="col-7-12 padr rt-value right">{{total}}</div>
 				</div>
 				{{/skillroll}} {{#attrroll}}
 				<div class="rt-emote"><i>{{character_name}} rolls {{pronoun}} {{attribute}}</i></div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Base</div>
-					<div class="col-7-12 padr rt-value center"><b>{{base}}</b></div>
+					<div class="col-7-12 padr rt-value right"><b>{{base}}</b></div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Roll</div>
-					<div class="col-7-12 padr rt-value center">{{roll}}</div>
+					<div class="col-7-12 padr rt-value right">{{roll}}</div>
 				</div>
 				<div class="row">
 					<div class="col-5-12 padl padr rt-key">Total</div>
-					<div class="col-7-12 padr rt-value center">{{total}}</div>
+					<div class="col-7-12 padr rt-value right">{{total}}</div>
 				</div>
 				{{/attrroll}}
 			</div>
@@ -7877,10 +7868,10 @@
 		const combat_stats_array = ['static_weapon_autofire_selection','weapon_ammo_capacity','weapon_ammo_reloads','static_weapon_range_selection','mainhand_state', 'offhand_state', 'mainhand_source', 'offhand_source', 'extraarms', 'extraarms_inuse', 'static_button_targeted_rushdamage', 'static_button_targeted_damage', 'static_button_targeted_attack', 'static_button_targeted_defense', 'massivedamage_targeted', 'massivedamage', 'enemyattack', 'enemydefense'];
 		const size_template_values_array = ['size', 'height', 'mass', 'size_lift', 'size_strdmg', 'size_ar', 'size_extradmg', 'size_rnghitdef', 'size_rngspd'];
 		const size_template_keys_array = ['name','rank','cost','height','mass','lift','strdmg','ar','extradmg','rnghitdef','rngspd'];
-		const all_attributes_array = ['absorption','alternate form','alternate identity','armor','attack mastery','augmented','capacity','change state','cognition','combat technique','companion','connected','control environment','conversion','data access','defect','defense mastery','dimension walk','dynamic powers','elasticity','enemy attack','enemy defense','energized','exorcism','extra actions','extra arms','extra defenses','features','flight','forcefield','gear','ground speed','healing','heightened awareness','heightened senses','illusion','immovable','immunity','immutable','inspire','jumping','massive damage','melee attack','melee defense','merge','metamorphosis','mimic','mind control','mind shield','minions','mulligan','nullify','plant control','pocket dimension','portal','power flux','power variation','projection','ranged attack','ranged defense','regeneration','reincarnation','resilient','sensory block','shield','sixth sense','size change','skill','social mastery','spaceflight','special movement','summon creatures','supersense','superspeed','superstrength','swarm','telekinesis','telepathy','teleport','tough','transfer','transmute','tunneling','unaffected','unassailable','undetectable','unique attribute','unknown power','water speed','wealth','weapon'];
-		const all_attributes_regex = /(absorption|alternate form|alternate identity|armor|attack mastery|augmented|capacity|change state|cognition|combat technique|companion|connected|control environment|conversion|data access|defect|defense mastery|dimension walk|dynamic powers|elasticity|enemy attack|enemy defense|energized|exorcism|extra actions|extra arms|extra defenses|features|flight|forcefield|gear|ground speed|healing|heightened awareness|heightened senses|illusion|immovable|immunity|immutable|inspire|jumping|massive damage|melee attack|melee defense|merge|metamorphosis|mimic|mind control|mind shield|minions|mulligan|nullify|plant control|pocket dimension|portal|power flux|power variation|projection|ranged attack|ranged defense|regeneration|reincarnation|resilient|sensory block|shield|sixth sense|size change|skill|social mastery|spaceflight|special movement|summon creatures|supersense|superspeed|superstrength|swarm|telekinesis|telepathy|teleport|tough|transfer|transmute|tunneling|unaffected|unassailable|undetectable|unique attribute|unknown power|water speed|wealth|weapon)/i;
-		const all_defects_array = ["achilles heel","awkward size","bane","blind fury","conditional ownership","confined","cursed","demure","easily distracted","fragile","hounded","impaired manipulation","impaired speech","inept attack","inept defense","involuntary change","ism","magnet","marked","nemesis","nightmares","no healing","obligated","phobia","physical impairment","red tape","reduced damage","sensory impairment","shortcoming","significant other","skeleton in the closet","social fault","special requirement","unappealing","unique defect","unsettled","vulnerability","wanted","weak point"];
-		//const all_defects_regex = /(achilles heel|awkward size|bane|blind fury|conditional ownership|confined|cursed|demure|easily distracted|fragile|hounded|impaired manipulation|impaired speech|inept attack|inept defense|involuntary change|ism|magnet|marked|nemesis|nightmares|no healing|obligated|phobia|physical impairment|red tape|reduced damage|sensory impairment|shortcoming|significant other|skeleton in the closet|social fault|special requirement|unappealing|unique defect|unsettled|vulnerability|wanted|weak point)/i;
+		const all_attributes_array = ['absorption','alternate form','alternate identity','armor','attack mastery','augmented','capacity','change state','cognition','combat technique','companion','connected','control environment','conversion','data access','defect','defense mastery','dimension walk','dynamic powers','elasticity','enemy attack','enemy defense','energized','exorcism','extra actions','extra arms','extra defenses','features','flight','forcefield','gear','ground speed','healing','heightened awareness','heightened senses','illusion','immovable','immunity','immutable','inspire','jumping','massive damage','melee attack','melee defense','merge','metamorphosis','mimic','mind control','mind shield','minions','mulligan','nullify','plant control','pocket dimension','portal','power flux','power variation','projection','ranged attack','ranged defense','regeneration','reincarnation','resilient','sensory block','shield','sixth sense','size change','skill','social mastery','spaceflight','special movement','summon creatures','supersense','superspeed','superstrength','swarm','telekinesis','telepathy','teleport','tough','transfer','transmute','tunneling','unaffected','unassailable','undetectable','unique attribute','unknown power','water speed','wealth','weapon'];
+		const all_attributes_regex = /(absorption|alternate form|alternate identity|armor|attack mastery|augmented|capacity|change state|cognition|combat technique|companion|connected|control environment|conversion|data access|defect|defense mastery|dimension walk|dynamic powers|elasticity|enemy attack|enemy defense|energized|exorcism|extra actions|extra arms|extra defenses|features|flight|forcefield|gear|ground speed|healing|heightened awareness|heightened senses|illusion|immovable|immunity|immutable|inspire|jumping|massive damage|melee attack|melee defense|merge|metamorphosis|mimic|mind control|mind shield|minions|mulligan|nullify|plant control|pocket dimension|portal|power flux|power variation|projection|ranged attack|ranged defense|regeneration|reincarnation|resilient|sensory block|shield|sixth sense|size change|skill|social mastery|spaceflight|special movement|summon creatures|supersense|superspeed|superstrength|swarm|telekinesis|telepathy|teleport|tough|transfer|transmute|tunneling|unaffected|unassailable|undetectable|unique attribute|unknown power|water speed|wealth|weapon)/i;
+		const all_defects_array = ["achilles heel","awkward size","bane","blind fury","conditional ownership","confined","cursed","demure","easily distracted","fragile","hounded","impaired manipulation","impaired speech","inept attack","inept defense","involuntary change","ism","magnet","marked","nemesis","nightmares","no healing","obligated","phobia","physical impairment","red tape","reduced damage","sensory impairment","shortcoming","significant other","skeleton in the closet","social fault","special requirement","unappealing","unique defect","unsettled","vulnerability","wanted","weak point"];
+		//const all_defects_regex = /(achilles heel|awkward size|bane|blind fury|conditional ownership|confined|cursed|demure|easily distracted|fragile|hounded|impaired manipulation|impaired speech|inept attack|inept defense|involuntary change|ism|magnet|marked|nemesis|nightmares|no healing|obligated|phobia|physical impairment|red tape|reduced damage|sensory impairment|shortcoming|significant other|skeleton in the closet|social fault|special requirement|unappealing|unique defect|unsettled|vulnerability|wanted|weak point)/i;
 		const lesser_defects_regex = /(conditionalownership|demure|easilydistracted|fragile|ineptattack|ineptdefense|involuntarychange|magnet|marked|nemesis|nightmares|phobia|redtape|shortcoming|significantother|socialfault|unappealing|unsettled)/i;
 		const serious_defects_regex = /(confined|impairedmanipulation|impairedspeech|nohealing|physicalimpairment|reduceddamage|sensoryimpairment|specialrequirement)/i;
 		const greater_defects_regex = /(achillesheel|awkwardsize|bane|blindfury|cursed|hounded|ism|obligated|skeletoninthecloset|vulnerability|wanted|weakpoint)/i;
@@ -7915,7 +7906,6 @@
 		
 		/** Utility Functions **/
 		const asw = (() => {
-			/*
 			const setActiveCharacterId = function(charId){
 				let oldAcid=getActiveCharacterId();
 				let ev = new CustomEvent("message");
@@ -7923,72 +7913,37 @@
 				self.dispatchEvent(ev);
 				return oldAcid;
 			};
-			*/
 			const promisifyWorker = (worker, parameters) => {
-				//let acid=getActiveCharacterId(); 
-				//let prevAcid=null;               
+				let acid=getActiveCharacterId(); 
+				let prevAcid=null;               
 				return new Promise((res,rej)=>{
-					//prevAcid=setActiveCharacterId(acid);  
+					prevAcid=setActiveCharacterId(acid);  
 					try {if (worker===0) getAttrs(parameters[0]||[],(v)=>res(v));
 						else if (worker===1) setAttrs(parameters[0]||{}, parameters[1]||{},(v)=>res(v));
 						else if (worker===2) getSectionIDs(parameters[0]||'',(v)=>res(v));
 					} catch(err) {rej(console.error(err))}
-				}).finally();//()=>setActiveCharacterId(prevAcid));
+				}).finally(()=>setActiveCharacterId(prevAcid));
 			}
 			return {
 				getAttrs(attrArray) {return promisifyWorker(0, [attrArray])},
 				setAttrs(attrObj, options) {return promisifyWorker(1, [attrObj, options])},
 				getSectionIDs(section) {return promisifyWorker(2, [section])},
-				//setActiveCharacterId,
+				setActiveCharacterId,
 			}
 		})();
-		/*
-		const getTarget = () => {
+		
+		const getTarget = async () => {
 			const rxGrab = /^0\[(.*)\]\s*$/;
-			const target = {}
-			const rollBase = `! {{charname=[[0[@{target|character_name}] ]]}} {{charid= [[0[@{target|character_id}] ]]}} }}`;
-			startRoll(rollBase, (targetRoll) => {
+			let rollBase = `! {{charname=[[0[@{target|h1|character_name}] ]]}} {{charid=[[0[@{target|h1|character_id}] ]]}}}}`,
+				targetRoll = await startRoll(rollBase),
 				target = {
 					name: targetRoll.results.charname.expression.match(rxGrab)[1],
 					id: targetRoll.results.charid.expression.match(rxGrab)[1],
 				};
-				finishRoll(targetRoll.rollId);
-			});
+			finishRoll(targetRoll.rollId);
 			return target;
 		}
-		/*
-		const getAttacker = async () => {
-			const rxGrab = /^0\[(.*)\]\s*$/;
-			const rollBase = `! ` +
-				`{{name=[[0[@{target|character_name}] ]]}} ` +
-				`{{roll=[[0[@{target|attack_roll}] ]]}} ` +
-				`{{damage=[[0[@{target|attack_damage}] ]]}} ` +
-				`{{damagetype=[[0[@{target|attack_damagetype}] ]]}}` +
-				`{{knockback=[[0[@{target|attack_knockback}] ]]}} ` +
-				`{{isstun=[[0[@{target|attack_isstun}] ]]}} ` +
-				`{{hasinsidious=[[0[@{target|attack_hasinsidious}] ]]}} ` +
-				`{{haspsychic=[[0[@{target|attack_haspsychic}] ]]}} `+
-				`}}`;
-			const getAttackerRoll = await startRoll(rollBase);
-			clog(2, {}, 'getAttackerRoll:', getAttackerRoll, 'getAttacker(TEST)');
-			const attacker = {
-				name: getAttackerRoll.results.name.expression.match(rxGrab)[1],
-				roll: parseInt(getAttackerRoll.results.roll.expression.match(rxGrab)[1]),
-			};
-			attacker.weapon = {
-				damagetype: getAttackerRoll.results.damagetype.expression.match(rxGrab)[1],
-				knockback: parseInt(getAttackerRoll.results.knockback.expression.match(rxGrab)[1]),
-				isstun: parseBoolean(getAttackerRoll.results.isstun.expression.match(rxGrab)[1]),
-				hasinsidious: parseBoolean(getAttackerRoll.results.hasinsidious.expression.match(rxGrab)[1]),
-				haspsychic: parseBoolean(getAttackerRoll.results.haspsychic.expression.match(rxGrab)[1]),
-			};
-			attacker.damage = {
-				total: parseInt(getAttackerRoll.results.damage.expression.match(rxGrab)[1]),
-			}
-			finishRoll(getAttackerRoll.rollId);
-			return attacker;
-		}
-		*/
+		
 		function getTimestamp(timer) {
 			const timeNow = Date.now();
 			const timeElapsed = timeNow - timer.start;
@@ -8057,16 +8012,6 @@
 			return (!str || str.length === 0);
 		}
 		
-		function isFalsey(v) {
-			const testFalsey = 
-				parseInt(v) === 0 ? true :
-				v === '' ? true :
-				v === null ? true :
-				v === undefined ? true :
-				false;
-			return testFalsey;
-		}
-		
 		function clog(debug, timer, text, data = '', title = '', type = 'event') {
 			//types = 'info', 'event'
 			//debug = 0:off, 1:info, 2:event, 3:performance
@@ -8082,14 +8027,6 @@
 				getTimestamp(timer);
 				console.log(`%crunTime[${timer.cache}] elapsedTime[${timer.elapsed}]`,'color:yellow');
 			}
-		}
-		
-		function parseBoolean(string) {
-			const boolean = 
-				string === 'true' ? true :
-				string === 'false' ? false :
-				undefined;
-			return boolean;
 		}
 		
 		function doUpgrade(value, sheetdb, attrIDs,sizetemplateIDs, setObj){
@@ -8211,21 +8148,6 @@
 			clog(2, {}, 'upgraded to 1.8.0');
 		}
 		
-		function upgradeTo_1_8_3(value, setObj) {
-			const statValues = [
-				parseInt(value.static_stat_base_body) || 0,
-				parseInt(value.static_stat_base_mind) || 0,
-				parseInt(value.static_stat_base_soul) || 0
-			];
-			clog(2, {}, 'statValues:', statValues, 'upgradeTo_1_8_3()');
-			_.each(statValues, (s, i) => {
-				const cost = getStatCost(2, {}, s);
-				clog(2, {}, 's =', s);
-				setObj[`stat_cost_${allaspects_stats_array[i]}`] = cost;
-			});
-			clog(2, {}, 'upgraded to 1.8.3');
-		}
-		
 		/** Build UI Functions **/
 		
 		function getSuperStrengthLift(debug, timer, level) {
@@ -8238,18 +8160,18 @@
 		
 		function setTotalLift(debug, timer, attrdb, value, setObj) {
 			const size = value.static_template_size_name;
-			const rank = parseInt(value.static_template_size_rank) || 0;
+			const rank = parseInt(value.static_template_size_rank);
 			clog(debug, timer, 'size =', size, 'setTotalLift()');
 			const liftMultiplier = size === 'Medium' ? 1 :
 				rank < 0 ? parseFloat(value.static_template_size_lift) :
-				parseInt(value.static_template_size_lift) || 0;
+				parseInt(value.static_template_size_lift);
 			clog(debug, timer, 'liftMultiplier =', liftMultiplier);
 			const ssdb = attrdb.superstrength;
 			const hasSuperStrength = ssdb === undefined ? false : 
 				_.chain(ssdb).pluck('level').reduce((p,c) => { return p + c; }, 0).value();
 			clog(debug, timer, 'hasSuperStrength =', hasSuperStrength);
 			const strValue = isNaN(parseInt(setObj.stat_total_str)) ?
-				parseInt(value.stat_total_str) || 0 : parseInt(setObj.stat_total_str);
+				parseInt(value.stat_total_str) : parseInt(setObj.stat_total_str);
 			const lift = hasSuperStrength ? parseInt(getSuperStrengthLift(debug, timer, hasSuperStrength)) : 
 				strValue * 25;
 			clog(debug, timer, 'lift =', lift);
@@ -8446,7 +8368,7 @@
 				'limiterassignments',
 				'lock',
 				'name',
-				//'new',
+				'new',
 				'object',
 				'objects',
 				'options',
@@ -8589,10 +8511,12 @@
 			const groupSourceID = value[`static_attrgroup_${groupid}_source`];
 			//const isPowerFlux = /flux/i.test(groupType);
 			const isPowerFlux = groupType.toLowerCase().indexOf('flux') !== -1 ? true : false;
-			const fluxcost = parseInt(value[`repeating_attr_${groupSourceID}_totalcost`]) || 0;
+			const fluxcost = parseInt(value[`repeating_attr_${groupSourceID}_totalcost`]);
+			//const aggregateAttrGroupCost = getAggregateAttrGroupCost(debug, timer, attrIDs, value, sectionName, rowID, setObj);
+			//const aggregateAttrGroupCost = parseInt(value[`static_attrgroup_${groupid}_groupcost`]);
 			const standardgroupcost = getStandardGroupCost(debug, timer, attrIDs, value, rowID, false, groupid, setObj);
 			const groupIsActive = groupSourceID !== false ? 
-				parseInt(value[`repeating_attr_${groupSourceID}_activate`]) || 0 :
+				parseInt(value[`repeating_attr_${groupSourceID}_activate`]) :
 				false;
 			const aggregateAttrGroupCost = 
 				isPowerFlux && groupIsActive ? 
@@ -8639,7 +8563,7 @@
 			const result =  
 				!isFlux ? 
 					false : //not flux group, keep running
-					groupSourceID === rowID ? 
+					groupSourceID == rowID ? 
 						false : //flux group source, keep running
 						isGroupActive ? 
 							false : //flux group is active, keep running
@@ -8654,18 +8578,18 @@
 			//const isPowerVariation = /variation/i.test(groupType);
 			const isPowerVariation = groupType.toLowerCase().indexOf('variation') !== -1 ? true : false;
 			const groupSourceID = value[`static_attrgroup_${groupid}_source`];
-			const groupIsActive = parseInt(value[`repeating_attr_${groupSourceID}_activate`]) || 0;
+			const groupIsActive = parseInt(value[`repeating_attr_${groupSourceID}_activate`]);
 			clog(debug, timer, 'isPowerVariation =', isPowerVariation, 'setPoolCostIfGroupIsVariation()');
 			if(!isPowerVariation || !groupIsActive){
 				clog(debug, timer, 'groupIsActive =', groupIsActive);
 				return;
 			}
-			const groupCost = parseInt(value[`repeating_attr_${groupSourceID}_totalcost`]) || 0;
+			const groupCost = parseInt(value[`repeating_attr_${groupSourceID}_totalcost`]);
 			const defect = value[`repeating_attr_${rowID}_attribute`];
 			const isDefect = defect.indexOf(defect) !== -1 ? true : false;
 			const attrcost = groupSourceID == rowID ? 0 : 
 				isDefect ? 0 :
-				parseInt(value[`repeating_attr_${rowID}_totalcost`]) || 0;
+				parseInt(value[`repeating_attr_${rowID}_totalcost`]);
 			const aggregateAttrCost = 
 				getAggregateAttrGroupCost(debug, timer, attrIDs, value, 'attr', rowID, setObj);
 			const poolcost = aggregateAttrCost - groupCost;
@@ -8682,7 +8606,7 @@
 			if(!isPowerFlux) return;
 			const groupSourceID = value[`static_attrgroup_${groupid}_source`];
 			clog(debug, timer, 'groupSourceID =', groupSourceID);
-			const groupCost = parseInt(value[`repeating_attr_${groupSourceID}_totalcost`]) || 0;
+			const groupCost = parseInt(value[`repeating_attr_${groupSourceID}_totalcost`]);
 			clog(debug, timer, 'groupCost =', groupCost);
 			const fluxactive = parseInt(value[`repeating_attr_${groupSourceID}_activate`]) || 0;
 			clog(debug, timer, 'fluxactive =', fluxactive);
@@ -8691,7 +8615,7 @@
 			clog(debug, timer, 'isDefect =', isDefect);
 			const attrcost = groupSourceID == rowID ? 0 : 
 				isDefect ? 0 :
-				parseInt(value[`repeating_attr_${rowID}_totalcost`]) || 0;
+				parseInt(value[`repeating_attr_${rowID}_totalcost`]);
 			clog(debug, timer, 'attrcost =', attrcost);
 			const isFluxActive = isPowerFlux && fluxactive ? true : false;
 			clog(debug, timer, 'isFluxActive =', isFluxActive);
@@ -8712,7 +8636,7 @@
 				2 : 1;
 			const result = 
 				Math.round((getAttrCostPerLevel(debug, timer, value, rowID) *
-				(parseInt(value[`repeating_attr_${rowID}_level`])) || 0) / isAltmunition);
+				parseInt(value[`repeating_attr_${rowID}_level`])) / isAltmunition);
 			clog(debug, timer, `repeating_attr_${rowID}_totalcost =`, result, 'setAttrCost()');
 			clog(debug, timer, `isWeapon =`, isWeapon);
 			clog(debug, timer, `isAltmunition =`, isAltmunition);
@@ -8733,7 +8657,7 @@
 			const groupSourceID = isPowerFlux || isPowerVariation ? 
 				value[`static_attrgroup_${groupid}_source`] : false;
 			const groupIsActive = groupSourceID !== false ? 
-				parseInt(value[`repeating_attr_${groupSourceID}_activate`]) || 0 :
+				parseInt(value[`repeating_attr_${groupSourceID}_activate`]) :
 				false;
 			const isVariationPool = isPowerVariation && groupIsActive ? true : false;
 			const standardgroupcost = getStandardGroupCost(debug, timer, attrIDs, value, rowID, isLevelChange, groupid, setObj, isVariationPool);
@@ -8745,7 +8669,7 @@
 				standardgroupcost;
 			const poolspent = 
 				isPowerFlux && groupIsActive ? 
-					parseInt(value[`static_attrgroup_${groupid}_spent`]) || 0 :
+					parseInt(value[`static_attrgroup_${groupid}_spent`]) :
 				isPowerVariation && groupIsActive ? 
 					getPowerVariationPoolCost(debug, timer, value, standardgroupcost, groupSourceID, groupid, setObj) :
 				0;
@@ -8764,7 +8688,7 @@
 		}
 		
 		function setAttrGroupPoolSpentByActivation(debug, timer, isActive, attrIDs, value, rowID, setObj) {
-			const groupid = parseInt(value[`repeating_attr_${rowID}_group`]) || 0; //getGroupID(value, 'attr');
+			const groupid = parseInt(value[`repeating_attr_${rowID}_group`]); //getGroupID(value, 'attr');
 			clog(debug, timer, 'groupid =', groupid, 'setAttrGroupPoolSpentByActivation()');
 			const groupType = 
 				value[`static_attrgroup_${groupid}_type`] || 'Standard';
@@ -8778,7 +8702,7 @@
 					true : false;
 			clog(debug, timer, 'isPowerVariation =', isPowerVariation);
 			if (isPowerFlux || isPowerVariation) {
-				const poolmax = parseInt(value[`static_attrgroup_${groupid}_groupmax`]) || 0;
+				const poolmax = parseInt(value[`static_attrgroup_${groupid}_groupmax`]);
 				clog(debug, timer, 'poolmax =', poolmax);
 				const poolspent = 
 					isPowerFlux ?
@@ -8796,7 +8720,7 @@
 				_.chain(attrIDs)
 				.map(id=>{
 					const attribute = value[`repeating_attr_${id}_attribute`];
-					const group = parseInt(value[`repeating_attr_${id}_group`]) || 0;
+					const group = parseInt(value[`repeating_attr_${id}_group`]);
 					const isGroupMember = group === groupid;
 					if (!isGroupMember) return 0;
 					const isDefect = attribute === 'defect' ? true : false;
@@ -8807,8 +8731,8 @@
 						2 : 1;
 					const isCurrAttr = id === rowID ? true : false;
 					const attrcost = isCurrAttr && isLevelChange ?
-						(parseInt(setObj[`repeating_attr_${id}_totalcost`]) || 0) * isAltmunition :
-						(parseInt(value[`repeating_attr_${id}_totalcost`]) || 0) * isAltmunition;
+						parseInt(setObj[`repeating_attr_${id}_totalcost`]) * isAltmunition :
+						parseInt(value[`repeating_attr_${id}_totalcost`]) * isAltmunition;
 					return attrcost;
 				})
 				.reduce((memo, num)=>{ return memo + num; }, 0)
@@ -8833,11 +8757,11 @@
 		function getPowerFluxPoolSpent(debug, timer, isActive, attrIDs, value, rowID, groupid, setObj) {
 			clog(debug, timer, 'groupid =', groupid, 'getPowerFluxPoolSpent()');
 			const groupSourceID = value[`static_attrgroup_${groupid}_source`];
-			const groupIsActive = parseInt(value[`repeating_attr_${groupSourceID}_activate`]) || 0;
+			const groupIsActive = parseInt(value[`repeating_attr_${groupSourceID}_activate`]);
 			const result = !groupIsActive ? 0 :
 				_.chain(attrIDs)
 				.map(id=>{
-					const group = parseInt(value[`repeating_attr_${id}_group`]) || 0;
+					const group = parseInt(value[`repeating_attr_${id}_group`]);
 					const isGroupMember = group === groupid;
 					if (!isGroupMember) return 0;
 		
@@ -8862,12 +8786,12 @@
 						isCurrAttr ? 
 							isActive :
 							isNaN(parseInt(setObj[`repeating_attr_${id}_activate`])) ?
-								(parseInt(value[`repeating_attr_${id}_activate`]) || 0) > 0 ? true : false :
+								parseInt(value[`repeating_attr_${id}_activate`]) > 0 ? true : false :
 								parseInt(setObj[`repeating_attr_${id}_activate`]) > 0 ?	true : false;
 					clog(debug, timer, 'isActivated =', isActivated);
 					if (!isActivated) return 0;
 		
-					const attrcost = (parseInt(value[`repeating_attr_${id}_totalcost`]) || 0) * isAltmunition;
+					const attrcost = parseInt(value[`repeating_attr_${id}_totalcost`]) * isAltmunition;
 					clog(debug, timer, 'attrcost =', attrcost);
 					return attrcost;
 				})
@@ -8880,12 +8804,12 @@
 		
 		function getPowerVariationPoolCost(debug, timer, isActive, attrIDs, value, rowID, groupid, setObj) {
 			const groupSourceID = value[`static_attrgroup_${groupid}_source`];
-			const groupIsActive = parseInt(value[`repeating_attr_${groupSourceID}_activate`]) || 0;
+			const groupIsActive = parseInt(value[`repeating_attr_${groupSourceID}_activate`]);
 			clog(debug, timer, 'groupid =', groupid, 'getPowerVariationPoolCost()');
 			const result = !groupIsActive ? 0 :
 				_.chain(attrIDs)
 				.map(id=>{
-					const group = parseInt(value[`repeating_attr_${id}_group`]) || 0;
+					const group = parseInt(value[`repeating_attr_${id}_group`]);
 					const isGroupMember = group === groupid;
 					if (!isGroupMember) return 0;
 		
@@ -8910,12 +8834,12 @@
 						isCurrAttr ? 
 							isActive :
 							isNaN(parseInt(setObj[`repeating_attr_${id}_activate`])) ?
-								(parseInt(value[`repeating_attr_${id}_activate`]) || 0) > 0 ? true : false :
+								parseInt(value[`repeating_attr_${id}_activate`]) > 0 ? true : false :
 								parseInt(setObj[`repeating_attr_${id}_activate`]) > 0 ?	true : false;
 					clog(debug, timer, 'isActive =', isActive);
 					if (!isActivated) return 0;
 		
-					const attrcost = (parseInt(value[`repeating_attr_${id}_totalcost`]) || 0) * isAltmunition;
+					const attrcost = parseInt(value[`repeating_attr_${id}_totalcost`]) * isAltmunition;
 					clog(debug, timer, 'attrcost =', attrcost);
 					return attrcost;
 				})
@@ -9010,8 +8934,8 @@
 					const id = o.source;
 					const defect = o.name;
 					const defectcategory = getDefectPointsByCategory(value, id, defect);
-					const group = parseInt(value[`repeating_attr_${id}_group`]) || 0;
-					const defectpoints = (parseInt(value[`repeating_attr_${id}_rank`]) || 0) * defectcategory;
+					const group = parseInt(value[`repeating_attr_${id}_group`]);
+					const defectpoints = parseInt(value[`repeating_attr_${id}_rank`]) * defectcategory;
 					const appliedPoints = group == groupid ?
 					defectpoints : 0;
 					return appliedPoints;
@@ -9030,7 +8954,7 @@
 			const aggregatePoolCost = _.chain(ids)
 				.map(id=>{
 					const isGroupMember = 
-						(parseInt(value[`repeating_${sectionName}_${id}_group`]) || 0) == groupid ?
+						parseInt(value[`repeating_${sectionName}_${id}_group`]) == groupid ?
 						true : false;
 					const isDefect = 
 						value[`repeating_attr_${id}_attribute`] === 'defect' ? 
@@ -9043,11 +8967,11 @@
 						true : false;
 					const isActivated = sectionName == 'skill' ? 1 :
 						isNaN(parseInt(setObj[`repeating_attr_${id}_activate`])) ?
-						parseInt(value[`repeating_attr_${id}_activate`]) || 0 :
+						parseInt(value[`repeating_attr_${id}_activate`]) :
 						parseInt(setObj[`repeating_attr_${id}_activate`]);
 					const attrcost = id == rowID ? 
 						parseInt(eventInfo.newValue) * getAttrCostPerLevel(debug, timer, value, rowID) : 
-						parseInt(value[`repeating_${sectionName}_${id}_totalcost`]) || 0;
+						parseInt(value[`repeating_${sectionName}_${id}_totalcost`]);
 					const appliedCost = isGroupMember ? 
 						isDefect ? 0 :	
 							isStandardGroup ? 0 : 
@@ -9073,13 +8997,13 @@
 					const attribute = value[`repeating_attr_${id}_attribute`];
 					clog(debug, timer, 'attribute =', attribute);
 					clog(debug, timer, 'isCurrAttr =', isCurrAttr);
-					const group = parseInt(value[`repeating_attr_${id}_group`]) || 0;
+					const group = parseInt(value[`repeating_attr_${id}_group`]);
 					clog(debug, timer, 'group =', group);
 					const activated =  
-						parseInt(setObj[`repeating_attr_${id}_activate`]) ||
-						parseInt(value[`repeating_attr_${id}_activate`]) || 0;
+						parseInt(setObj[`repeating_attr_${id}_activate`])	||
+						parseInt(value[`repeating_attr_${id}_activate`]);
 					clog(debug, timer, 'activated =', activated);
-					const attrcost = parseInt(value[`repeating_attr_${id}_totalcost`]) || 0;
+					const attrcost = parseInt(value[`repeating_attr_${id}_totalcost`]);
 					clog(debug, timer, 'attrcost =', attrcost);
 					const isGroupMember = group == groupid ? true : false;
 					clog(debug, timer, 'isGroupMember =', isGroupMember);
@@ -9114,9 +9038,9 @@
 		function getAggregateSkillGroupCost(debug, timer, skillIDs, value, rowID, groupID, setObj){
 			const result = _.chain(skillIDs)
 				.map(id => {
-					const group = parseInt(value[`repeating_skill_${id}_group`]) || 0;
+					const group = parseInt(value[`repeating_skill_${id}_group`]);
 					const totalcost = isNaN(parseInt(setObj[`repeating_skill_${id}_totalcost`])) ?
-						parseInt(value[`repeating_skill_${id}_totalcost`]) || 0 :
+						parseInt(value[`repeating_skill_${id}_totalcost`]) :
 						parseInt(setObj[`repeating_skill_${id}_totalcost`]);
 					const appliedCost = group == groupID ? 
 						id == rowID ? 0 :
@@ -9142,7 +9066,7 @@
 			const skillcost = getSkillCost(debug, timer, value, skillname);
 			clog(debug, timer, 'skillcost =', skillcost);
 			const skillrank = isNaN(parseInt(setObj[`repeating_skill_${rowID}_level`])) ?
-				parseInt(value[`repeating_skill_${rowID}_level`]) || 0 : 
+				parseInt(value[`repeating_skill_${rowID}_level`]) : 
 				parseInt(setObj[`repeating_skill_${rowID}_level`]);
 			clog(debug, timer, 'skillrank =', skillrank);
 			const totalcost = (skillcost * skillrank) + specilizationscost;
@@ -9171,7 +9095,7 @@
 			const poolSpent = aggregatePoolCost;
 			
 			const standardcost = aggregateAttrCost + aggregateDefectPoints + attrcost;
-			const variationcost = parseInt(value[`static_attrgroup_${groupid}_groupcost`]) || 0;
+			const variationcost = parseInt(value[`static_attrgroup_${groupid}_groupcost`]);
 			const fluxcost = parseInt(value[`repeating_attr_${groupSourceID}_totalcost`]) || 0;	
 			const groupCost = 
 				isPowerFlux && isGroupActive ? fluxcost : 
@@ -9218,7 +9142,7 @@
 			const aggregateRank = _.chain(defectdb)
 				.map(defect => {
 					const result = defect.name == 'shortcoming' ? defect.aspect == stat ?
-						(parseInt(value[`repeating_attr_${defect.source}_activate`]) || 0) > 0 ?
+						parseInt(value[`repeating_attr_${defect.source}_activate`]) > 0 ?
 						defect.rank : 0 : 0 : 0;
 					return result;
 				})
@@ -9259,7 +9183,7 @@
 		}
 		
 		//async function commitChanges(debug, timer, value, keys, values, isSilent = true) {
-		function commitChanges(debug, timer, value, commits, setObj, isSilent = true) {
+		async function commitChanges(debug, timer, value, commits, isSilent = true) {
 			const keys = _.keys(commits);
 			const values = _.values(commits);
 			const commitObj = {};
@@ -9300,16 +9224,12 @@
 						key.slice(0, key.length - 10).toLowerCase() : key.toLowerCase();
 					//const keyLowerCase = key.toLowerCase();
 					//clog(debug, timer, 'keyLowerCase =', keyLowerCase);
+					commitObj[`${keyLowerCase}`] = validValues[i];
 					if(!sheetOnly) value[`${keyLowerCase}`] = validValues[i];
-					if(!isSilent) { 
-						setObj[`${keyLowerCase}`] = validValues[i];
-					} else {
-						commitObj[`${keyLowerCase}`] = validValues[i];
-					}
 				}
-			});
+			})
 			clog(debug, timer, 'commitObj:', commitObj, 'commitChanges()');
-			if(commitObj.length !== 0 && isSilent) setAttrs(commitObj,{silent:isSilent});
+			if(commitObj.length !== 0) await asw.setAttrs(commitObj,{silent:isSilent});
 		}
 		
 		function setAllAspectStats(debug, timer, eventInfo, attrdb, value, setObj, stat) {
@@ -9400,7 +9320,7 @@
 			const result = _.chain(defectdb)
 				.map(defect => {
 					const isActive = isNaN(parseInt(setObj[`repeating_attr_${defect.source}_activate`])) ?
-						parseInt(value[`repeating_attr_${defect.source}_activate`]) || 0 :
+						parseInt(value[`repeating_attr_${defect.source}_activate`]) :
 						parseInt(setObj[`repeating_attr_${defect.source}_activate`]);
 					const rank = defect.name == 'shortcoming' ? 
 						major_stats_regex.test(defect.aspect) ?
@@ -9537,7 +9457,7 @@
 		function setAttrVisibilityByGroup(value, eventInfo, attrIDs, setObj, sectionName) {
 			const section = sectionName.substring(0, sectionName.length - 5);
 			_.each(attrIDs, (id) => {
-				const group = parseInt(value[`repeating_${section}_${id}_group`]) || 0;
+				const group = parseInt(value[`repeating_${section}_${id}_group`]);
 				const currGroup = eventInfo.newValue.substring(sectionName.length);
 				const visible = group == currGroup ? 0 : 1;
 				setObj[`repeating_${section}_${id}_visible`] = visible;
@@ -9653,7 +9573,7 @@
 		}
 		
 		function removePoolCpFromGroupCost(value, source, setObj) {
-			let type = parseInt(value[`${source}_type`]) || 0;
+			let type = parseInt(value[`${source}_type`]);
 			if (type < 3) {
 				let groupcost = setObj[`${source}_groupcost`] - setObj[`${source}_poolcp`];
 				setObj[`${source}_groupcost`] = groupcost;
@@ -9689,7 +9609,7 @@
 				type == 2 ? 
 					(newlevel - poolenhancement) * 5 : 
 				type == 3 ? 
-					parseInt(value[`${source}_groupmax`]) || 0 : 
+					parseInt(value[`${source}_groupmax`]) : 
 				isSkill ? newlevel * 10 : 0;
 			setLevelElevation(eventInfo, `${source}`, `poollevelelevation`, setObj);
 			const newgroupcost = 
@@ -9740,13 +9660,13 @@
 			clog(debug, timer, 'currGroup =', currGroup);
 			//setObj[`${source}_new`] = 0;
 			//setObj[`${source}_group`] = currGroup;
-			//writeValues(debug, timer, value, `${source}_new`, 0, setObj);
+			writeValues(debug, timer, value, `${source}_new`, 0, setObj);
 			writeValues(debug, timer, value, `${source}_group`, currGroup, setObj);
 		}
 		
 		function resetOnActive(debug, timer, eventInfo, value, match, rowID, setObj) {
-			const activate = parseInt(value[`repeating_attr_${rowID}_activate`]) || 0;
-			const reset = (eventInfo.previousValue == eventInfo.newValue) ? 0 : eventInfo.previousValue;
+			let activate = parseInt(value[`repeating_attr_${rowID}_activate`]),
+				reset = (eventInfo.previousValue == eventInfo.newValue) ? 0 : eventInfo.previousValue;
 			if (activate) {
 				clog(debug, timer, 'attribute is active, exiting', '', 'resetOnActive()');
 				setObj[`${match}`] = reset;
@@ -9758,8 +9678,8 @@
 		}
 		
 		function resetOnLocked(debug, timer, eventInfo, value, match, rowID, setObj) {
-			const locked = parseInt(value[`repeating_attr_${rowID}_lock`]) || 0;
-			const reset = (eventInfo.previousValue == eventInfo.newValue) ? 0 : eventInfo.previousValue;
+			const locked = parseInt(value[`repeating_attr_${rowID}_lock`]),
+				reset = (eventInfo.previousValue == eventInfo.newValue) ? 0 : eventInfo.previousValue;
 			if (locked) {
 				clog(debug, timer, 'attribute is locked, exiting', '', 'resetOnLocked()');
 				setObj[`${match}`] = reset;
@@ -9771,15 +9691,15 @@
 		}
 		
 		function getIsLocked(debug, timer, value, rowID, sourceAttr) {
-			const result = (parseInt(value[`repeating_attr_${rowID}_lock`]) || 0) ? true : false;
+			const result = parseInt(value[`repeating_attr_${rowID}_lock`]) ? true : false;
 			clog(debug, timer, 'result =', result, 'getIsLocked()');
 			return result;
 		}
 		
 		function resetOnLevelNotZero(debug, timer, eventInfo, value, match, rowID, setObj) {
-			const level = parseInt(value[`repeating_attr_${rowID}_level`]) || 0;
-			const elevel = parseInt(value[`repeating_attr_${rowID}_effectivelevel`]) || 0;
-			const reset = (eventInfo.previousValue == eventInfo.newValue) ? 0 : eventInfo.previousValue;
+			let level = parseInt(value[`repeating_attr_${rowID}_level`]),
+				elevel = parseInt(value[`repeating_attr_${rowID}_effectivelevel`]),
+				reset = (eventInfo.previousValue == eventInfo.newValue) ? 0 : eventInfo.previousValue;
 			if (level || elevel) {
 				clog(debug, timer, 'can‘t change Attribute when Level or Effective Level is greater than 0, exiting', '', 'resetOnLevelNotZero()');
 				setObj[`${match}`] = reset;
@@ -10427,10 +10347,8 @@
 		}
 		
 		function getCharacteristicByAttr(debug, timer, value, rowID, attribute, setObj) {
-			const level = 
-				parseInt(setObj[`repeating_attr_${rowID}_effectivelevel`]) || 
-				parseInt(value[`repeating_attr_${rowID}_effectivelevel`]) || 0;
-			const chardb = {
+			const level = parseInt(setObj[`repeating_attr_${rowID}_effectivelevel`]) || parseInt(value[`repeating_attr_${rowID}_effectivelevel`]) || 0,
+				chardb = {
 					"capacity": {
 						0: {
 							1: "200 kg",
@@ -11244,7 +11162,7 @@
 			const layer = attr == `armor` ? 
 				parseInt(value[`repeating_attr_${rowID}_armorlayer`]) || 1 : '';
 			const type = (attr == `absorption` || attr == `conversion`) ? 
-				parseInt(value[`repeating_attr_${rowID}_collectiontype`]) || 0 : '';
+				parseInt(value[`repeating_attr_${rowID}_collectiontype`]) : '';
 			const attrstate = 
 				parseInt(value[`protection_${attr}${layer}${type}_state`]) || 0;
 			const source = 
@@ -11452,7 +11370,7 @@
 			clog(debug, timer, 'rowID =', rowID, 'getIsTargetedActive()');
 			const isTargeted = getIsTargeted(debug, timer, value, rowID, setObj);
 			if (!isTargeted) return '';
-			const activeID = (parseInt(value[`repeating_attr_${rowID}_activate`]) || 0) === 1 ?
+			const activeID = parseInt(value[`repeating_attr_${rowID}_activate`]) === 1 ?
 				rowID : '';
 			clog(debug, timer, 'activeID =', activeID);
 			clog(debug, timer, 'activate =', value[`repeating_attr_${rowID}_activate`]);
@@ -11636,6 +11554,8 @@
 		}
 		*/
 		function setAttrdb(isActive, debug, timer, value, attrdb, attrIDs, rowID, sourceAttr, attribute, setObj) {
+			clog(debug, timer, 'isActive =', isActive, 'setAttrdb(TEST)');
+			clog(debug, timer, 'attribute =', attribute);
 			const name = value[`repeating_attr_${rowID}_name`] || "";
 			clog(debug, timer, 'name =', name);
 			const level = parseInt(value[`repeating_attr_${rowID}_effectivelevel`]) || 0;
@@ -11770,6 +11690,7 @@
 				*/
 			} else {
 				attrdb[`${attribute}`].find((attr, i) => {
+					//console.log(`attr.source = ${attr.source}`); console.log(`rowID = ${rowID}`);
 					if (attr.source == rowID) {
 						delete attrdb[`${attribute}`][i]; return true;
 					}
@@ -11786,7 +11707,7 @@
 			clog(debug, timer, 'result =', result, 'getIsMelee()');
 			return result;
 		}
-		/*
+		
 		function getAttackMod(debug, timer, value, attrIDs, wpnclass, sourceAttr) {
 			var result = 0,
 				ismelee = getIsMelee(debug, timer, wpnclass);
@@ -11801,7 +11722,7 @@
 			clog(debug, timer, 'result =', result, 'getAttackMod()');
 			return result;
 		}
-		*/
+		
 		function getSumOfActiveAttrLevels(attrdb, attribute, focus = '') {
 			var result = 0;
 			_.each(attrdb[`${attribute}`], (o) => {
@@ -11816,46 +11737,47 @@
 		
 		function setArms(debug, timer, value, rowID, setObj, name, isActive, hand) {
 			const extraarmIDs = value.extraarmIDs;
-			clog(debug, timer, 'hand =', hand, 'setArms()');
 			const handsource = getHandSource(debug, timer, extraarmIDs, hand);
 			const source = setObj[`repeating_attr_${rowID}_source`];
 			if (isActive) {
 				setObj[`${handsource}_name`] = name;
 				writeValues(debug, timer, value, `${handsource}_source`, rowID, setObj);
 				if (source === undefined || source === '') {
+					//setObj[`repeating_attr_${rowID}_source`] = hand;
 					writeValues(debug, timer, value, `repeating_attr_${rowID}_source`, hand, setObj);
 				} else {
 					const twohanded = `${source},${hand}`;
+					//setObj[`repeating_attr_${rowID}_source`] = twohanded;
 					writeValues(debug, timer, value, `repeating_attr_${rowID}_source`, twohanded, setObj);
 				}
 			} else {
+				//setObj[`${handsource}_name`] = '';
+				//setObj[`${handsource}_source`] = '';
+				//setObj[`repeating_attr_${rowID}_source`] = '';
 				writeValues(debug, timer, value, `${handsource}_name`, '', setObj);
 				writeValues(debug, timer, value, `${handsource}_source`, '', setObj);
 				writeValues(debug, timer, value, `repeating_attr_${rowID}_source`, '', setObj);
 			}
+			clog(debug, timer, 'handsource =', handsource, 'setArms()');
 		}
 		
 		function updateWeaponStates(debug, timer, attrdb, extraarmIDs, value, source, sourceAttr, setObj){
-			clog(debug, timer, 'source =', source, 'updateWeaponStates()');
 			const handsource = getHandSource(debug, timer, extraarmIDs, source);
-			const state = parseInt(value[`${handsource}_state`]) || 0;
-			clog(debug, timer, 'state =', state);
+			const state = parseInt(value[`${handsource}_state`]);
+			clog(debug, timer, 'state =', state, 'updateWeaponStates()');
 			if(state > 0) {
-				//setWeaponStates(debug, timer, extraarmIDs, value, handsource, setObj);	
+				setWeaponStates(debug, timer, extraarmIDs, value, handsource, setObj);
 				setActiveWeapon(debug, timer, value, handsource, setObj);
 				//setCombatRoll(debug, timer, value, attrdb, value[`${source}_source`], sourceAttr, setObj);
 			}
-			clearWeaponStates(debug, timer, extraarmIDs, value, setObj);
 		}
 		
 		function setWeapon(isActive, debug, timer, value, attrIDs, extraarmIDs, rowID, sourceAttr, setObj, attrdb, attribute) {
 			const name = value[`repeating_attr_${rowID}_name`] || "";
-			clog(debug, timer, 'name =', name, 'setWeapon()');
 			const hands = 
 				attribute === 'telekinesis' || attribute === 'swarm' ? 0 :
 				getCustomizationValue(debug, timer, value, rowID, 'rank', 'hands') ? 2 :
 				getCustomizationValue(debug, timer, value, rowID, 'rank', 'nohands') ? 0 : 1;
-			clog(debug, timer, 'hands =', hands);
 			const mainsource = value.mainhand_source || "";
 			const offsource = value.offhand_source || "";
 			switch (hands) {
@@ -11866,10 +11788,8 @@
 						extraarmIDs.push(extraarmID.toLowerCase());
 						writeValues(debug, timer, value, `repeating_extraarm_${extraarmID}_state`, 0, setObj);
 						writeValues(debug, timer, value, `repeating_extraarm_${extraarmID}_type`, 0, setObj);
-						writeValues(debug, timer, value, `repeating_extraarm_${extraarmID}_source`, rowID, setObj);
 						writeValues(debug, timer, value, `repeating_extraarm_${extraarmID}_name`, name, setObj);
 						writeValues(debug, timer, value, `repeating_extraarm_${extraarmID}_label`, capital(attribute), setObj);
-						updateWeaponStates(debug, timer, attrdb, extraarmIDs, value, extraarmID, sourceAttr, setObj);
 					} else {
 						let source = 
 							setObj[`repeating_attr_${rowID}_source`] || 
@@ -11892,6 +11812,14 @@
 				case 1: //single handed
 					if (isActive) {
 						const extrahands = _.chain(extraarmIDs)
+							/*	
+							.each((id, i) => {
+								if (parseInt(value[`repeating_extraarm_${id}_type`]) == 0 || 
+									value[`repeating_extraarm_${id}_source`].length > 0) {
+										delete id[i];
+								}
+							})
+							*/
 							.map(id => {
 								const availableHand =
 									parseInt(value[`repeating_extraarm_${id}_type`]) === 0 ? '' :
@@ -11954,13 +11882,20 @@
 					}
 				break;
 				case 2: //two-handed
-					clog(debug, timer, 'two-handed', '');
 					if (isActive) {
 						const extrahands = _.chain(extraarmIDs)
+							/*
+							.each((handID, i) => {
+								if (parseInt(value[`repeating_extraarm_${handID}_type`]) == 0 || 
+									value[`repeating_extraarm_${handID}_source`].length > 0) {
+										delete handID[i];
+								}
+							})
+							*/
 							.map(id => {
 								const availableHand =
 									parseInt(value[`repeating_extraarm_${id}_type`]) === 0 ? '' :
-									!isFalsey(value[`repeating_extraarm_${id}_source`]) ? '' :
+									value[`repeating_extraarm_${id}_source`].length > 0 ? '' :
 									id;
 								return availableHand;
 							})
@@ -11995,12 +11930,13 @@
 					} else {
 						let source = setObj[`repeating_attr_${rowID}_source`] || 
 							value[`repeating_attr_${rowID}_source`] || '';
+						//if (/(mainhand|offhand)/i.test(source)) {
 						if (hands_array.indexOf(source) !== -1) {
 							setArms(debug, timer, value, rowID, setObj, name, false, "mainhand");
 							setArms(debug, timer, value, rowID, setObj, name, false, "offhand");
 							updateWeaponStates(debug, timer, attrdb, extraarmIDs, value, "mainhand", sourceAttr, setObj);
 						} else {
-							if (source.indexOf(',') !== -1) source = source.split(',');
+							if (source.indexOf(',') > 1) source = source.split(',');
 							_.each(source, (extraarm, i) => {
 								if (extraarm === source[i]) {
 									setArms(debug, timer, value, rowID, setObj, name, false, extraarm);
@@ -12011,6 +11947,7 @@
 					}
 				break;
 			}
+			clog(debug, timer, 'sourceAttr =', sourceAttr, 'setWeapon()');
 		}
 		
 		function disableWeapon(debug, timer, attrIDs, value, source, attrdb, setObj) {
@@ -12098,7 +12035,7 @@
 		
 		function setAttrEffects(debug, timer, isActive, value, attrdb, extraarmIDs, attrIDs, skillIDs, sectionName, rowID, sourceAttr, setObj) {
 			const attribute = removeWhiteSpace(value[`repeating_attr_${rowID}_attribute`]);
-			const level = parseInt(value[`repeating_attr_${rowID}_effectivelevel`]) || 0;
+			const level = parseInt(value[`repeating_attr_${rowID}_effectivelevel`]);
 			switch (attribute) {
 				case "absorption":
 				case "armor": 
@@ -12243,11 +12180,11 @@
 		
 		function setSwarmCritters(isActive, debug, timer, value, attrdb, rowID, setObj){
 			const debugtext = '[setSwarmCritters()]';
-			const body = parseInt(value.stat_total_body) || 0;
-			const soul = parseInt(value.stat_total_soul) || 0;
+			const body = parseInt(value.stat_total_body);
+			const soul = parseInt(value.stat_total_soul);
 			const health = (body+soul)*5;
 			const wounds = parseInt(value.static_stat_total_wounds) || 0;
-			const level = parseInt(value[`repeating_attr_${rowID}_effectivelevel`]) || 0;
+			const level = parseInt(value[`repeating_attr_${rowID}_effectivelevel`]);
 			const critters = isActive ? health * level : 0;
 			let swarmobj = _.find(attrdb.swarm, o => {
 				if(o.source == rowID) return true;
@@ -12316,15 +12253,15 @@
 			const groupCost = _.chain(attrIDs)
 				.map(id=>{
 					id = id.toLowerCase();
-					const group = parseInt(value[`repeating_attr_${id}_group`]) || 0;
+					const group = parseInt(value[`repeating_attr_${id}_group`]);
 					const activated = parseInt(setObj[`repeating_attr_${id}_activate`]) ||
-						parseInt(value[`repeating_attr_${id}_activate`]) || 0;
+						parseInt(value[`repeating_attr_${id}_activate`]);
 					const attribute = value[`repeating_attr_${id}_attribute`];
 					const isWeapon = attribute === 'weapon' ? true : false;
 					const isAltmunition = isWeapon && 
 						getCustomizationExists('altmunition', value[`repeating_attr_${id}_customizations`]) ?
 						2 : 1;
-					const totalcost = (parseInt(value[`repeating_attr_${id}_totalcost`]) || 0) * isAltmunition;
+					const totalcost = parseInt(value[`repeating_attr_${id}_totalcost`]) * isAltmunition;
 					const appliedCost = group == groupid ? 
 						id == rowID ? 0 : 
 						///flux/i.test(groupType) ? activated ? totalcost : 0 :
@@ -12336,7 +12273,7 @@
 				.value();
 			const max = //isActive ? /flux/i.test(groupType) ? 
 				isActive && groupType.toLowerCase().indexOf('flux') !== -1 ?
-					(parseInt(value[`repeating_${sectionName}_${rowID}_effectivelevel`]) || 0) * 5 : 
+					parseInt(value[`repeating_${sectionName}_${rowID}_effectivelevel`]) * 5 : 
 				///variation/i.test(groupType) ? groupCost : 0 : 0;
 				isActive && groupType.toLowerCase().indexOf('variation') !== -1 ?
 					groupCost : 0;
@@ -12347,13 +12284,13 @@
 		function convertAttrGroupCost(isActive, debug, timer, value, sectionName, attrIDs, rowID, setObj){
 			const groupid = getGroupID(value, sectionName);
 			const groupType = value[`static_${sectionName}group_${groupid}_type`];
-			const dynamicGroupCost = parseInt(value[`repeating_${sectionName}_${rowID}_totalcost`]) || 0;
+			const dynamicGroupCost = parseInt(value[`repeating_${sectionName}_${rowID}_totalcost`]);
 			const aggregateAttrCost = _.chain(attrIDs)
 				.map(id=>{
-					const group = parseInt(value[`repeating_${sectionName}_${id}_group`]) || 0;
+					const group = parseInt(value[`repeating_${sectionName}_${id}_group`]);
 					const activated = parseInt(setObj[`repeating_${sectionName}_${id}_activate`]) ||
-						parseInt(value[`repeating_${sectionName}_${id}_activate`]) || 0;
-					const totalcost = parseInt(value[`repeating_${sectionName}_${id}_totalcost`]) || 0;
+						parseInt(value[`repeating_${sectionName}_${id}_activate`]);
+					const totalcost = parseInt(value[`repeating_${sectionName}_${id}_totalcost`]);
 					const appliedCost = //group == groupid ? 
 						///flux/i.test(groupType) ? 
 						group == groupid && groupType.toLowerCase().indexOf('flux') !== -1 ?
@@ -12407,9 +12344,9 @@
 		function setSkillGroupMaxByLevelChange(isActive, timer, debug, value, rowID, setObj){
 			const isSkillAttr = attribute => attribute=='skill' ? true: false;
 			if(isSkillAttr(value[`repeating_attr_${rowID}_attribute`])==false) return;
-			const groupid = parseInt(value[`repeating_attr_${rowID}_skillgroup`]) || 0;
+			const groupid = parseInt(value[`repeating_attr_${rowID}_skillgroup`]);
 			const skillpointmax = isActive ? 
-				(parseInt(value[`repeating_attr_${rowID}_effectivelevel`]) || 0) * 10 : 0;
+				parseInt(value[`repeating_attr_${rowID}_effectivelevel`]) * 10 : 0;
 			setObj[`static_skillgroup_${groupid}_groupmax`] = skillpointmax;
 			clog(debug, timer, 'groupid =', groupid, 'setSkillGroupMaxByLevelChange()');
 			clog(debug, timer, 'skillpointmax =', skillpointmax);
@@ -12615,11 +12552,11 @@
 			const state = 
 				(type == 'acv') ? 
 				isNaN(parseInt(setObj.static_button_targeted_attack)) ?
-				parseInt(value.static_button_targeted_attack) || 0 :
+				parseInt(value.static_button_targeted_attack) :
 				parseInt(setObj.static_button_targeted_attack) :
 				(type == 'dcv') ? 
 				isNaN(parseInt(setObj.static_button_targeted_defense)) ?
-				parseInt(value.static_button_targeted_defense) || 0 :
+				parseInt(value.static_button_targeted_defense) :
 				parseInt(setObj.static_button_targeted_defense) :
 				0;
 			clog(debug, timer, 'state =', state);
@@ -12645,8 +12582,8 @@
 			const cv = 
 				Math.round((parseInt(setObj.stat_total_body) + parseInt(setObj.stat_total_mind) +
 					parseInt(setObj.stat_total_soul)) / 3) || 
-				Math.round(((parseInt(value.stat_total_body) || 0) + (parseInt(value.stat_total_mind) || 0) + 
-					(parseInt(value.stat_total_soul) || 0)) / 3) || 
+				Math.round((parseInt(value.stat_total_body) + parseInt(value.stat_total_mind) + 
+					parseInt(value.stat_total_soul)) / 3) || 
 				0;
 			clog(debug, timer, 'cv =', cv);
 			const result = 
@@ -12671,9 +12608,9 @@
 			return diceToRoll;
 		}
 		
-		function setActiveWeapon(debug, timer, value, handsource, setObj) {
-			const state = parseInt(setObj[`${handsource}_state`]) || 0;
-			const source = state !== 0 ? value[`${handsource}_source`] : '';
+		function setActiveWeapon(debug, timer, value, rowID, setObj) {
+			const state = parseInt(setObj[`${rowID}_state`]) || 0;
+			const source = state > 0 ? value[`${rowID}_source`] : '';
 			clog(debug, timer, 'source =', source, 'setActiveWeapon()');
 			if (source !== undefined) {
 				//setObj.previous_weapon = setObj.active_weapon || value.active_weapon;
@@ -12786,33 +12723,31 @@
 		
 		function setWeaponReload(debug, timer, attrdb, value, setObj) {
 			const rowID = value.active_weapon;
-			const capacity = parseInt(value[`repeating_attr_${rowID}_capacity`]) || 0;
-			let ammostate = parseInt(value.weapon_ammo_reloads) || 0;
+			const capacity = parseInt(value[`repeating_attr_${rowID}_capacity`]);
+			let ammostate = parseInt(value.weapon_ammo_reloads);
 			const reloadcapacity = ammostate > 0 ? capacity : 0;
 			const reloadammo = ammostate > 0 ? ammostate -= 1 : 0;
-			clog(debug, timer, 'active_weapon =', rowID, 'setWeaponReload()');
 			writeValues(debug, timer, value, 'weapon_ammo_reloads', reloadammo, setObj);
 			writeValues(debug, timer, value, 'weapon_ammo_capacity', reloadcapacity, setObj);
+			clog(debug, timer, 'reloads =', setObj.weapon_ammo_reloads, 'setWeaponReload()');
+			clog(debug, timer, 'capacity =', setObj.weapon_ammo_capacity);
 		}
 		
 		function setWeaponAmmo(debug, timer, attrdb, value, handsource, setObj) {
-			const activeHasAmmo = getCustomizationValue(debug, timer, value, setObj.active_weapon, 'rank', 'ammo') ? true : false;
-			const previousHasAmmo = getCustomizationValue(debug, timer, value, value.previous_weapon, 'rank', 'ammo') ? true : false;
-			if (!activeHasAmmo && !previousHasAmmo) return;
 			const state = setObj[`${handsource}_state`];
 			const rowID = value[`${handsource}_source`];
 			const type = value[`repeating_attr_${rowID}_attribute`];
-			const ammostate = parseInt(value.weapon_ammo_reloads) || 0;
-			const capacitystate = parseInt(value.weapon_ammo_capacity) || 0;
+			const ammostate = parseInt(value.weapon_ammo_reloads);
+			const capacitystate = parseInt(value.weapon_ammo_capacity);
 			clog(debug, timer, 'ammostate =', ammostate, 'setWeaponAmmo()');
 			clog(debug, timer, 'capacitystate =', capacitystate);
-			if (previousHasAmmo && rowID !== value.previous_weapon && !isFalsey(value.previous_weapon)) {
+			if (rowID !== setObj.previous_weapon && _.isString(setObj.previous_weapon)) {
 				clog(debug, timer, 'weapon change, save ammo state', '');
-				writeValues(debug, timer, value, `repeating_attr_${value.previous_weapon}_ammostate`, ammostate, setObj);
-				writeValues(debug, timer, value, `repeating_attr_${value.previous_weapon}_capacitystate`, capacitystate, setObj);	
+				writeValues(debug, timer, value, `repeating_attr_${setObj.previous_weapon}_ammostate`, ammostate, setObj);
+				writeValues(debug, timer, value, `repeating_attr_${setObj.previous_weapon}_capacitystate`, capacitystate, setObj);	
 			}
 			if (type === 'telekinesis' || type === 'swarm') return;
-			if (activeHasAmmo && state) {//weapon armed, load ammo state
+			if (state) {//weapon armed, load ammo state
 				clog(debug, timer, 'weapon armed, load ammo state', '');
 				const weapon = _.find(attrdb[`${type}`], w => {
 					if (w.source == rowID) return true;
@@ -12822,17 +12757,19 @@
 					if (c.name == 'ammo') return true;
 				});
 				if (!getIsObject(customization)) return;
-				const ammo = parseInt(customization.rank) === 4 ? 0 :
-					isNaN(parseInt(value[`repeating_attr_${rowID}_ammostate`])) ?
-						getAmmoMax(debug, timer, customization.rank) : 
-						parseInt(value[`repeating_attr_${rowID}_ammostate`]) || 0;
-				const capacity = isNaN(parseInt(value[`repeating_attr_${rowID}_capacitystate`])) ? 
-					parseInt(customization.rank) === 4 ?
-						parseInt(value[`repeating_attr_${rowID}_capacity`]) || 0 :
-						0 : parseInt(value[`repeating_attr_${rowID}_capacitystate`]) || 0;
+				const ammo = isNaN(parseInt(value[`repeating_attr_${rowID}_ammostate`])) ?
+					getAmmoMax(debug, timer, customization.rank) : 
+					parseInt(value[`repeating_attr_${rowID}_ammostate`]);
+				const capacity = isNaN(parseInt(value[`repeating_attr_${rowID}_capacitystate`])) ?
+					0 :
+					parseInt(value[`repeating_attr_${rowID}_capacitystate`]);
 				writeValues(debug, timer, value, 'weapon_ammo_reloads', ammo, setObj);
 				writeValues(debug, timer, value, 'weapon_ammo_capacity', capacity, setObj);
-			} else if (previousHasAmmo && !state && rowID === value.previous_weapon) {//} if (rowID.length === 20 && !state) {//weapon unarmed, save ammo state
+				clog(debug, timer, 'ammo =', ammo, 'setWeaponAmmo()');
+				clog(debug, timer, 'capacity =', capacity);
+			} else if (rowID.length === 20) {//weapon unarmed, save ammo state
+				//const ammostate = parseInt(value.weapon_ammo_reloads);
+				//const capacitystate = parseInt(value.weapon_ammo_capacity);
 				clog(debug, timer, 'weapon unarmed, save ammo state', '');
 				writeValues(debug, timer, value, `repeating_attr_${rowID}_ammostate`, ammostate, setObj);
 				writeValues(debug, timer, value, `repeating_attr_${rowID}_capacitystate`, capacitystate, setObj);
@@ -12852,6 +12789,7 @@
 			const weapondb = attrdb[`${type}`].find(o => {
 				if (o.source == weapon) return true;
 			});
+			//const customizations = weapondb.customizations;	
 			//set default overrides
 			_.each(weapondb.customizations, customization => {
 				switch(customization.name){
@@ -12865,6 +12803,7 @@
 					break;
 					case 'range':
 						const selection = customization.rank > 2 ?
+							//parseInt(setObj.static_weapon_range_selection) || 
 							parseInt(value.static_weapon_range_selection) ||
 							1 :
 							1;
@@ -13375,9 +13314,30 @@
 			return result;
 		}
 		
-		function doCombatRoll(debug, timer, value, attrdb, ev, setObj) {
-			clog(debug, timer, 'ev:', ev, 'doCombatRoll()');
+		async function getBesmdbID(debug, timer, value) {
+			if(value.besmdb_name === '') return;
 			const rxGrab = /^0\[(.*)\]\s*$/;
+			const rollBase = `! {{besmdbid=[[0[@{${value.besmdb_name}|character_id}] ]]}}}}`;
+			const idRoll = await startRoll(rollBase);
+			const besmdb = {
+					id: idRoll.results.besmdbid.expression.match(rxGrab)[1],
+				};
+			finishRoll(idRoll.rollId);
+			clog(debug, timer, 'besmdb:', besmdb, 'getBesmdbID()');
+			return besmdb.id;
+		}
+		
+		async function getLastAttacker(debug, timer, value) {
+			const lastAttackerJSON = await asw.getAttrs([`${value.character_id}`]);
+			clog(debug, timer, 'lastAttackerJSON =', lastAttackerJSON, 'getLastAttacker()');
+			const lastAttackerObj = Object.assign({}, JSON.parse(lastAttackerJSON[value.character_id]));
+			clog(debug, timer, 'lastAttackerObj:', lastAttackerObj);
+			return lastAttackerObj;
+		}
+		
+		async function doCombatRoll(debug, timer, value, attrdb, rowID, setObj) {
+			clog(debug, timer, 'Fired!', '', 'doCombatRoll()');
+			const besmdb_id = await getBesmdbID(debug, timer, value);
 			const roll = { 
 				damage: {},
 				maneuver: { 
@@ -13443,151 +13403,97 @@
 						12: 1.5
 					};
 					setDamage(debug, timer, roll, attrdb);
-					//roll.self = getActiveCharacterId();
-					//roll.target = getTarget(); 
-					//clog(debug, timer, 'roll.self =', roll.self);
-					clog(debug, timer, 'roll.target:', roll.target);
-					roll.template += ` {{attack=1}} {{title=Attack}} {{target=[[0[@{target|character_name}] ]]}}` +
+					roll.target = await getTarget(); 
+					roll.template += ` {{attack=1}} {{title=ATTACK}} ` +
 						`{{target_name=${roll.target.name}}} {{weapon_name=${roll.weapon.name}}} ` +
-						`{{maneuver=${roll.maneuver.titlecase}}} {{acv=${roll.results.cv}}} ` +
+						`{{maneuver=${roll.maneuver.titlecase}}} {{acv=[[0d6 + ${roll.results.cv}]]}} ` +
 						`{{damage_type=${roll.weapon.damagetype}}} {{roll2=[[1d1-1]]}} ` +
 						`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
 						`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
 						`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
 		
-					startRoll(roll.template, (attackRoll) => {
-						clog(debug, timer, 'attackRoll:', attackRoll);
-						const rollEscape = {
-							chars: {
-								'"': '%quot;',
-								',': '%comma;',
-								':': '%colon;',
-								'}': '%rcub;',
-								'{': '%lcub;',
-							},
-							escape(str) {
-								str = (typeof(str) === 'object') ? JSON.stringify(str) : (typeof(str) === 'string') ? str : null;
-								return (str) ? `${str}`.replace(new RegExp(`[${Object.keys(this.chars)}]`, 'g'), (r) => this.chars[r]) : null;
-							},
-							unescape(str) {
-								str = `${str}`.replace(new RegExp(`(${Object.values(this.chars).join('|')})`, 'g'), (r) => Object.entries(this.chars).find(e=>e[1]===r)[0]);
-								return JSON.parse(str);
-							}
-						}
-						roll.target = {
-							name: attackRoll.results.target.expression.match(rxGrab)[1],
-						};
-						roll.results.roll1 = parseInt(attackRoll.results.roll1.result);
-						roll.results.total = roll.results.roll1 + roll.results.cv;
-						roll.damage.total = 
-							parseInt(attackRoll.results.roll2.result) + 
-							Math.round(roll.damage.base * parseFloat(damageMod[roll.results.roll1]));
-						//const attacker = Object.assign({}, roll);
-						//const attack = {
-						/*
-						setObj.attack_roll = roll.results.total;
-						setObj.attack_damage = roll.damage.total;
-						setObj.attack_damagetype = roll.weapon.damagetype;
-						setObj.attack_knockback = 0;
-						setObj.attack_isstun = roll.weapon.isstun;
-						setObj.attack_hasinsidious = roll.weapon.hasinsidious;
-						setObj.attack_haspsychic = roll.weapon.haspsychic;
-						*/
-						//};
-						//clog(debug, timer, 'attack:', attack);
-						//clog(debug, timer, 'character_id =', getActiveCharacterId());
-						//asw.setActiveCharacterId(value.beacon_id);
-						//clog(debug, timer, 'beacon_id =', getActiveCharacterId());
-						//await asw.setAttrs(attack,{silent:true});
-						//await asw.setAttrs({[`${roll.target.id}`]:attacker},{silent:true});
-						//asw.setActiveCharacterId(value.character_id);
-						//clog(debug, timer, 'character_id =', getActiveCharacterId());
-						//asw.setActiveCharacterId(roll.target.id);
-						finishRoll(attackRoll.rollId, {
-							passthroughdata: rollEscape.escape(roll),
-						});
+					const attackRoll = await startRoll(roll.template);
+					clog(debug, timer, 'attackRoll:', attackRoll);
+					roll.results.roll1 = parseInt(attackRoll.results.roll1.result);
+					roll.results.total = roll.results.roll1 + roll.results.cv;
+					roll.damage.total = 
+						parseInt(attackRoll.results.roll2.result) + 
+						Math.round(roll.damage.base * parseFloat(damageMod[roll.results.roll1]));
+					//const attack = Object.assign({}, roll);
+					//clog(debug, timer, 'attack:', attack);
+					asw.setActiveCharacterId(besmdb_id);
+					await asw.setAttrs({[roll.target.id]:JSON.stringify(roll)},{silent:true});
+					finishRoll(attackRoll.rollId, {
+						roll1: roll.results.total,
+						roll2: roll.damage.total
 					});
 				break;
 				case 2://defense
-					//clog(debug, timer, 'character_id =', value.character_id);
-					//asw.setActiveCharacterId(value.beacon_id);
-					//clog(debug, timer, 'beacon_id =', getActiveCharacterId());
-					//const getAttrsArray = [value.character_id];
-					//clog(debug, timer, 'getAttrsArray =', getAttrsArray);
-					//const lastAttacker = Object.assign({}, await asw.getAttrs([`${value.character_id}`]));
-					const last = {};
-					//last.attacker = await getAttacker();
-					//const lastAttacker = await asw.getAttrs(getAttrsArray);
-					//asw.setActiveCharacterId(value.character_id);
-					//clog(debug, timer, 'last:', last);
-		
-					//clog(debug, timer, 'lastAttacker:', lastAttacker);
-					//const last = {};
-					//last.attacker = lastAttacker[`${value.character_id}`];
-					//clog(debug, timer, 'last.attacker:', last.attacker);
-		
+					asw.setActiveCharacterId(besmdb_id);
+					const attacker = await getLastAttacker(debug, timer, value); //Object.assign({}, await asw.getAttrs([`${value.character_id}`]));
+					asw.setActiveCharacterId(value.character_id);
 					const commits = {};
-					//clog(debug, timer, 'last:', last);
+					clog(debug, timer, 'attacker:', attacker);
 					
-					setProtectionValues(debug, timer, roll, last, value, attrdb);
-					calculateDamage(debug, timer, roll, last, value, attrdb, commits);
-					//const catastrophicDamage = roll.outcome.catastrophic ? ' Catastrophic ' : '';
+					setProtectionValues(debug, timer, roll, attacker, value, attrdb);
+					await calculateDamage(debug, timer, roll, attacker, value, attrdb, commits);
 					
 					if(roll.maneuver.name === 'doesnothing') {
 						roll.template += `{{doesnothing=1}} {{title=Does Nothing}} {{maneuver=does nothing}} ` +
 								`{{roll1=[[0d6]]}}`;
 					} else {
-						roll.template += ` {{defense=1}} {{title=Defense}} {{dcv=${roll.results.cv}}} ` +
+						roll.template += ` {{defense=1}} {{title=DEFENSE}} {{dcv=[[0d6 + ${roll.results.cv}]]}} ` +
 							`{{weapon_name=${roll.weapon.name}}} {{maneuver=${roll.maneuver.titlecase}}}` +
 							`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
 							`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
 							`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
 					}
 					
-					roll.template += ` {{damage=${roll.outcome.damage}}} {{shock=${roll.outcome.shocktn}}}` +
-						` {{damageclass=${roll.outcome.damageclass}}}`;
+					roll.template += ` {{damage=${roll.outcome.damage}}} {{shock=${roll.outcome.shocktn}}}`
 					
-					startRoll(roll.template, (defenseRoll) => {
-						clog(debug, timer, 'defenseRoll:', defenseRoll);
-						roll.results.roll1 = parseInt(defenseRoll.results.roll1.result) + roll.results.cv;
-						if(last.attacker.roll > roll.results.roll1) {
-							commitChanges(debug, timer, value, commits, setObj, false);
-						}
-						//clog(debug, timer, 'roll.results.roll1 =', roll.results.roll1);
-						finishRoll(defenseRoll.rollId,{
-							roll1: roll.results.roll1
-						});
+					
+					const defenseRoll = await startRoll(roll.template);
+					clog(debug, timer, 'defenseRoll:', defenseRoll);
+					
+					roll.results.roll1 = parseInt(defenseRoll.results.roll1.result) + roll.results.cv;
+					if(attacker.results.total > roll.results.roll1) {
+						await commitChanges(debug, timer, value, commits, false);
+					}
+					
+					clog(debug, timer, 'roll.results.roll1 =', roll.results.roll1);
+					finishRoll(defenseRoll.rollId,{
+						roll1: roll.results.roll1
 					});
 				break;
 				case 3://do nothing
 				/*
 					setProtectionValues(debug, timer, roll, value, attrdb);
-					await calculateDamage(debug, timer, roll, last, value, setObj);
+					await calculateDamage(debug, timer, roll, attacker, value, setObj);
 				*/
 				break;
 			}
 			clog(debug, timer, 'roll:', roll);
 		}
 		
-		function calculateDamage(debug, timer, roll, last, value, attrdb, commits) {
+		async function calculateDamage(debug, timer, roll, attacker, value, attrdb, commits) {
 			const outcome = {};
-			outcome.damage = last.attacker.damage.total || 0;
+			outcome.damage = attacker.damage.total || 0;
 			outcome.converted = 0;
 			clog(debug, timer, 'outcome.damage =', outcome.damage, 'calculateDamage()');
 			
-			if(outcome.damage !== 0) applyForcefieldToDamage(debug, timer, roll, outcome, value, last);
+			if(outcome.damage !== 0) await applyForcefieldToDamage(debug, timer, roll, outcome, value, attacker);
 			if(outcome.damage !== 0) applyShieldToDamage(debug, timer, roll, outcome);
-			if(outcome.damage !== 0) applyArmorToDamage(debug, timer, roll, outcome, last);
+			if(outcome.damage !== 0) applyArmorToDamage(debug, timer, roll, outcome, attacker);
 			if(outcome.damage !== 0) applyMindShieldToDamage(debug, timer, roll, outcome);
-			if(outcome.damage !== 0) applyAbsorptionToDamage(debug, timer, roll, value, outcome);
-			if(roll.protection.conversion.type === 0) applyConversionToDamage(debug, timer, value, outcome, attrdb);
+			if(outcome.damage !== 0) await applyAbsorptionToDamage(debug, timer, roll, value, outcome);
+			if(roll.protection.conversion.type === 0) await applyConversionToDamage(debug, timer, value, outcome, attrdb);
 			
 			if(outcome.damage !== 0) {
 				const wounds = parseInt(value.static_stat_total_wounds) + outcome.damage;
 				const shockValue = getShockValue(debug, timer, value, attrdb);
 				const seriousInjuries = parseInt(value.stat_total_seriousinjuries) || 0;
 				const seriousInjury = 
-					last.attacker.weapon.isstun ? 0 + seriousInjuries : 
+					attacker.weapon.isstun ? 0 + seriousInjuries : 
 					outcome.damage > shockValue ? 
 						seriousInjuries + 1 : 0 + seriousInjuries;
 				/*
@@ -13597,10 +13503,6 @@
 				const hasSeriousInjury = seriousInjury !== 0 ? 1 : 0;
 				outcome.shocktn = outcome.damage > (shockValue * 2) ? 18 : 
 					outcome.damage > shockValue ? 12 : 0;
-				outcome.damageclass = 
-					last.attacker.weapon.isstun ? 'Stun ' :
-					outcome.damage >= parseInt(value.stat_total_health) ? 'Catastrophic ' :
-					'';
 		
 				commits.outcome = outcome;
 				commits.static_stat_total_wounds = wounds;
@@ -13634,18 +13536,18 @@
 			return isStun;
 		}
 		
-		function applyConversionToDamage(debug, timer, value, outcome, attrdb, setObj) {
+		async function applyConversionToDamage(debug, timer, value, outcome, attrdb, setObj) {
 			const convertedDamage = Math.floor((outcome.damage + outcome.converted) /10) || 0;
 			const convertedCP = (parseInt(value.protection_conversion1_cp) || 0) + convertedDamage;
 			clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
 			clog(debug, timer, 'convertedCP =', convertedCP);
 			//setObj[`repeating_active_${conversion.activeid}_pointvalue`] = convertedDamage;
 			//await commitChanges(debug, timer, value, ['protection_conversion1_cp'], [convertedCP]);
-			commitChanges(debug, timer, value, { protection_conversion1_cp: convertedCP }, setObj);
+			await commitChanges(debug, timer, value, { protection_conversion1_cp: convertedCP });
 			//clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
 		}
 		
-		function applyAbsorptionToDamage(debug, timer, roll, value, outcome) {
+		async function applyAbsorptionToDamage(debug, timer, roll, value, outcome) {
 			if(roll.protection.absorption1.ar !== 0 || roll.protection.absorption2.ar !== 0) {
 				clog(debug, timer, 'Fired!', '', 'applyAbsorptionToDamage()');
 			}
@@ -13662,7 +13564,7 @@
 				const totalHealth = parseInt(value.stat_total_health);
 				const newTempHealth = tempHealth > totalHealth ?
 					totalHealth : tempHealth;
-				setObj.static_stat_temp_health = newTempHealth;
+				await asw.setAttrs({static_stat_temp_health:newTempHealth});
 			}
 			if(roll.protection.absorption2.ar !== 0) {
 				const absorbedEnergy = roll.protection.absorption2.ar > outcome.damage ?
@@ -13677,7 +13579,7 @@
 				const totalEnergy = parseInt(value.stat_total_energy);
 				const newTempEnergy = tempEnergy > totalEnergy ?
 					totalEnergy : tempEnergy;
-				setObj.static_stat_temp_energy = newTempEnergy;
+				await asw.setAttrs({static_stat_temp_energy:newTempEnergy});
 			}
 		}
 		
@@ -13686,16 +13588,16 @@
 			outcome.damage = outcome.damage < 1 ? 0 : outcome.damage;
 		}
 		
-		function applyArmorToDamage(debug, timer, roll, outcome, last) {
+		function applyArmorToDamage(debug, timer, roll, outcome, attacker) {
 			clog(debug, timer, 'Fired!', '', 'applyArmorToDamage()');
-			const weaponHasInsidious = last.attacker.weapon.hasinsidious;
+			const weaponHasInsidious = attacker.weapon.hasinsidious;
 			if(weaponHasInsidious) return;
 			for(let i = 1; i <= 3; i++) {
 				if(roll.protection[`armor${i}`].ar !== 0 && outcome.damage !== 0) {
 					clog(debug, timer, `armor${i}`, '');
 					const isSpecialized = roll.protection[`armor${i}`].isspecialized;
 					const armorDamageType = roll.protection[`armor${i}`].damagetype;
-					const weaponDamageType = last.attacker.weapon.damagetype;
+					const weaponDamageType = attacker.weapon.damagetype;
 					const baseAR = roll.protection[`armor${i}`].ar;
 					const realAR = 
 						isSpecialized && armorDamageType === weaponDamageType ?
@@ -13753,24 +13655,24 @@
 			return isBlocked;
 		}
 		
-		function applyForcefieldToDamage(debug, timer, roll, outcome, value, last) {
+		async function applyForcefieldToDamage(debug, timer, roll, outcome, value, attacker) {
 			clog(debug, timer, 'roll.protection.forcefield.ar =', roll.protection.forcefield.ar, 'applyForcefieldToDamage()');
 			if(roll.protection.forcefield.ar !== 0) {
-				const weaponHasInsidious = last.attacker.weapon.hasinsidious;
+				const weaponHasInsidious = attacker.weapon.hasinsidious;
 				const canBlockInsidious = doesForcefieldBlockInsidious(debug, timer, value);
 				if(weaponHasInsidious && !canBlockInsidious) {
 					clog(debug, timer, 'weaponHasInsidious =', weaponHasInsidious);
 					clog(debug, timer, 'canBlockInsidious =', canBlockInsidious);
 					return;
 				}
-				if(last.attacker.weapon.damagetype === 'disease' && !forcefield.hasairtight) {
-					clog(debug, timer, 'last.attacker.weapon.damagetype =', last.attacker.weapon.damagetype);
+				if(attacker.weapon.damagetype === 'disease' && !forcefield.hasairtight) {
+					clog(debug, timer, 'attacker.weapon.damagetype =', attacker.weapon.damagetype);
 					clog(debug, timer, 'forcefield.hasairtight =', forcefield.hasairtight);
 					return;
 				}
 				const forcefieldDamageCategory = roll.protection.forcefield.damagecategory;
 				clog(debug, timer, 'forcefieldDamageCategory =', forcefieldDamageCategory);
-				const weaponDamageCategory = getWeaponDamageCategory(debug, timer, last.attacker.weapon.damagetype);
+				const weaponDamageCategory = getWeaponDamageCategory(debug, timer, attacker.weapon.damagetype);
 				clog(debug, timer, 'weaponDamageCategory =', weaponDamageCategory);
 				const isSpecific = 
 					forcefieldDamageCategory !== false ?
@@ -13786,7 +13688,7 @@
 						//roll.protection.forcefield.ar : 
 						roll.protection.forcefield.ar - 10;
 					//await commitChanges(debug, timer, value, ['protection_forcefield_ar'], [newForcefieldAR]);
-					commitChanges(debug, timer, value, { protection_forcefield_ar: newForcefieldAR }, setObj);
+					await commitChanges(debug, timer, value, { protection_forcefield_ar: newForcefieldAR });
 					if(roll.protection.conversion.type === 0 && roll.protection.conversion.hasescalate) {
 						outcome.converted += outcome.damage - damageRemainder;
 						clog(debug, timer, 'outcome.converted =', outcome.converted);
@@ -13824,7 +13726,7 @@
 			return damageCategory;
 		}
 		
-		function setProtectionValues(debug, timer, roll, last, value, attrdb) {
+		function setProtectionValues(debug, timer, roll, attacker, value, attrdb) {
 			clog(debug, timer, 'Fired!', '', 'setProtectionValues(TEST)');
 			clog(debug, timer, 'attrdb.conversion.length =', attrdb.conversion.length);
 			const conversion = attrdb.conversion.length !== 0 ? 
@@ -13838,14 +13740,14 @@
 			_.each(protection_array, p => {
 				clog(debug, timer, 'Protection =', p);
 				roll.protection[p].ar = 
-					p === 'mindshield' && last.attacker.weapon.haspsychic ?	
+					p === 'mindshield' && attacker.weapon.haspsychic ?	
 						parseInt(value[`protection_${p}_ar`]) || 0 :
 					p === 'shield' && roll.maneuver.name !== 'doesnothing' ? 0 :
-					p !== 'mindshield' && !last.attacker.weapon.haspsychic ?
+					p !== 'mindshield' && !attacker.weapon.haspsychic ?
 						parseInt(value[`protection_${p}_ar`]) || 0 :
 					0;
-					clog(debug, timer, `roll.protection[${p}].ar =`, roll.protection[p].ar);
-				if(p === 'forcefield' && parseInt(value[`protection_${p}_ar`]) !== 0) {
+				clog(debug, timer, `roll.protection[${p}].ar =`, roll.protection[p].ar);
+				if(p === 'forcefield' && roll.protection[p].ar !== 0) { //parseInt(value[`protection_${p}_ar`]) !== 0) {
 					const forcefield = _.find(attrdb.forcefield, ff => {
 						if(ff.source === value.protection_forcefield_source) return true;
 					});
@@ -13856,7 +13758,7 @@
 						getCustomizationValue(debug, timer, value, forcefield.source, 'rank', 'airtight');
 					roll.protection[p].hasairtight;
 				}
-				if(p.indexOf('armor') !== -1 && parseInt(value[`protection_${p}_ar`]) !== 0) {
+				if(p.indexOf('armor') !== -1 && roll.protection[p].ar !== 0) {
 					const armor = _.find(attrdb.armor, a => {
 						if(a.source === value[`protection_${p}_source`]) return true;
 					});
@@ -13866,7 +13768,7 @@
 					roll.protection[p].damagetype = damageType;
 					roll.protection[p].isspecialized = isSpecialized;
 				}
-				if(p.indexOf('absorption') !== -1 && parseInt(value[`protection_${p}_ar`]) !== 0) {
+				if(p.indexOf('absorption') !== -1 && roll.protection[p].ar !== 0) {
 					const absorption = _.find(attrdb.absorption, a => {
 						clog(debug, timer, 'name =', a.name);
 						clog(debug, timer, 'source =', a.source);
@@ -14050,7 +13952,7 @@
 				targetedmdState ? targetedmdLevel : 0;
 			const rushattackState =
 				isNaN(parseInt(setObj.static_button_targeted_rushdamage)) ?
-				parseInt(value.static_button_targeted_rushdamage) || 0 :
+				parseInt(value.static_button_targeted_rushdamage) :
 				parseInt(setObj.static_button_targeted_rushdamage);
 			const rushattackLevel = 
 				getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'rushattack');
@@ -14135,7 +14037,7 @@
 							break;
 							case 'autofire':
 								const firemode = parseInt(setObj[`static_weapon_autofire_selection`]) || 
-									parseInt(value[`static_weapon_autofire_selection`]) || 1;
+									parseInt(value[`static_weapon_autofire_selection`]);
 								const numhits = firemode == 1 ?
 									`{{hits2=1}} {{hits3=1}} {{hits4=1}} {{hits5=1}} {{hits6=1}} {{hits7=1}} {{hits8=1}} {{hits9=1}} {{hits10=1}} {{hits11=1}} {{hits12=1}}` :
 									firemode == 3 ?
@@ -14252,7 +14154,7 @@
 								result = `${result} {{${customization.name}=${customization.rank}}} {{range=${range}}}`;
 							break;
 							case 'stoppable':
-								const stopdamage = (parseInt(value[`repeating_attr_${rowID}_level`]) || 0) * 10;
+								const stopdamage = parseInt(value[`repeating_attr_${rowID}_level`]) * 10;
 								const timetostop = customization.rank > 3 ? '1 hour' :
 									customization.rank > 2 ? '1 minute' :
 									customization.rank > 1 ? '5 rounds' :
@@ -14345,33 +14247,31 @@
 		}
 		
 		function recordAmmoState(debug, timer, value, setObj) {
-			clog(debug, timer, '', '', 'recordAmmoState()');
 			writeValues(debug, timer, value, `repeating_attr_${value.active_weapon}_ammostate`, value.weapon_ammo_reloads, setObj);
 			writeValues(debug, timer, value, `repeating_attr_${value.active_weapon}_capacitystate`, value.weapon_ammo_capacity, setObj);
 		}
 		
 		function disableActiveWeapon(debug, timer, value, rowID, setObj) {
-			clog(debug, timer, '', '', 'disableActiveWeapon()');
 			const attribute = value[`repeating_attr_${rowID}_attribute`];
 			if (attribute !== 'weapon') return;
-			const activeweapon = value.active_weapon || '';
-			if (activeweapon.length !== 0) recordAmmoState(debug, timer, value, setObj);
+			const activeweapon = value.active_weapon || 'empty';
+			if (activeweapon.length === 20) recordAmmoState(debug, timer, value, setObj);
 			setObj.weapon_range = 0;
 			setObj.weapon_ammo_autofire = 0;
 			setObj.weapon_ammo = 0;
 			setObj.weapon_autofire = 0;
 			const state = parseInt(setObj[`repeating_attr_${rowID}_activate`]) || 
-				parseInt(value[`repeating_attr_${rowID}_activate`]) || 0;
-			clog(debug, timer, 'state =', state);
+				parseInt(value[`repeating_attr_${rowID}_activate`]);
+			clog(debug, timer, 'state =', state, 'disableActiveWeapon()');
 			clog(debug, timer, 'activeweapon =', activeweapon);
 			if (!state) return;
-			if (activeweapon === rowID) {
+			if (activeweapon == rowID) {
 				setObj.active_weapon = '';
 			}
 		}
 		
 		function setButtonState(debug, timer, value, source, rowID, sourceAttr, setObj) {
-			const theme = parseInt(value.theme) || 1;
+			const theme = parseInt(value.theme);
 			const attribute = sourceAttr;
 			const setstate = value[`${source}_${attribute}`] || 0;
 			const state = setstate == 0 ? 1 : 0;
@@ -14403,63 +14303,35 @@
 		}
 		
 		function getHandSource(debug, timer, extraarmIDs, rowID){
-			rowID = rowID.toLowerCase();
 			const handsource = /(mainhand|offhand)/i.test(rowID) ? rowID : 
 				extraarmIDs !== undefined ? extraarmIDs.indexOf(rowID) !== -1 ?
 					`repeating_extraarm_${rowID}` : '' : '';
-			clog(debug, timer, 'handsource =', handsource, 'getHandSource()');
 			const handscheck = handsource !== '' ? handsource.indexOf(',') > 0 ? 
 				handsource.split(',') : handsource : false;
-			clog(debug, timer, 'handscheck =', handscheck);
 			const result = handscheck !== false ? _.isArray(handscheck) ? 
 				handscheck[0] : handscheck : false;
-			clog(debug, timer, 'result =', result);
+			clog(debug, timer, 'result =', result, 'getHandSource()');
 			return result;
 		}
 		
-		function clearWeaponStates(debug, timer, extraarmIDs, value, setObj) {
-			const handsArray = buildHandsArray(debug, timer, extraarmIDs);
-			_.each(handsArray, hand => {
-				writeValues(debug, timer, value, `${hand}_state`, 0, setObj);
-			});
-		}
-		
-		function setWeaponStates(debug, timer, extraarmIDs, value, handsource, setObj) {
-			clog(debug, timer, 'handsource =', handsource, 'setWeaponStates()');
+		function setWeaponStates(debug, timer, extraarmIDs, value, rowID, setObj) {
 			const armedID = 
-				setObj[`${handsource}_source`] ||
-				value[`${handsource}_source`];
-			clog(debug, timer, 'armedID =', armedID);
-			//const handSources = value[`repeating_attr_${armedID}_source`] !== undefined ?
-			//	value[`repeating_attr_${armedID}_source`].indexOf(',') !== -1 ?
-			//		value[`repeating_attr_${armedID}_source`].split(',') :
-			//		value[`repeating_attr_${armedID}_source`] : '';
-			//const isTwoHanded = _.isArray(handSources);
+				setObj[`${rowID}_source`] ||
+				value[`${rowID}_source`];
 			const handsArray = buildHandsArray(debug, timer, extraarmIDs);
-			clog(debug, timer, 'handsArray =', handsArray);
 			const handsStateArray = 
 				_.map(handsArray, hand => {
 					const source = setObj[`${hand}_source`] || value[`${hand}_source`];
-					clog(debug, timer, 'hand[source] =', `${hand}[${source}]`);
-					const state = parseInt(setObj[`${hand}_state`]) || parseInt(value[`${hand}_state`]) || 0;
-					clog(debug, timer, 'state =', state);
-					//const isActive = //isNaN(parseInt(setObj[`repeating_attr_${source}_activate`])) ?
-						//parseInt(value[`repeating_attr_${source}_activate`]) || 0 :
-					//	parseInt(setObj[`repeating_attr_${source}_activate`]) || 0;
-					//clog(debug, timer, 'isActive =', isActive);
-					//const sourceHandPosition = handSources.indexOf(hand);
+					const state = parseInt(setObj[`${hand}_state`]) || parseInt(value[`${hand}_state`]);
 					const isExtraArm = extraarmIDs.indexOf(hand) !== -1 ? true : false;
 					const extraArmType = parseInt(value[`${hand}_type`]) || false;
 					const isWeaponMount = isExtraArm && extraArmType === 0 ? true : false;
 					const handstate = source == armedID ?
-						//isTwoHanded ?
-						//	parseInt(setObj[`${handSources[0]}_state`]) || parseInt(value[`${handSources[0]}_state`]) === 0 ? 1 : 0 :
-						state === 0 ? 1 : 0 : 0;
+							state == 0 ? 1 : 0 : 0;
 					return handstate;
 				});
-			clog(debug, timer, 'handsStateArray:', handsStateArray);
+			clog(debug, timer, 'handsStateArray:', handsStateArray, 'setWeaponStates()');
 			_.each(handsArray, (hand, i) => {
-				clog(debug, timer, 'hand[state]', `${hand}[${handsStateArray[i]}]`);
 				//setObj[`${hand}_state`] = handsStateArray[i];
 				writeValues(debug, timer, value, `${hand}_state`, handsStateArray[i], setObj);
 			});
@@ -14489,7 +14361,7 @@
 		}
 		
 		function setDepleteRules(debug, timer, value, attrIDs, setObj) {
-			const state = (parseInt(value.static_rules_deplete_alt) || 0) == 1 ?
+			const state = parseInt(value.static_rules_deplete_alt) == 1 ?
 				1 : 0;
 			if (_.isArray(attrIDs)) {
 				_.each(attrIDs, id => {
@@ -14503,7 +14375,7 @@
 		
 		function setDepleteResurvation(debug, timer, attrdb, value, rowID, setObj) {
 			const depleteRank = getCustomizationValue(debug, timer, value, rowID, 'rank', 'deplete');
-			const useDepleteAltRules = (parseInt(value.static_rules_deplete_alt) || 0);
+			const useDepleteAltRules = parseInt(value.static_rules_deplete_alt);
 			if (!depleteRank && !useDepleteAltRules) return;
 			const totalDepete = _.chain(all_attributes_array)
 				.map( a => {
@@ -14671,7 +14543,7 @@
 			const skillStatButtonState = button => 
 				allaspects_stats_array.indexOf(button) !== -1 ||
 				major_stats_array.indexOf(button) !== -1 ?
-					(parseInt(value[`${match}state`]) || 0) > 0 ?
+					parseInt(value[`${match}state`]) > 0 ?
 						setObj[`${match}state`] = 0 : 
 						setObj[`${match}state`] = 1 : 
 				false;
@@ -14685,7 +14557,7 @@
 				sourceAttr;
 			const setButtonState = button => button == 'stat' || button == 'type' || 
 				button.length == 20 ?
-				(parseInt(value[`${source}state`]) || 0) > 0 ?
+				parseInt(value[`${source}state`]) > 0 ?
 					setObj[`${source}state`] = 0 :
 					setObj[`${source}state`] = 1 :
 				false;
@@ -14706,7 +14578,7 @@
 				(specilizations.match(/,/g) || []).length;
 			const skillname = value[`repeating_skill_${rowID}_name`];
 			const skillcost = getSkillCost(debug, timer, value, skillname);
-			const skillrank = parseInt(value[`repeating_skill_${rowID}_level`]) || 0;
+			const skillrank = parseInt(value[`repeating_skill_${rowID}_level`]);
 			const totalcost = (skillcost * skillrank) + specilizationscost;
 			const groupid = getGroupID(value, 'skill');
 			const spent = getAggregateSkillGroupCost(debug, timer, skillIDs, value, rowID, groupid, setObj);
@@ -14716,7 +14588,7 @@
 		
 		function setSkillGroupCost(value, sectionName, cost, setObj){
 			const groupID = getGroupID(value, sectionName);
-			const groupcost = parseInt(value[`static_skillgroup_${groupID}_groupcost`]) || 0;
+			const groupcost = parseInt(value[`static_skillgroup_${groupID}_groupcost`]);
 			setObj[`static_skillgroup_${groupID}_groupcost`] = groupcost + cost;
 		}
 		
@@ -14747,7 +14619,7 @@
 			const stats = type.major==1 ? statmajor: statallaspect;
 			const sum = _.chain(stats)
 				.map(stat=>{
-					return parseInt(value[`stat_total_${stat}`]) || 0;
+					return parseInt(value[`stat_total_${stat}`]);
 				})
 				.reduce((memo,stat)=>{
 					return memo + stat;
@@ -14975,10 +14847,10 @@
 					'static_options_selection_gamegenre',
 					'previous_weapon',
 					'static_rules_deplete_alt',
-					'attacker',
-					'outcome', 
-					'character_id',
-					'beacon_id'
+					//'attacker',
+					//'outcome',
+					'besmdb_name',
+					'character_id'
 				]);
 				getAttrsString = getAttrsString.concat(size_template_values_array);
 				getAttrsString = getAttrsString.concat(buildStatButtonStatesArray());
@@ -14993,8 +14865,7 @@
 					sheetdb.extraarmIDs = extraarmIDs;
 		
 					_.each(getAttrsString, o => {
-						//if(value[o] !== undefined) sheetdb[o] = value[o];
-						if(!isFalsey(value[o])) sheetdb[o] = value[o];
+						if(value[o] !== undefined) sheetdb[o] = value[o];
 					});
 					clog(3, timer, 'value:', value);
 		
@@ -15040,7 +14911,7 @@
 			return;
 		});
 		
-		on(events, (eventInfo, ev) => {
+		on(events, async (eventInfo) => {
 			
 			const timer = {
 				start:Date.now(),
@@ -15056,7 +14927,7 @@
 				'sheetdb'
 			];
 		
-			getAttrs(get_attrs_array, v => {
+			const v = await asw.getAttrs(get_attrs_array);
 				let value = JSON.parse(v.sheetdb);
 				if (recordSheetChanges(timer, eventInfo, value, setObj)) return;
 				const debug = parseInt(value[`show_debug_messages`]) || 0;
@@ -15125,7 +14996,7 @@
 							clog(debug, timer, 'setObj:', setObj, 'Changes To Sheet Values', 'info');
 							value = {...value, ...setObj};
 							setObj.sheetdb = JSON.stringify(value);
-							setAttrs(setObj,{silent:true});
+							await asw.setAttrs(setObj,{silent:true});
 							clog(debug, timer, 'Changes written to sheet', '', 'setAttrs()', 'info');
 						}
 						return;
@@ -15144,10 +15015,8 @@
 		
 						switch (sectionName) {
 							case `attr`:
-								//const isNew = parseInt(value[`${source}_new`]) === 0 ? false : true;
-								const group = parseInt(value[`${source}_group`]) || 0;
-								const isNew = group !== 0 ? false : true;
-								clog(debug, timer, `isNew =`, isNew, 'Attribute is new?');
+								const isNew = parseInt(value[`${source}_new`]) === 0 ? false : true;
+								clog(debug, timer, `${source}_new =`, value[`${source}_new`], 'Attribute is new?');
 								if(isNew) {
 									setGroupMembership(debug, timer, value, setObj, source, sectionName);
 									attrIDs.indexOf(rowID) === -1 ? attrIDs.push(rowID) : false;
@@ -15155,6 +15024,13 @@
 								}
 								if(getIsSheetworker(eventInfo.sourceType)) return;
 								switch (sourceAttr) {
+									/*
+									case `options`:
+										if (resetOnLocked(debug, timer, eventInfo, value, match, rowID, setObj)) return;
+										const state = parseInt(value[`${source}_${sourceAttr}`]) > 0 ? 0: 1;
+										setObj[`${source}_${sourceAttr}`] = state;
+									break;
+									*/
 									case `attribute`:
 										if (resetOnLocked(debug, timer, eventInfo, value, match, rowID, setObj)) return;
 										if (resetOnLevelNotZero(debug, timer, eventInfo, value, match, rowID, setObj)) return;
@@ -15182,24 +15058,15 @@
 										if (!getIsLocked(debug, timer, value, rowID, sourceAttr)) return;
 										if (getFluxGroupIsNotActive(debug, timer, value, rowID)) return;
 										const isActive = setButtonState(debug, timer, value, source, rowID, sourceAttr, setObj);
-										setAttrEffects(debug, timer, isActive, value, attrdb, extraarmIDs, attrIDs, skillIDs, sectionName, rowID, sourceAttr, setObj);
 										const handsource = getHandSource(debug, timer, extraarmIDs, value[`repeating_attr_${rowID}_source`]);
-										const handstate = handsource !== false ? parseInt(value[`${handsource}_state`]) || 0 : false;
-										clog(debug, timer, 'handstate =', handstate, 'TEST');
-										
+										const handstate = handsource !== false ? parseInt(value[`${handsource}_state`]) : false;
+										setAttrEffects(debug, timer, isActive, value, attrdb, extraarmIDs, attrIDs, skillIDs, sectionName, rowID, sourceAttr, setObj);
 										//setPoolCostIfGroupIsFlux(debug, timer, attrIDs, value, rowID, setObj);
 										setAttrGroupPoolSpentByActivation(debug, timer, isActive, attrIDs, value, rowID, setObj);
 										//setPoolCostIfGroupIsVariation(debug, timer, isActive, attrIDs, value, rowID, setObj);
 										disableActiveWeapon(debug, timer, value, rowID, setObj);
 										if (handstate) {
 											setWeaponAmmo(debug, timer, attrdb, value, handsource, setObj);
-		
-											//const handsource = getHandSource(debug, timer, extraarmIDs, rowID);
-											//setWeaponStates(debug, timer, extraarmIDs, value, rowID, setObj);
-											//setActiveWeapon(debug, timer, value, handsource, setObj);
-											//setActiveWeaponUI(debug, timer, attrdb, value, setObj);
-											//setWeaponAmmo(debug, timer, attrdb, value, handsource, setObj);
-											//setCombatRoll(debug, timer, value, attrdb, value[`${handsource}_source`], sourceAttr, setObj);
 										}
 										setGroupDefectPointsOnActivation(debug, timer, attrIDs, attrdb, value, sectionName, rowID, setObj);
 										setDepleteResurvation(debug, timer, attrdb, value, rowID, setObj);
@@ -15260,7 +15127,8 @@
 									break;
 									case 'statselection':
 									case 'option':
-										const state = (parseInt(value[`${source}_${sourceAttr}`]) || 0) > 0 ? 0 : 1;
+										const state = parseInt(value[`${source}_${sourceAttr}`]) > 0 ? 0: 1;
+										//setObj[`${source}_${sourceAttr}`] = state;
 										writeValues(debug, timer, value, `${source}_${sourceAttr}`, state, setObj);
 									break;
 									default:
@@ -15302,7 +15170,7 @@
 						clog(debug, timer, 'setObj:', setObj, 'Changes To Sheet Values', 'info');
 						value = {...value, ...setObj};
 						setObj.sheetdb = JSON.stringify(value);
-						setAttrs(setObj,{silent:true});
+						await asw.setAttrs(setObj,{silent:true});
 						clog(debug, timer, 'Changes written to sheet', '', 'setAttrs()', 'info');
 						return;
 					} else if (sourceType==`static`) {
@@ -15388,16 +15256,14 @@
 								setStatButtonStatsAndRolls(debug, timer, eventInfo, value, rowID, sourceAttr, setObj);
 								switch (`${sourceAttr}`) {
 									case `armedstate`:
-										const handsource = getHandSource(debug, timer, extraarmIDs, rowID);
 										setWeaponStates(debug, timer, extraarmIDs, value, rowID, setObj);
-										setActiveWeapon(debug, timer, value, handsource, setObj);
+										setActiveWeapon(debug, timer, value, rowID, setObj);
 										setActiveWeaponUI(debug, timer, attrdb, value, setObj);
 										setWeaponAmmo(debug, timer, attrdb, value, rowID, setObj);
 										//setCombatRoll(debug, timer, value, attrdb, value[`${rowID}_source`], sourceAttr, setObj);
 									break;
 									case 'roll':
-										doCombatRoll(debug, timer, value, attrdb, ev, setObj);
-										return;
+										await doCombatRoll(debug, timer, value, attrdb, rowID, setObj);
 									break;
 									case 'regenerate':
 										doRegenerateForcefield(debug, timer, value, attrdb, setObj);
@@ -15432,7 +15298,7 @@
 						clog(debug, timer, 'setObj:', setObj, 'Changes To Sheet Values', 'info');
 						value = {...value, ...setObj};
 						setObj.sheetdb = JSON.stringify(value);
-						setAttrs(setObj,{silent:true});
+						await asw.setAttrs(setObj,{silent:true});
 						clog(debug, timer, 'Changes written to sheet', '', 'setAttrs()', 'info');
 						return;
 					} else {
@@ -15440,7 +15306,7 @@
 						return;
 					}
 				//});
-			});
+			//});
 		});
 		
 		on('clicked:testactive', ()=>{
