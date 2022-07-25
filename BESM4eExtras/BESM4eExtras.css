@@ -2337,11 +2337,16 @@ div.flex-skillchild-button {
 /***************** Roll Templates *****************/
 
 /*.sheet-rolltemplate-besm .sheet-besm-outer {*/
-#besm-outer {
+.sheet-besm-outer {
     border: 5px solid #E83278;
 	border-radius: 20px 20px 20px 20px;
 	padding: 10% 0% 10% 0%;
-	
+}
+
+.sheet-besm-outer.sheet-conclusion {
+    border: 5px solid #000;
+	border-radius: 0px 0px 20px 20px;
+	padding: -10% 0% 10% 0%;
 }
 
 .sheet-rolltemplate-besm .sheet-besm-header {
@@ -2350,7 +2355,8 @@ div.flex-skillchild-button {
 	text-align: center;
 }
 
-.sheet-rolltemplate-besm .sheet-besm-title {
+.sheet-rolltemplate-besm .sheet-action .sheet-besm-title, 
+.sheet-rolltemplate-besm .sheet-reaction .sheet-besm-title {
 	font-size: 1.1em;
     line-height: 1.1em;
     margin: 0% -6% 0% -6%;
@@ -2363,8 +2369,19 @@ div.flex-skillchild-button {
     padding: 1% 0% 3% 0%;
 }
 
+.sheet-rolltemplate-besm .sheet-conclusion .sheet-besm-title {
+	font-size: 1.1em;
+    line-height: 1.1em;
+    margin: 0% -6% 0% -6%;
+    border: 5px solid #000;
+    border-radius: 50px 50px 50px 50px;
+    padding: 1% 0% 3% 0%;
+	background-color: #36286D;
+}
+
 .sheet-rolltemplate-besm .sheet-action .sheet-besm-header .sheet-besm-title,
-.sheet-rolltemplate-besm .sheet-reaction .sheet-besm-header .sheet-besm-title {
+.sheet-rolltemplate-besm .sheet-reaction .sheet-besm-header .sheet-besm-title,
+.sheet-rolltemplate-besm .sheet-conclusion .sheet-besm-header .sheet-besm-title {
 	font-family: 'Long Cang', cursive;
 	font-weight: bold;
 	font-size: 3em;

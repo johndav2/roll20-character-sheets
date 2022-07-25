@@ -8658,37 +8658,44 @@
 -->
 
 	<rolltemplate class="sheet-rolltemplate-besm">
-		<div class="sheet-besm-outer{{#action}} sheet-action{{/action}}{{#reaction}} reaction{{/reaction}}{{#conclusion}} conclusion{{/conclusion}}" style="border: 5px solid {{#color}}{{color}}{{/color}}{{^color}}#E83278{{/color}}; border-radius: 20px 20px 20px 20px; padding: 5% 0% 5% 0%; background-color: {{#background}}{{background}}{{/background}}{{^background}}#ffb4c9{{/background}};">
+		<div class="sheet-besm-outer{{#action}} sheet-action{{/action}}{{#reaction}} reaction{{/reaction}}" style="border: 5px solid {{#color}}{{color}}{{/color}}{{^color}}#E83278{{/color}}; border-radius: 20px 20px 20px 20px; padding: 5% 0% 5% 0%; background-color: {{#background}}{{background}}{{/background}}{{^background}}#ffb4c9{{/background}};">
 			<!-- NON-REACT HEADER/BODY 
 			{{^react}}-->
-
-				<div class="besm-header">
-					<div class="besm-title" style="background-color: {{#color}}{{color}}{{/color}}{{^color}}#E83278{{/color}};"><span>{{title}}</span></div>
-					{{#emote}}
-					<div class="besm-emote">
-						<span>{{emote}}</span>
-					</div>
-					{{/emote}}
+			<div class="besm-header">
+				<div class="besm-title" style="background-color: {{#color}}{{color}}{{/color}}{{^color}}#E83278{{/color}};"><span>{{title}}</span></div>
+				{{#emote}}
+				<div class="besm-emote">
+					<span>{{emote}}</span>
 				</div>
-				<!-- BODY -->
-				<div class="besm-body">
-					<div class="grid-besmrt">
-						<div class="besmrt-key">{{cvtype}}</div>  <!--padl padr rt-key-->
-						<div class="besmrt-value mouseover-hideroll">{{cv}}</div> <!--padr rt-value right -->
-					</div>
-					<div class="grid-besmrt">
-						<div class="besmrt-key">Roll</div>
-						<div class="besmrt-value">{{roll1}}</div>
-					</div>
-					<div class="grid-besmrt">
-						<div class="besmrt-key">Total</div>
-						<div class="besmrt-value mouseover-hideroll">{{computed::roll1}}</div>
-					</div>
+				{{/emote}}
+			</div>
+			<!-- BODY -->
+			<div class="besm-body">
+				<div class="grid-besmrt">
+					<div class="besmrt-key">{{cvtype}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{cv}}</div>
 				</div>
-
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Roll</div>
+					<div class="besmrt-value">{{roll1}}</div>
+				</div>
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Total</div>
+					<div class="besmrt-value mouseover-hideroll">{{computed::roll1}}</div>
+				</div>
+			</div>
 		</div>
 	</rolltemplate>
 
+	<rolltemplate class="sheet-rolltemplate-besmConclusion">
+		<div class="sheet-besm-outer sheet-conclusion">
+			<div class="sheet-besm-header">
+				<div class="sheet-besm-title">
+					CONCLUSION
+				</div>
+			</div>
+		</div>
+	</rolltemplate>
 
 	<rolltemplate class="sheet-rolltemplate-besmDefault">
 		<div class="rt-card">
@@ -14138,18 +14145,14 @@
 		}
 		
 		function setDice(mod, eo = 0) {
+			const exceed2dice = false;
 			const edges = mod.edge;
 			const obstacles = mod.obstacle * -1;
 			const total = edges + obstacles + eo;
 			const hl = (total > 0) ? 'kh2' : (total < 0) ? 'kl2' : '';
-			const ndice = (total > 1 || total < -1) ? 4 : (total == 1 || total == -1) ? 3 : 2;
+			const ndice = exceed2dice ? total : 
+				(total > 1 || total < -1) ? 4 : (total === 1 || total === -1) ? 3 : 2;
 			const diceToRoll = `${ndice}d6${hl}`;
-			/*
-			const total = mod + eo,
-				hl = (total > 0) ? 'kh2' : (total < 0) ? 'kl2' : '',
-				dice = (total > 1 || total < -1) ? 4 : (total == 1 || total == -1) ? 3 : 2,
-				result = `${dice}d6${hl}`;
-			*/
 			return diceToRoll;
 		}
 		
@@ -14880,7 +14883,7 @@
 			return lastAttackerObj;
 		}
 		
-		async function doCombatRoll(debug, timer, value, attrdb, rowID, setObj) {
+		async function doCombatRoll(debug, timer, value, attrdb, setObj) {
 			clog(debug, timer, 'Fired!', '', 'doCombatRoll()');
 			const besmdb_id = await getBesmdbID(debug, timer, value);
 			const roll = { 
@@ -15034,7 +15037,7 @@
 					
 					const attackSucceeded = attacker.results.total - roll.results.roll1 > 0;
 					roll.outcome.title = attackSucceeded ? 'Failure' : 'Success';
-					roll.outcome.body = `&{template:besmConclusion} {{character_name=@{charactername}}} `;
+					roll.outcome.body = `&{template:besmConclusion} {{character_name=@{charactername}}} {{conclusion=1}} `;
 					roll.outcome.body += attackSucceeded ? 
 						`{{attacksucceeded=1}} {{title=RESOLUTION}} ` +
 						`{{damage=[[ 0d6 + ${roll.outcome.damage} ]]}} {{shockvalue=[[ 0d6 + ${roll.outcome.shocktn} ]]}}` :
@@ -15170,8 +15173,8 @@
 		
 		function applyArmorToDamage(debug, timer, roll, outcome, attacker) {
 			clog(debug, timer, 'Fired!', '', 'applyArmorToDamage()');
-			const weaponHasInsidious = attacker.weapon.hasinsidious;
-			if(weaponHasInsidious) return;
+			//const weaponHasInsidious = attacker.weapon.insidious;
+			if(attacker.weapon.insidious) return;
 			for(let i = 1; i <= 3; i++) {
 				if(roll.protection[`armor${i}`].ar !== 0 && outcome.damage !== 0) {
 					clog(debug, timer, `armor${i}`, '');
@@ -15238,7 +15241,7 @@
 		async function applyForcefieldToDamage(debug, timer, roll, outcome, value, attacker) {
 			clog(debug, timer, 'roll.protection.forcefield.ar =', roll.protection.forcefield.ar, 'applyForcefieldToDamage()');
 			if(roll.protection.forcefield.ar !== 0) {
-				const weaponHasInsidious = attacker.weapon.hasinsidious;
+				const weaponHasInsidious = attacker.weapon.insidious;
 				const canBlockInsidious = doesForcefieldBlockInsidious(debug, timer, value);
 				if(weaponHasInsidious && !canBlockInsidious) {
 					clog(debug, timer, 'weaponHasInsidious =', weaponHasInsidious);
@@ -15320,10 +15323,10 @@
 			_.each(protection_array, p => {
 				clog(debug, timer, 'Protection =', p);
 				roll.protection[p].ar = 
-					p === 'mindshield' && attacker.weapon.haspsychic ?	
+					p === 'mindshield' && attacker.weapon.psychic ?	
 						parseInt(value[`protection_${p}_ar`]) || 0 :
 					p === 'shield' && roll.maneuver.name !== 'doesnothing' ? 0 :
-					p !== 'mindshield' && !attacker.weapon.haspsychic ?
+					p !== 'mindshield' && !attacker.weapon.psychic ?
 						parseInt(value[`protection_${p}_ar`]) || 0 :
 					0;
 				clog(debug, timer, `roll.protection[${p}].ar =`, roll.protection[p].ar);
@@ -15403,9 +15406,9 @@
 				clog(debug, timer, 'superstrength =', superstrength);
 				roll.damage.base = 
 					roll.weapon.level === -1 ? 0 :
-					roll.weapon.isswarm ?
+					roll.weapon.swarm ?
 						Math.round(weapon.weapon.critters / 10) :
-					roll.weapon.istelekinesis ?
+					roll.weapon.telekinesis ?
 						(((roll.weapon.level - 2) + massivedamage + roll.damage.targeted) * 5) + 
 						roll.cv :
 					roll.weapon.weaponclass === 'unarmed' && roll.weapon.level === 0 ?
@@ -15450,9 +15453,9 @@
 			const cvType = roll.maneuver.type === 1 ? 'acv' :
 				roll.maneuver.type === 2 ? 'dcv' : '';
 			roll.results.cv = 
-				cvType === 'acv' && roll.weapon.isswarm ?
+				cvType === 'acv' && roll.weapon.swarm ?
 					parseInt(roll.weapon.level) + 4 :
-				cvType === 'dcv' && roll.weapon.isswarm ? 0 :
+				cvType === 'dcv' && roll.weapon.swarm ? 0 :
 				getCV(debug, timer, value, attrdb, setObj, cvType, roll.weapon.weaponclass) || 0;
 		}
 		
@@ -15461,7 +15464,6 @@
 				parseInt(value.static_button_targeted_damage) || 0;
 			const targetedmdLevel = 
 				getTargetedLevel(attrdb, 'massivedamage') || 0;
-			//const targetedmd = 
 			roll.damage.targeted =
 				targetedmdState ? targetedmdLevel : 0;
 		}
@@ -15470,10 +15472,58 @@
 			const activeweapon = value.active_weapon;
 			const type = value.active_weapon !== undefined ? 
 				value[`repeating_attr_${activeweapon}_attribute`] : 'unarmed';
-			const isNaturalWeapon = 
-				activeweapon === '' || activeweapon === undefined ? true : false;
 			const weapon = 
 				_.find(attrdb[`${type}`], o => { if (o.source == activeweapon) return o; });
+			const isWeapon = getIsObject(weapon);
+			
+			if (isWeapon) roll.weapon = Object.assign(roll.weapon, weapon);
+			roll.weapon.isweapon = isWeapon;
+			roll.weapon.isnaturalweapon = 
+				activeweapon === '' || activeweapon === undefined ? true : false;
+			roll.weapon.isstun = 
+				getIsStun(debug, timer, roll, value, attrdb, roll.weapon.isnaturalweapon, weapon);
+			roll.weapon.name = roll.weapon.isweapon ? weapon.name : 'Unarmed';
+			roll.weapon.level = roll.weapon.isweapon ? weapon.level :
+				getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'brutal') || 0;
+			roll.weapon.weaponclass = roll.weapon.isweapon ? weapon.focus : 'unarmed';
+			roll.weapon.damagetype = roll.weapon.isweapon ? weapon.damagetype : 'blunt';
+			roll.weapon.ismelee = 
+				type === 'shield' ? true : getIsMelee(debug, timer, roll.weapon.weaponclass);
+			roll.weapon.muscle = roll.weapon.ismelee !== 0 ? 1 :
+				_.find(weapon.customizations, o => { 
+					if (o.name === 'muscle') return 1; 
+				}) || 0;
+		
+			_.each(weapon.customizations, c => {
+				roll.weapon[c.name] = c.rank;
+			});
+			/*
+			roll.weapon.hasinsidious = roll.weapon.isweapon ? 
+				getCustomizationExists('insidious', weapon.customizations) : false;
+			roll.weapon.haspsychic = roll.weapon.isweapon ?
+				getCustomizationExists('psychic', weapon.customizations) : false;
+			roll.weapon.istelekinesis = 
+				roll.weapon.isweapon ? weapon.attribute === 'telekinesis' : false;
+			roll.weapon.isswarm = 
+				roll.weapon.isweapon ? weapon.attribute === 'swarm' : false;
+			roll.weapon.aoe = 
+				_.find(weapon.customizations, o => { 
+					if (o.name === 'area') return 'area'; }) ||
+				_.find(weapon.customizations, o => { 
+					if (o.name === 'spreading') return 'spreading'; }) ||
+				false;
+			if (roll.weapon.aoe !== false) {
+				roll.weapon.selective = 
+					_.find(weapon.customizations, o => { 
+						if (o.name === 'selective') return true; }) || 
+					false;
+			}
+			roll.weapon.stoppable = 
+				_.find(weapon.customizations, o => { 
+					if (o.name === 'stoppable') return true; }) ||
+				false;
+		
+			/*
 			const isWeapon = getIsObject(weapon);
 			const hasInsidious = isWeapon ? 
 				getCustomizationExists('insidious', weapon.customizations) : false;
@@ -15507,6 +15557,7 @@
 			roll.weapon.damagetype = damagetype;
 			roll.weapon.ismelee = isMelee;
 			roll.weapon.muscle = muscle;
+			*/
 			clog(debug, timer, 'roll.weapon:', roll.weapon, 'getActiveWeapon()');
 		}
 		
@@ -16871,7 +16922,7 @@
 										//setCombatRoll(debug, timer, value, attrdb, value[`${rowID}_source`], sourceAttr, setObj);
 									break;
 									case 'roll':
-										await doCombatRoll(debug, timer, value, attrdb, rowID, setObj);
+										await doCombatRoll(debug, timer, value, attrdb, setObj);
 									break;
 									case 'regenerate':
 										doRegenerateForcefield(debug, timer, value, attrdb, setObj);
