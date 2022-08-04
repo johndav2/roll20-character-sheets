@@ -9556,6 +9556,16 @@
 			if (isLesserThan180) {
 				upgradeTo_1_8_0(sizetemplateIDs, value, sheetdb, setObj);
 			}
+			const isLesserThan183 = major_global_version <= 1 && minor_global_version < 8.3 ?
+				true : false;
+			if (isLesserThan183) {
+				upgradeTo_1_8_3(value, setObj);
+			}
+			const isLesserThan186 = major_global_version <= 1 && minor_global_version < 8.6 ?
+				true : false;
+			if (isLesserThan186) {
+				upgradeTo_1_8_6(value, setObj);
+			}
 			setObj.global_version = sheet_version;
 		}
 		
@@ -9641,6 +9651,36 @@
 				});
 			}
 			clog(2, {}, 'upgraded to 1.8.0');
+		}
+		
+		function upgradeTo_1_8_3(value, setObj) {
+			const statValues = [
+				parseInt(value.static_stat_base_body) || 0,
+				parseInt(value.static_stat_base_mind) || 0,
+				parseInt(value.static_stat_base_soul) || 0
+			];
+			clog(2, {}, 'statValues:', statValues, 'upgradeTo_1_8_3()');
+			_.each(statValues, (s, i) => {
+				const cost = getStatCost(2, {}, s);
+				clog(2, {}, 's =', s);
+				setObj[`stat_cost_${allaspects_stats_array[i]}`] = cost;
+			});
+			clog(2, {}, 'upgraded to 1.8.3');
+		}
+		
+		function upgradeTo_1_8_6(value, setObj) {
+			const statValues = [
+				parseInt(value.static_stat_base_body) || 0,
+				parseInt(value.static_stat_base_mind) || 0,
+				parseInt(value.static_stat_base_soul) || 0
+			];
+			clog(2, {}, 'statValues:', statValues, 'upgradeTo_1_8_6()');
+			_.each(statValues, (s, i) => {
+				const cost = getStatCost(2, {}, s);
+				clog(2, {}, 's =', s);
+				setObj[`stat_cost_${allaspects_stats_array[i]}`] = cost;
+			});
+			clog(2, {}, 'upgraded to 1.8.6');
 		}
 		
 		/** Build UI Functions **/
@@ -10027,6 +10067,15 @@
 			const result = getSkillStatsDisplay(stats);
 			clog(debug, timer, 'result =', result, 'getSkillStatTypeDisplay()');
 			return result;
+		}
+		
+		function getStatCost(debug, timer, level) {
+			let cost = 0;
+			for(let i = 1; i <= level; i++) {
+				if(i < 13) { cost += 2 } else { cost += 4 }
+			}
+			clog(debug, timer, 'cost =', cost, 'getStatCost()');
+			return cost;
 		}
 		
 		function setStatCost(debug, timer, eventInfo, value, setObj, sourceAttr) {
@@ -11869,6 +11918,7 @@
 		function getCharacteristicSpecializationByAttr(debug, timer, value, rowID, attribute) {
 			const obj = {
 				"meleeattack": "weaponclass",
+				"rangedattack": "weaponclass",
 				"meleedefense": "weaponclass",
 				"enemyattack": "enemy",
 				"enemydefense": "enemy",
@@ -11878,11 +11928,12 @@
 				"skill": "skillgroup"
 			};
 			const default_obj = {
-				"meleeattack": "exotic",
-				"meleedefense": "exotic",
-				"enemyattack": "not configured",
-				"enemydefense": "not configured",
-				"immunity": "not configured",
+				"meleeattack": "<select weapon class>",
+				"rangedattack": "<select weapon class>",
+				"meleedefense": "<select weapon class>",
+				"enemyattack": "<not configured>",
+				"enemydefense": "<not configured>",
+				"immunity": "<not configured>",
 				"immutable": "body",
 				"rangeddefense": "personal",
 				"skill": 1
@@ -15934,6 +15985,8 @@
 		}
 		
 		function getHandSource(debug, timer, extraarmIDs, rowID){
+			if (rowID === undefined) return false;
+			rowID = rowID.toLowerCase();
 			const handsource = /(mainhand|offhand)/i.test(rowID) ? rowID : 
 				extraarmIDs !== undefined ? extraarmIDs.indexOf(rowID) !== -1 ?
 					`repeating_extraarm_${rowID}` : '' : '';
@@ -16761,6 +16814,11 @@
 									case 'unaffected':
 										setStatButtonStatsAndRolls(debug, timer, eventInfo, value, rowID, sourceAttr, setObj);
 										setUnaffectedAttributes(debug, timer, eventInfo, value, rowID, setObj);
+									break;
+									case 'enemy':
+									case 'immunityrole':
+									case 'weaponclass':
+										setAttrCharacteristic(debug, timer, value, rowID, setObj);
 									break;
 									default:
 										const isDefect = value[`${source}_attribute`] == 'defect' ?
