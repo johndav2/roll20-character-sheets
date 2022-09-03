@@ -1393,14 +1393,14 @@
 						</div>	
 					</div>
 					<fieldset class="repeating_extraarm">						
-						<div class="row">
-							<div class="col-5-6 theme">
+						<div class="flex-container-evenlyspace padb">
+							<div class="flex-5-6 theme">
 								<input type="checkbox" class="weapon" name="attr_state" value="1" />
 								<button type="action" class="input-component weapon" name="act_armedstate">
 									<span>
 										<span style="font-weight: normal; color: black;" name="attr_label"></span>
-										<div class="row padb">
-											<div class="col-1 border" style="background: white;">
+										<div class="flex-container-spacearound padb">
+											<div class="flex-1 border" style="background: white;">
 												<span style="width: 90%; color: black;" name="attr_name"></span>
 											</div>
 											<input type="hidden" class="center" name="attr_name" value="Unarmed" readonly />
@@ -8636,9 +8636,14 @@
 
 	<!--************************* Hidden Values *************************-->
 
-	<div>
+	<div style="display:none; visibility: hidden">
 		<input type="hidden" name="attr_besmdb_id" value="" />
 		<input type="hidden" name="attr_theme" value=1 />
+		<button type="action" name="act_react-defend"></button>
+		<button type="action" name="act_react-shock"></button>
+		<button type="action" name="act_react-death"></button>
+		<button type="action" name="act_react-stat"></button>
+		<button type="action" name="act_static_button_combat_react"></button>
 	</div>
 
 	<!-- ************************ Roll Templates ************************ -->
@@ -8685,16 +8690,211 @@
 				</div>
 			</div>
 		</div>
+		{{#react}}
+		<div class="sheet-besm-react-outer" style="background-color: #94b1cc; border: #4f4f4f solid 5px;">
+			<div class="sheet-besm-react-header center" style="color: #1f1f4f;">
+				<span>Reactive rolls:</span>
+			</div>
+			<!--{{#reactbutton1name}}{{#^rollTotal() computed::reactbutton1name 1}}-->
+			<div class="sheet-besm-row">
+				<div class="sheet-besm-react-buttonname">
+					{{reactbutton1name}}
+				</div>
+				<!--{{#reactbutton1label}}-->
+				<div class="sheet-besm-react-button">
+					[{{reactbutton1label}}](~selected|{{roll1link}}||{{computed::roll1data}})
+				</div>
+				<!--{{/reactbutton1label}}-->
+			</div>
+			<!--{{/^rollTotal() computed::reactbutton1name 1}}{{/reactbutton1name}}-->
+		</div>
+		{{/react}}
 	</rolltemplate>
 
-	<rolltemplate class="sheet-rolltemplate-besmConclusion">
-		<div class="sheet-besm-outer sheet-conclusion">
-			<div class="sheet-besm-header">
+	<rolltemplate class="sheet-rolltemplate-besm-result">
+		<div class="sheet-besm-result-outer" style="background-color: {{#succeed}}#C5E0B4{{/succeed}}{{^succeed}}#FF6969{{/succeed}}; border: {{#succeed}}#70AD47{{/succeed}}{{^succeed}}#E60000{{/succeed}} solid 5px;">
+			<div class="sheet-besm-result-header" style="color: #fff; background-color: {{#succeed}}#70AD47{{/succeed}}{{^succeed}}#E60000{{/succeed}};">
 				<div class="sheet-besm-title">
-					CONCLUSION
+					{{result-header}}
+				</div>
+			</div>
+			<div class="besm-body">
+				{{#autofire}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Autofire Hits</div>
+					<div class="besmrt-value mouseover-hideroll">{{autofire}}</div>
+				</div>
+				{{/autofire}} {{#damagetaken}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{stun}}Damage {{#autofire}}per Hit{{/autofire}}{{^autofire}}Taken{{/autofire}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{damagetaken}}</div>
+				</div>
+				{{/damagetaken}} {{#forcefield}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{forcefieldname}} Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">{{forcefield}}</div>
+				</div>
+				{{/forcefield}} {{#shield}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{shieldname}} Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">{{shield}}</div>
+				</div>
+				{{/shield}} {{#armor1}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{armor1name}} Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">{{armor1}}</div>
+				</div>
+				{{/armor1}} {{#armor2}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{armor2name}} Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">{{armor2}}</div>
+				</div>
+				{{/armor2}} {{#armor3}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{armor3name}} Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">{{armor3}}</div>
+				</div>
+				{{/armor3}} {{#mindshield}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{mindshieldname}} Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">{{mindshield}}</div>
+				</div>
+				{{/mindshield}} {{#absorption1}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{absorption1name}} Absorbed</div>
+					<div class="besmrt-value mouseover-hideroll">{{absorption1}}</div>
+				</div>
+				{{/absorption1}} {{#absorption2}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{absorption2name}} Absorbed</div>
+					<div class="besmrt-value mouseover-hideroll">{{absorption2}}</div>
+				</div>
+				{{/absorption2}} {{#conversion}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{conversionname}} Converted</div>
+					<div class="besmrt-value mouseover-hideroll">{{conversion}}</div>
+				</div>
+				{{/conversion}} {{#seriouswound}}
+				<div class="sheet-result-fail grid-besmrt center">
+					<span>Seriously Wounded!!!</span>
+				</div>
+				{{/seriouswound}} {{#wounds}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Wounds Received</div>
+					<div class="besmrt-value mouseover-hideroll">{{wounds}}</div>
+				</div>
+				{{/wounds}} {{#shocktn}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">System Shock TN</div>
+					<div class="besmrt-value mouseover-hideroll">{{shocktn}}</div>
+				</div>
+				{{/shocktn}} {{#reactvalue1}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey1}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue1}}</div>
+				</div>
+				{{/reactvalue1}} {{#reactvalue2}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey2}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue2}}</div>
+				</div>
+				{{/reactvalue2}} {{#reactvalue3}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey3}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue3}}</div>
+				</div>
+				{{/reactvalue3}} {{#reactvalue4}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey4}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue4}}</div>
+				</div>
+				{{/reactvalue4}} {{#reactvalue5}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey5}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue5}}</div>
+				</div>
+				{{/reactvalue5}} {{#reactvalue6}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey6}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue6}}</div>
+				</div>
+				{{/reactvalue6}} {{#reactvalue7}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey7}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue7}}</div>
+				</div>
+				{{/reactvalue7}} {{#reactvalue8}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey8}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue8}}</div>
+				</div>
+				{{/reactvalue8}} {{#reactvalue9}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey9}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue9}}</div>
+				</div>
+				{{/reactvalue9}} {{#reactvalue10}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey10}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue10}}</div>
+				</div>
+				{{/reactvalue10}} {{#reactvalue11}}
+				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+					<div class="besmrt-key">{{reactkey11}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{reactvalue11}}</div>
+				</div>
+				{{/reactvalue11}}
+			</div>
+		</div>
+	</rolltemplate>
+
+	<rolltemplate class="sheet-rolltemplate-disabled">
+		<div class="sheet-besm-outer{{#result}} sheet-result{{/result}}" style="border: 5px solid {{#color}}{{color}}{{/color}}{{^color}}#E83278{{/color}}; border-radius: 20px 20px 20px 20px; padding: 5% 0% 5% 0%; background-color: {{#background}}{{background}}{{/background}}{{^background}}#ffb4c9{{/background}};">
+			<!-- NON-REACT HEADER/BODY 
+			{{^react}}-->
+			<div class="besm-header">
+				<div class="besm-title" style="background-color: {{#color}}{{color}}{{/color}}{{^color}}#E83278{{/color}};"><span>{{title}}</span></div>
+				{{#emote}}
+				<div class="besm-emote">
+					<span>{{emote}}</span>
+				</div>
+				{{/emote}}
+			</div>
+			<!-- BODY -->
+			<div class="besm-body">
+				<div class="grid-besmrt">
+					<div class="besmrt-key">{{cvtype}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{cv}}</div>
+				</div>
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Roll</div>
+					<div class="besmrt-value">{{roll1}}</div>
+				</div>
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Total</div>
+					<div class="besmrt-value mouseover-hideroll">{{computed::roll1}}</div>
 				</div>
 			</div>
 		</div>
+		{{#react}}
+		<div class="sheet-besm-react-outer">
+			<div class="sheet-besm-react-header center">
+				<span>Reactive rolls:</span>
+			</div>
+			<!--{{#reactbutton1name}}{{#^rollTotal() computed::reactbutton1name 1}}-->
+			<div class="sheet-besm-row">
+				<div class="sheet-besm-react-buttonname">
+					{{reactbutton1name}}
+				</div>
+				<!--{{#reactbutton1label}}-->
+				<div class="sheet-besm-react-button">
+					[{{reactbutton1label}}](~selected|{{roll1link}}||{{computed::roll1data}})
+				</div>
+				<!--{{/reactbutton1label}}-->
+			</div>
+			<!--{{/^rollTotal() computed::reactbutton1name 1}}{{/reactbutton1name}}-->
+		</div>
+		{{/react}}
 	</rolltemplate>
 
 	<rolltemplate class="sheet-rolltemplate-besmDefault">
@@ -9390,6 +9590,7 @@
 		const damage_category_physical = ['blunt','penetrating'];
 		const damage_category_energy = ['cold','electric','heat','radiation'];
 		const damage_category_chemical = ['acid','toxin'];
+		const rxGrab = /^0\[(.*)\]\s*$/;
 		
 		const upgrade_to_1_5_0_array = ["upgraded_1_5_0"];
 		const upgrade_to_1_3_1_array = ["upgraded_1_3_1", "attrdb"];
@@ -9427,16 +9628,54 @@
 			}
 		})();
 		
-		const getTarget = async () => {
-			const rxGrab = /^0\[(.*)\]\s*$/;
-			let rollBase = `! {{charname=[[0[@{target|h1|character_name}] ]]}} {{charid=[[0[@{target|h1|character_id}] ]]}}}}`,
-				targetRoll = await startRoll(rollBase),
-				target = {
-					name: targetRoll.results.charname.expression.match(rxGrab)[1],
-					id: targetRoll.results.charid.expression.match(rxGrab)[1],
-				};
-			finishRoll(targetRoll.rollId);
+		async function getTarget(debug, timer, roll) {
+			const target = {};
+			const getTargetMethodRoll = '! {{targetmethod=[[0[?{Target Method' +
+				'|Choose Target,choosetarget' +
+				'|Target Number,?{Provide Target Number&#124;12&#125;}] ]]}}';
+		
+			const getTargetMethod = await startRoll(getTargetMethodRoll);
+				const targetMethod = parseInt(getTargetMethod.results.targetmethod.expression.match(rxGrab)[1]);
+			finishRoll(getTargetMethod.rollId);
+			clog(debug, timer, 'targetMethod:', targetMethod, 'getTarget(TEST)');
+			if (isNaN(targetMethod)) {
+				const rollBase = `! ` +
+					`{{charname=[[0[@{target|character_name}] ]]}} ` +
+					`{{charid=[[0[@{target|character_id}] ]]}} ` +
+					`{{charattrdb=[[0[@{target|attrdb}] ]]}}` +
+					`}}`;
+				const targetRoll = await startRoll(rollBase);
+					const targetattrdb = targetRoll.results.charattrdb.expression.match(rxGrab)[1];
+					const deflect = roll.weapon.range !== undefined ?
+						getSumOfActiveSubAttrRanks(JSON.parse(targetattrdb), 'combattechnique', 'defelction') || 0 :
+						0;
+					target.name = targetRoll.results.charname.expression.match(rxGrab)[1];
+					target.id = targetRoll.results.charid.expression.match(rxGrab)[1];
+					target.hasdeflection = deflect;
+				finishRoll(targetRoll.rollId);
+			} else {
+				target.number = targetMethod;
+			}
+			clog(debug, timer, 'target:', target, 'getTarget()');
 			return target;
+		}
+		
+		const rollEscape = {
+			chars: {
+				'"': '%quot;',
+				',': '%comma;',
+				':': '%colon;',
+				'}': '%rcub;',
+				'{': '%lcub;',
+			},
+			escape(str) {
+				str = (typeof(str) === 'object') ? JSON.stringify(str) : (typeof(str) === 'string') ? str : null;
+				return (str) ? `${str}`.replace(new RegExp(`[${Object.keys(this.chars)}]`, 'g'), (r) => this.chars[r]) : null;
+			},
+			unescape(str) {
+				str = `${str}`.replace(new RegExp(`(${Object.values(this.chars).join('|')})`, 'g'), (r) => Object.entries(this.chars).find(e=>e[1]===r)[0]);
+				return JSON.parse(str);
+			}
 		}
 		
 		function getTimestamp(timer) {
@@ -9488,7 +9727,7 @@
 			return oneTwoAndHalfOrFive(level % 3);
 		}
 		
-		function setPreviousValue(eventInfo){
+		function setStartingPreviousValue(eventInfo){
 			eventInfo.previousValue = 
 				eventInfo.previousValue === eventInfo.newValue ? 
 					Number.isInteger(eventInfo.newValue) ? 
@@ -12862,6 +13101,7 @@
 					//setObj[`repeating_extraarm_${armID}_state`] = 0;
 					writeValues(debug, timer, value, `repeating_extraarm_${armID}_label`, label, setObj);
 					writeValues(debug, timer, value, `repeating_extraarm_${armID}_type`, 1, setObj);
+					writeValues(debug, timer, value, `repeating_extraarm_${armID}_source`, '', setObj);
 					writeValues(debug, timer, value, `repeating_extraarm_${armID}_state`, 0, setObj);
 					armIDs[i] = armID;
 				}
@@ -13376,6 +13616,7 @@
 		}
 		
 		function setWeapon(isActive, debug, timer, value, attrIDs, extraarmIDs, rowID, sourceAttr, setObj, attrdb, attribute) {
+			clog(debug, timer, 'extraarmIDs', extraarmIDs, 'setWeapon(TEST)');
 			const name = value[`repeating_attr_${rowID}_name`] || "";
 			const hands = 
 				attribute === 'telekinesis' || attribute === 'swarm' ? 0 :
@@ -13414,24 +13655,16 @@
 				break;
 				case 1: //single handed
 					if (isActive) {
-						const extrahands = _.chain(extraarmIDs)
-							/*	
-							.each((id, i) => {
-								if (parseInt(value[`repeating_extraarm_${id}_type`]) == 0 || 
-									value[`repeating_extraarm_${id}_source`].length > 0) {
-										delete id[i];
-								}
-							})
-							*/
-							.map(id => {
+						const extrahands = 
+							_.chain(extraarmIDs).map(id => {
+								clog(debug, timer, 'id', id);
+								clog(debug, timer, `value[repeating_extraarm_${id}_source]`, value[`repeating_extraarm_${id}_source`]);
 								const availableHand =
 									parseInt(value[`repeating_extraarm_${id}_type`]) === 0 ? '' :
-									value[`repeating_extraarm_${id}_source`].length > 0 ? '' :
+									value[`repeating_extraarm_${id}_source`] !== '' ? '' :
 									id;
 								return availableHand;
-							})
-							.compact()
-							.value();
+							}).compact().value();
 						if (mainsource == "" && attribute != 'shield') {
 							//arm mainhand
 							setArms(debug, timer, value, rowID, setObj, name, true, "mainhand");
@@ -14915,17 +15148,16 @@
 		
 		async function getBesmdbID(debug, timer, value) {
 			if(value.besmdb_name === '') return;
-			const rxGrab = /^0\[(.*)\]\s*$/;
 			const rollBase = `! {{besmdbid=[[0[@{${value.besmdb_name}|character_id}] ]]}}}}`;
 			const idRoll = await startRoll(rollBase);
 			const besmdb = {
-					id: idRoll.results.besmdbid.expression.match(rxGrab)[1],
-				};
+				id: idRoll.results.besmdbid.expression.match(rxGrab)[1],
+			};
 			finishRoll(idRoll.rollId);
 			clog(debug, timer, 'besmdb:', besmdb, 'getBesmdbID()');
 			return besmdb.id;
 		}
-		
+		/*
 		async function getLastAttacker(debug, timer, value) {
 			const lastAttackerJSON = await asw.getAttrs([`${value.character_id}`]);
 			clog(debug, timer, 'lastAttackerJSON =', lastAttackerJSON, 'getLastAttacker()');
@@ -14933,16 +15165,13 @@
 			clog(debug, timer, 'lastAttackerObj:', lastAttackerObj);
 			return lastAttackerObj;
 		}
-		
-		async function doCombatRoll(debug, timer, value, attrdb, setObj) {
-			clog(debug, timer, 'Fired!', '', 'doCombatRoll()');
-			const besmdb_id = await getBesmdbID(debug, timer, value);
-			const roll = { 
-				damage: {},
-				maneuver: { 
-					name: '', 
-					type: 0 
-				}, 
+		*/
+		async function doCombatReactRoll(debug, timer, eventInfo, value, attrdb, setObj) {
+			clog(debug, timer, 'Fired!', '', 'doDefenseRoll()');
+			//const besmdb_id = await getBesmdbID(debug, timer, value);
+			const roll = {
+				attacker: {},
+				maneuver: { name: '', type: 0 }, 
 				mod: { edge: 0, obstacle: 0 }, 
 				outcome: {},
 				protection: {
@@ -14956,37 +15185,328 @@
 					absorption2: { ar: 0 },
 					conversion: { level: 0 }
 				},
-				results: {
-					cv: 0,
-					total: 0
-				}, 
-				target: {},
-				template: '',  
+				results: { cv: 0, total: 0 }, 
+				template: '&{template:besm} ',
 				weapon: {}
 			};
-			const maneuver = _.isString(setObj.static_weapon_maneuver_name) ? 
-				setObj.static_weapon_maneuver_name : value.static_weapon_maneuver_name;
+			roll.attacker = rollEscape.unescape(eventInfo.originalRollId);
 			
+			await buildActiveWeapon(debug, timer, roll, value, attrdb);
+			await buildManeuverOptions(debug, timer, roll, attrdb);
+			roll.target = roll.maneuver.name === 'defendother' ? await getTarget(debug, timer, roll) : '';
+		
+			setCV(debug, timer, roll, value, attrdb, setObj);
+			setRollMod(debug, timer, roll);
+			
+			if(roll.maneuver.name === 'doesnothing') {
+				roll.template += `{{doesnothing=1}} {{title=Does Nothing}} {{maneuver=does nothing}} ` +
+						`{{roll1=[[0d6]]}}`;
+			} else {
+				roll.template += `{{emote=${value.charactername} performs a ${roll.maneuver.titlecase} with ${value.pronoun} ${roll.weapon.name}}}`;
+		
+				roll.template += ` {{reaction=0}} {{succeed=0}} {{title=DEFENSE}} {{color=#786DA1}}` +
+				`{{background=#bfb7df}} {{cvtype=DCV}} {{cv=[[0d6 + ${roll.results.cv}]]}} ` +
+				`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
+				`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
+				`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
+				/*
+				roll.template += ` {{defense=1}} {{title=DEFENSE}} {{dcv=[[0d6 + ${roll.results.cv}]]}} ` +
+					`{{weapon_name=${roll.weapon.name}}} {{maneuver=${roll.maneuver.titlecase}}}` +
+					`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
+					`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
+					`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
+				*/
+			}
+			
+			//roll.template += ` {{damage=${roll.outcome.damage}}} {{shock=${roll.outcome.shocktn}}}`
+			
+			
+			const defenseRoll = await startRoll(roll.template);
+				clog(debug, timer, 'defenseRoll:', defenseRoll);
+				roll.outcome.roll1 = parseInt(defenseRoll.results.roll1.result) + roll.results.cv;
+				roll.outcome.succeed = roll.outcome.roll1 > roll.attacker.results.total;
+				if (!roll.outcome.succeed) {
+					setProtectionValues(debug, timer, roll, value, attrdb);
+					await calculateDamage(debug, timer, roll, value, attrdb);
+				}
+			finishRoll(defenseRoll.rollId,{
+				roll1: roll.outcome.roll1,
+			});
+		
+			roll.resulttemplate = `&{template:besm-result}`;
+			roll.resulttemplate += roll.outcome.succeed ? ' {{succeed=[[1d1]]}}' : ''; 
+			roll.resulttemplate += ` {{result-header=${roll.attacker.name} vs ${roll.attacker.target.name}}}`;
+			roll.outcome.attackdifference = Math.max(roll.attacker.results.total - roll.outcome.roll1, 1);
+		
+			if (roll.attacker.weapon.isweapon){
+				_.each(roll.weapon.customizations, customization => {
+					switch (customization.name) {
+						case 'area':
+							roll.resulttemplate += 
+								` {{area=${get1or3(customization.rank, 3) * (10 ** (Math.ceil((customization.rank) / 2)))}}}`;
+						break;
+						case 'autofire':
+							const firemode = parseInt(setObj[`static_weapon_autofire_selection`]) || 
+								parseInt(value[`static_weapon_autofire_selection`]) || 1;
+							const autofirehits = Math.ceil(roll.outcome.attackdifference/3);
+							roll.resulttemplate += 
+								firemode === 3 ?
+									` {{autofire=${autofirehits > 3 ? 3 : autofirehits}}}` :
+								firemode === 6 ?
+									` {{autofire=${autofirehits}}}` : '';
+						break;
+						case 'backblast':
+							const bystander = customization.rank > 1 ? 'User and bystanders' :
+								customization.rank > 0 ? 'Bystanders only' : '';
+							result = `${result} {{bystander=${bystander}}} {{${customization.name}=${customization.rank}}} {{continuing2=${Math.round((damage * 0.25)/5)}}} {{continuing3=${Math.round((damage * 0.35)/5)}}} {{continuing4=${Math.round((damage * 0.45)/5)}}} {{continuing5=${Math.round((damage * 0.55)/5)}}} {{continuing6=${Math.round((damage * 0.65)/5)}}} {{continuing7=${Math.round((damage * 0.75)/5)}}} {{continuing8=${Math.round((damage * 0.9)/5)}}} {{continuing9=${Math.round((damage * 1.05)/5)}}} {{continuing10=${Math.round((damage * 1.2)/5)}}} {{continuing11=${Math.round((damage * 1.35)/5)}}} {{continuing12=${Math.round((damage * 1.5)/5)}}}`;
+						break;
+						case 'blight':
+							const blightrank = customization.rank > 2 ? 18 :
+								customization.rank > 1 ? 15 :
+								customization.rank > 0 ? 12 : 0;
+							result = `${result} {{${customization.name}=${blightrank}}}`;
+						break;
+						case 'continuing':
+							result = `${result} {{${customization.name}=${customization.rank}}} {{continuing2=${Math.round((damage * 0.25)/5)}}} {{continuing3=${Math.round((damage * 0.35)/5)}}} {{continuing4=${Math.round((damage * 0.45)/5)}}} {{continuing5=${Math.round((damage * 0.55)/5)}}} {{continuing6=${Math.round((damage * 0.65)/5)}}} {{continuing7=${Math.round((damage * 0.75)/5)}}} {{continuing8=${Math.round((damage * 0.9)/5)}}} {{continuing9=${Math.round((damage * 1.05)/5)}}} {{continuing10=${Math.round((damage * 1.2)/5)}}} {{continuing11=${Math.round((damage * 1.35)/5)}}} {{continuing12=${Math.round((damage * 1.5)/5)}}}`;
+						break;
+						case 'drain':
+							const draintype = value[`repeating_attr_${rowID}_draintype`] || '';
+							result = `${result} {{${customization.name}=${customization.rank}}} {{draintype=${draintype}}}`;
+						break;
+						case 'duration':
+							const timeobj = {
+								1:"2 rounds",
+								2:"5 rounds",
+								3:"10 rounds",
+								4:"1 minute",
+								5:"1 hour",
+								6:"1 day",
+								10:"Permanent"
+							};
+							const time = timeobj[customization.rank] || "0";
+							result = `${result} {{${customization.name}=${customization.rank}}} {{time=${time}}}`;
+						break;
+						case 'enervation':
+							result = `${result} {{${customization.name}=${customization.rank * 5}}}`;
+						break;
+						case 'flareaudible':
+						case 'flarescent':
+						case 'flaretactile':
+						case 'flaretaste':
+						case 'flarevisual':
+							const sense = customization.name.replace(/flare/g, '');
+							const obstacle = customization.rank > 2 ? 'Major' :
+								customization.rank > 1 ? 'Minor' : 'No';
+							result = `${result} {{flare=${customization.rank}}} {{sense=${sense}}} {{obstacle=${obstacle}}}`;
+						break;
+						case `flexible`: 
+							rollmod = (getIsGrappling(maneuver)) ? rollmod - customization.rank : rollmod;
+							result = `${result} {{${customization.name}=${customization.rank}}}`;
+						break;
+						case `homing`: 
+							rollmod = rollmod + customization.rank; 
+							result = `${result} {{${customization.name}=${customization.rank}}}`;
+						break;
+						case `indirect`: 
+							rollmod = rollmod - 1;
+							result = `${result} {{${customization.name}=${customization.rank}}}`;
+						break;
+						case 'incapacitating':
+						case 'irritant':
+							const hasobstacle = customization.rank > 2 ? 'major' :
+								customization.rank > 1 ? 'minor' : 'none';
+							result = `${result} {{${customization.name}=${customization.rank}}} {{obstacle=${hasobstacle}}}`;
+						break;
+						case 'incurable':
+							const recovery = customization.rank > 2 ? 'special' :
+							customization.rank > 1 ? 'slow' : 'normal';
+							result = `${result} {{${customization.name}=${customization.rank}}} {{recovery=${recovery}}}`;
+						break;
+						case 'knockback':
+							const kb = 1 << customization.rank -1;
+							result = `${result} {{${customization.name}=${customization.rank}}} {{kb=${kb}}}`;
+						break;
+						case 'nonpenetrating':
+							const wontpenetrate = parseInt(customization.rank * 10);
+							result = `${result} {{${customization.name}=${customization.rank}}} {{wontpenetrate=${wontpenetrate}}}`;
+						break;
+						case 'penetrating':
+						case 'piercing':
+							const penname = customization.name == 'penetrating' ? 'Armor' :
+								customization.name == 'piercing' ? 'Forcefield' : '';
+							const pen = customization.rank * 10;
+							const pentype = capital(customization.name);
+							result = `${result} {{penname=${penname}}} {{pentype=${pentype}}} {{pen=${pen}}}`;
+						break;
+						case 'quake':
+							const fissureobj = {
+								1:"2",
+								2:"5",
+								3:"10",
+								4:"30",
+								5:"100",
+								6:"300"
+							};
+							const fissure = fissureobj[customization.rank] || "0";
+							result = `${result} {{${customization.name}=${customization.rank}}} {{fissure=${fissure}}}`;
+						break;
+						case 'range':
+							const selection = customization.rank > 2 ?
+								parseInt(setObj.static_weapon_range_selection) || 
+								parseInt(value.static_weapon_range_selection) ||
+								1 :
+								1;
+							setRange(debug, timer, attrdb, customization, selection, setObj);
+							const range = setObj.weapon_range_distance;
+							rollmod = rollmod + getRangeRollmod(debug, timer, selection);
+							result = `${result} {{${customization.name}=${customization.rank}}} {{range=${range}}}`;
+						break;
+						case 'stoppable':
+							const stopdamage = parseInt(value[`repeating_attr_${rowID}_level`]) * 10;
+							const timetostop = customization.rank > 3 ? '1 hour' :
+								customization.rank > 2 ? '1 minute' :
+								customization.rank > 1 ? '5 rounds' :
+								customization.rank > 0 ? '1 round' : '';
+							result = `${result} {{${customization.name}=${customization.rank}}} {{timetostop=${timetostop}}} {{stopdamage=${stopdamage}}}`;
+						break;
+						case 'tangle':
+							result = `${result} {{${customization.name}=${customization.rank * 5}}}`;
+						break;
+						case 'exclusive':
+						case 'targeted':
+							const hasenemy = value[`repeating_attr_${rowID}_enemy`] || '';
+							result = `${result} {{${customization.name}=${customization.rank}}} {{hasenemy=${hasenemy}}}`;
+						break;
+						case 'toxic':
+							const escapable = customization.rank > 1 ? 'Escapable' :
+								customization.rank > 0 ? 'Non-escapable' : '';
+							result = `${result} {{${customization.name}=${customization.rank}}} {{escapable=${escapable}}}`;
+						break;
+						case 'unreliable':
+							const failure = customization.rank > 1 ? `${customization.rank + 1} or less` :
+								customization.rank > 0 ? '2' : '';
+							result = `${result} {{${customization.name}=${customization.rank}}} {{failure=${failure}}}`;
+						break;
+						case 'vampiric':
+							const stolenhealth = customization.rank > 2 ? 'Increase' :
+								customization.rank > 0 ? 'Restore' : '';
+							result = `${result} {{${customization.name}=${customization.rank}}} {{stolenhealth=${stolenhealth}}}`;
+						break;
+						case 'contact':
+						case 'contagious':
+						case 'fieldless':
+						case 'helper':
+						case 'inconspicuous':
+						case 'insidious':
+						case 'multidimensional':
+						case 'nostun':
+						case 'psychic':
+						case 'reach':
+						case 'selective':
+						case 'spreading':
+						case 'stunonly':
+							result = `${result} {{${customization.name}=${customization.rank}}}`;
+					}
+				});
+			}
+			
+			
+			roll.resulttemplate += ` {{damagetaken=${roll.attacker.damage.total}}}`;
+			
+			const resultRoll = await startRoll(roll.resulttemplate);
+			finishRoll(resultRoll.rollId);
+		}
+		
+		async function buildManeuverOptions(debug, timer, roll, attrdb) {
+			const maneuverObj = {
+				'attack': '|Attack,attack',
+				'calledshot': 
+					'|Called Shot,?{Select Called Shot' +
+					'&#124;Bypass Armor&#44;bypass armor&#124;Reduce Armor&#44;reduce armor' +
+					'&#124;Vital Spot&#44;vital spot&#124;Weak Point&#44;weak point&#125;',
+				'defense': 
+					'|Defend,defend|Defend Other,defend other' +
+					'|Do Nothing,do nothing',
+				'deflection': '|Deflection,deflection',
+				'disarm': '|Disarm,disarm',
+				'escape': '|Escape,escape',
+				'grappling': 
+					'|Grapping,?{Select Grapping Maneuver' +
+					'&#124;Bite&#44;bite&#124;Grab&#44;grab&#124;Lock&#44;lock' +
+					'&#124;Pin&#44;pin&#124;Throw&#44;throw&#124;Touch&#44;touch&#125;',
+				'trip': '|Trip,trip',
+				'reflection': '|Reflection,reflection'
+			};
+			const actor = 
+				_.chain(roll).keys().find(key => { 
+					if (key === 'attacker') return true;
+				}).value() === 'attacker' ? 'defender' : 'attacker';
+			clog(debug, timer, 'actor =', actor, 'buildManeuverOptions()');
+			let maneuverOptions = '! {{maneuver=[[0[?{Select Maneuver';
+			// General Attack/Defense - Melee and Ranged
+			maneuverOptions += actor === 'attacker' ? 
+				maneuverObj['attack'] : maneuverObj['defense'];
+			// Attacker - Called Shot; 
+			maneuverOptions += actor === 'attacker' ?
+				maneuverObj['calledshot'] : '';
+			// Unarmed Attack/Defense - Grappling
+			maneuverOptions += roll.weapon.isweapon === false ? 
+				actor === 'attacker' ? 
+					maneuverObj['grappling'] : maneuverObj['escape'] : 
+				'';
+			// Disarm - Melee and Ranged
+			maneuverOptions += actor === 'attacker' ?
+				maneuverObj['disarm'] : '';
+			// Weapon is Flexible - Trip Attack
+			maneuverOptions += actor === 'attacker' && roll.weapon.flexible ?
+				maneuverObj['trip'] : '';
+			maneuverOptions += actor === 'defender' && 
+				getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'defelction') ?
+					maneuverObj['deflection'] : '';
+			maneuverOptions += actor === 'defender' &&
+				getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'reflection') ?
+					maneuverObj['reflection'] : '';
+			maneuverOptions += '}] ]] }}';
+			clog(debug, timer, 'maneuverOptions:', maneuverOptions);
+			const getManeuver = await startRoll(maneuverOptions);
+			clog(debug, timer, 'getManeuver:', getManeuver);
+			roll.maneuver.selected = getManeuver.results.maneuver.expression.match(rxGrab)[1];
+			clog(debug, timer, 'roll.maneuver.selected =', roll.maneuver.selected);
+			finishRoll(getManeuver.rollId);
+		}
+		
+		async function doCombatRoll(debug, timer, value, attrdb, setObj) {
+			clog(debug, timer, 'Fired!', '', 'doAttackRoll()');
+			const roll = { 
+				damage: {},
+				maneuver: { name: '', options: '', selected: '', type: 0 },
+				mod: { edge: 0, obstacle: 0 }, 
+				name: value.charactername,
+				outcome: {},
+				results: { cv: 0, total: 0 }, 
+				target: {},
+				template: '&{template:besm} ',
+				weapon: {}
+			};
+		
+			await buildActiveWeapon(debug, timer, roll, value, attrdb);
+			await buildManeuverOptions(debug, timer, roll, attrdb);
+		
 			// Define default roll attributes.
-			roll.maneuver.titlecase = capital(maneuver);
-			roll.maneuver.name = removeWhiteSpace(maneuver);
+			roll.maneuver.titlecase = capital(roll.maneuver.selected);
+			roll.maneuver.name = removeWhiteSpace(roll.maneuver.selected);
 			roll.maneuver.type = 
 				attack_manuevers_array.indexOf(roll.maneuver.name) !== -1 ? 1 : 
 				defense_manuevers_array.indexOf(roll.maneuver.name) !== -1 ||
 					roll.maneuver.name === 'doesnothing' ? 2 :
 				3;
 		
-			getActiveWeapon(debug, timer, roll, value, attrdb);
+			roll.target = await getTarget(debug, timer, roll);
+			
 			getTargetedDM(debug, timer, roll, value, attrdb);
 			setCV(debug, timer, roll, value, attrdb, setObj);
 			setRollMod(debug, timer, roll);
-			/*
-			roll.template = `&{template:besm} {{character_name=@{charactername}}} ` +
-			`{{pronoun=@{pronoun}}} {{ismelee=${roll.weapon.ismelee}}} ` +
-			`{{weapon_name=${roll.weapon.name}}} {{maneuver=${roll.maneuver.titlecase}}} `;
-			*/
-			roll.template = '&{template:besm} ';
-		
+			
 			// Define maneuver specific roll attributes and do roll.
 			switch(roll.maneuver.type) {
 				case 1://attack
@@ -15004,26 +15524,21 @@
 						12: 1.5
 					};
 					setDamage(debug, timer, roll, attrdb);
-					roll.target = await getTarget(); 
-					
-					roll.template += `{{emote=${value.charactername} performs a ${roll.maneuver.titlecase} manuever to attack ${roll.target.name} with ${value.pronoun} ${roll.weapon.name}}}`;
 		
-					roll.template += ` {{action=1}} {{title=ATTACK}} {{color=#E83278}}` +
+					roll.template += `{{emote=${value.charactername} performs a ` +
+						`${roll.maneuver.titlecase} manuever to attack ${roll.target.name} ` +
+						`with ${value.pronoun} ${roll.weapon.name}}}`;
+		
+					roll.template += ` {{react=1}} {{action=1}} {{title=ATTACK}} {{color=#E83278}}` +
 					`{{cvtype=ACV}} {{cv=[[0d6 + ${roll.results.cv}]]}} ` +
 					`{{damage_type=${roll.weapon.damagetype}}} {{roll2=[[1d1-1]]}} ` +
+					`{{reactbutton1name=${roll.target.name} Defense}} ` +
 					`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
 					`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
-					`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
+					`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}} ` +
+					`{{roll1data=[[0]]}} {{reactbutton1label=L}} ` +
+					`{{roll1link=static_button_combat_react}} {{roll1target=${roll.target.id}}}`;
 		
-					/*
-					roll.template += ` {{attack=1}} {{title=ATTACK}} ` +
-						`{{target_name=${roll.target.name}}} {{weapon_name=${roll.weapon.name}}} ` +
-						`{{maneuver=${roll.maneuver.titlecase}}} {{acv=[[0d6 + ${roll.results.cv}]]}} ` +
-						`{{damage_type=${roll.weapon.damagetype}}} {{roll2=[[1d1-1]]}} ` +
-						`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
-						`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
-						`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
-					*/
 					const attackRoll = await startRoll(roll.template);
 					clog(debug, timer, 'attackRoll:', attackRoll);
 					roll.results.roll1 = parseInt(attackRoll.results.roll1.result);
@@ -15031,24 +15546,18 @@
 					roll.damage.total = 
 						parseInt(attackRoll.results.roll2.result) + 
 						Math.round(roll.damage.base * parseFloat(damageMod[roll.results.roll1]));
-					//const attack = Object.assign({}, roll);
-					//clog(debug, timer, 'attack:', attack);
-					asw.setActiveCharacterId(besmdb_id);
-					await asw.setAttrs({[roll.target.id]:JSON.stringify(roll)},{silent:true});
+					
 					finishRoll(attackRoll.rollId, {
 						roll1: roll.results.total,
-						roll2: roll.damage.total
+						roll2: roll.damage.total,
+						roll1data: rollEscape.escape(roll)
 					});
 				break;
 				case 2://defense
-					asw.setActiveCharacterId(besmdb_id);
-					const attacker = await getLastAttacker(debug, timer, value); //Object.assign({}, await asw.getAttrs([`${value.character_id}`]));
-					asw.setActiveCharacterId(value.character_id);
-					const commits = {};
 					clog(debug, timer, 'attacker:', attacker);
 					
 					setProtectionValues(debug, timer, roll, attacker, value, attrdb);
-					await calculateDamage(debug, timer, roll, attacker, value, attrdb, commits);
+					//await calculateDamage(debug, timer, roll, attacker, value, attrdb, commits);
 					
 					if(roll.maneuver.name === 'doesnothing') {
 						roll.template += `{{doesnothing=1}} {{title=Does Nothing}} {{maneuver=does nothing}} ` +
@@ -15077,10 +15586,11 @@
 					clog(debug, timer, 'defenseRoll:', defenseRoll);
 					
 					roll.results.roll1 = parseInt(defenseRoll.results.roll1.result) + roll.results.cv;
+					/*
 					if(attacker.results.total > roll.results.roll1) {
 						await commitChanges(debug, timer, value, commits, false);
 					}
-					
+					*/
 					clog(debug, timer, 'roll.results.roll1 =', roll.results.roll1);
 					finishRoll(defenseRoll.rollId,{
 						roll1: roll.results.roll1
@@ -15088,15 +15598,14 @@
 					
 					const attackSucceeded = attacker.results.total - roll.results.roll1 > 0;
 					roll.outcome.title = attackSucceeded ? 'Failure' : 'Success';
-					roll.outcome.body = `&{template:besmConclusion} {{character_name=@{charactername}}} {{conclusion=1}} `;
+					roll.outcome.body = `&{template:besmResult} {{character_name=@{charactername}}} {{result=1}} `;
 					roll.outcome.body += attackSucceeded ? 
-						`{{attacksucceeded=1}} {{title=RESOLUTION}} ` +
+						`{{attacksucceeded=1}} {{title=RESULT}} ` +
 						`{{damage=[[ 0d6 + ${roll.outcome.damage} ]]}} {{shockvalue=[[ 0d6 + ${roll.outcome.shocktn} ]]}}` :
-						`{{defensesucceeded=1}} {{title=RESOLUTION}} {{body=Missed me!}}`;
+						`{{defensesucceeded=1}} {{title=RESULT}} {{body=Missed me!}}`;
 		
-					//const rxGrab = /^0\[(.*)\]\s*$/;
-					const conclusion = await startRoll(roll.outcome.body);
-					finishRoll(conclusion.rollId);
+					//const result = await startRoll(roll.outcome.body);
+					//finishRoll(result.rollId);
 		
 				break;
 				case 3://do nothing
@@ -15109,45 +15618,45 @@
 			clog(debug, timer, 'roll:', roll);
 		}
 		
-		async function calculateDamage(debug, timer, roll, attacker, value, attrdb, commits) {
-			const outcome = {};
-			outcome.damage = attacker.damage.total || 0;
-			outcome.converted = 0;
-			clog(debug, timer, 'outcome.damage =', outcome.damage, 'calculateDamage()');
+		async function calculateDamage(debug, timer, roll, value, attrdb) {
+			roll.outcome.damage = roll.attacker.damage.total || 0;
+			roll.outcome.damagetaken = roll.outcome.damage;
+			roll.outcome.converted = 0;
+			clog(debug, timer, 'roll.outcome.damage =', roll.outcome.damage, 'calculateDamage()');
 			
-			if(outcome.damage !== 0) await applyForcefieldToDamage(debug, timer, roll, outcome, value, attacker);
-			if(outcome.damage !== 0) applyShieldToDamage(debug, timer, roll, outcome);
-			if(outcome.damage !== 0) applyArmorToDamage(debug, timer, roll, outcome, attacker);
-			if(outcome.damage !== 0) applyMindShieldToDamage(debug, timer, roll, outcome);
-			if(outcome.damage !== 0) await applyAbsorptionToDamage(debug, timer, roll, value, outcome);
-			if(roll.protection.conversion.type === 0) await applyConversionToDamage(debug, timer, value, outcome, attrdb);
+			if(roll.outcome.damage !== 0) await applyForcefieldToDamage(debug, timer, roll, value);
+			if(roll.outcome.damage !== 0) applyShieldToDamage(debug, timer, roll);
+			if(roll.outcome.damage !== 0) applyArmorToDamage(debug, timer, roll);
+			if(roll.outcome.damage !== 0) applyMindShieldToDamage(debug, timer, roll);
+			if(roll.outcome.damage !== 0) await applyAbsorptionToDamage(debug, timer, roll, value);
+			if(roll.protection.conversion.type === 0) await applyConversionToDamage(debug, timer, value);
 			
-			if(outcome.damage !== 0) {
-				const wounds = parseInt(value.static_stat_total_wounds) + outcome.damage;
+			if(roll.outcome.damage !== 0) {
+				const wounds = parseInt(value.static_stat_total_wounds) + roll.outcome.damage;
 				const shockValue = getShockValue(debug, timer, value, attrdb);
 				const seriousInjuries = parseInt(value.stat_total_seriousinjuries) || 0;
 				const seriousInjury = 
-					attacker.weapon.isstun ? 0 + seriousInjuries : 
-					outcome.damage > shockValue ? 
+					roll.attacker.weapon.isstun ? 0 + seriousInjuries : 
+					roll.outcome.damage > shockValue ? 
 						seriousInjuries + 1 : 0 + seriousInjuries;
 				/*
 				const shockTN = outcome.damage > (shockValue * 2) ? 18 :
 					outcome.damage > shockValue ? 12 : 0;
 				*/
 				const hasSeriousInjury = seriousInjury !== 0 ? 1 : 0;
-				outcome.shocktn = outcome.damage > (shockValue * 2) ? 18 : 
-					outcome.damage > shockValue ? 12 : 0;
+				roll.outcome.shocktn = roll.outcome.damage > (shockValue * 2) ? 18 : 
+					roll.outcome.damage > shockValue ? 12 : 0;
 		
-				commits.outcome = outcome;
-				commits.static_stat_total_wounds = wounds;
-				commits.stat_total_seriousinjuries = seriousInjury;
-				commits.showseriousinjury_sheetonly = hasSeriousInjury;
-				commits.seriousinjurystate_sheetonly = hasSeriousInjury;
+				//commits.outcome = outcome;
+				roll.outcome.static_stat_total_wounds = wounds;
+				roll.outcome.stat_total_seriousinjuries = seriousInjury;
+				roll.outcome.showseriousinjury_sheetonly = hasSeriousInjury;
+				roll.outcome.seriousinjurystate_sheetonly = hasSeriousInjury;
 				//const keys = ['static_stat_total_wounds','stat_total_seriousinjuries'];
 				//const values = [wounds, seriousInjury];
 			}
 		
-			roll.outcome = Object.assign(roll.outcome, outcome);
+			//roll.outcome = Object.assign(roll.outcome, outcome);
 			//return false;
 		}
 		
@@ -15170,8 +15679,8 @@
 			return isStun;
 		}
 		
-		async function applyConversionToDamage(debug, timer, value, outcome, attrdb, setObj) {
-			const convertedDamage = Math.floor((outcome.damage + outcome.converted) /10) || 0;
+		async function applyConversionToDamage(debug, timer, value) {
+			const convertedDamage = Math.floor((roll.outcome.damage + roll.outcome.converted) /10) || 0;
 			const convertedCP = (parseInt(value.protection_conversion1_cp) || 0) + convertedDamage;
 			clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
 			clog(debug, timer, 'convertedCP =', convertedCP);
@@ -15181,19 +15690,19 @@
 			//clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
 		}
 		
-		async function applyAbsorptionToDamage(debug, timer, roll, value, outcome) {
+		async function applyAbsorptionToDamage(debug, timer, roll, value) {
 			if(roll.protection.absorption1.ar !== 0 || roll.protection.absorption2.ar !== 0) {
 				clog(debug, timer, 'Fired!', '', 'applyAbsorptionToDamage()');
 			}
 			if(roll.protection.absorption1.ar !== 0) {
-				const absorbedHealth = roll.protection.absorption1.ar > outcome.damage ?
-					outcome.damage : roll.protection.absorption1.ar;
+				const absorbedHealth = roll.protection.absorption1.ar > roll.outcome.damage ?
+				roll.outcome.damage : roll.protection.absorption1.ar;
 				clog(debug, timer, 'absorbedHealth =', absorbedHealth);
 				if(roll.protection.conversion.type === 0 && roll.protection.absorption1.issynergistic) {
-					outcome.converted += absorbedHealth;
-					clog(debug, timer, 'outcome.converted =', outcome.converted);
+					roll.outcome.converted += absorbedHealth;
+					clog(debug, timer, 'roll.outcome.converted =', roll.outcome.converted);
 				}
-				outcome.damage -= absorbedHealth;
+				roll.outcome.damage -= absorbedHealth;
 				const tempHealth = parseInt(value.static_stat_temp_health) + absorbedHealth;
 				const totalHealth = parseInt(value.stat_total_health);
 				const newTempHealth = tempHealth > totalHealth ?
@@ -15201,14 +15710,14 @@
 				await asw.setAttrs({static_stat_temp_health:newTempHealth});
 			}
 			if(roll.protection.absorption2.ar !== 0) {
-				const absorbedEnergy = roll.protection.absorption2.ar > outcome.damage ?
-					outcome.damage : roll.protection.absorption2.ar;
+				const absorbedEnergy = roll.protection.absorption2.ar > roll.outcome.damage ?
+					roll.outcome.damage : roll.protection.absorption2.ar;
 				clog(debug, timer, 'absorbedEnergy =', absorbedEnergy);
 				if(roll.protection.conversion.type === 0 && roll.protection.absorption2.issynergistic) {
-					outcome.converted += absorbedEnergy;
-					clog(debug, timer, 'outcome.converted =', outcome.converted);
+					roll.outcome.converted += absorbedEnergy;
+					clog(debug, timer, 'roll.outcome.converted =', roll.outcome.converted);
 				}
-				outcome.damage -= absorbedEnergy;
+				roll.outcome.damage -= absorbedEnergy;
 				const tempEnergy = parseInt(value.static_stat_temp_energy) + absorbedEnergy;
 				const totalEnergy = parseInt(value.stat_total_energy);
 				const newTempEnergy = tempEnergy > totalEnergy ?
@@ -15217,21 +15726,21 @@
 			}
 		}
 		
-		function applyMindShieldToDamage(debug, timer, roll, outcome) {
-			outcome.damage -= roll.protection.mindshield.ar;
-			outcome.damage = outcome.damage < 1 ? 0 : outcome.damage;
+		function applyMindShieldToDamage(debug, timer, roll) {
+			roll.outcome.damage -= roll.protection.mindshield.ar;
+			roll.outcome.damage = roll.outcome.damage < 1 ? 0 : roll.outcome.damage;
 		}
 		
-		function applyArmorToDamage(debug, timer, roll, outcome, attacker) {
+		function applyArmorToDamage(debug, timer, roll) {
 			clog(debug, timer, 'Fired!', '', 'applyArmorToDamage()');
 			//const weaponHasInsidious = attacker.weapon.insidious;
-			if(attacker.weapon.insidious) return;
+			if(roll.attacker.weapon.insidious) return;
 			for(let i = 1; i <= 3; i++) {
-				if(roll.protection[`armor${i}`].ar !== 0 && outcome.damage !== 0) {
+				if(roll.protection[`armor${i}`].ar !== 0 && roll.outcome.damage !== 0) {
 					clog(debug, timer, `armor${i}`, '');
 					const isSpecialized = roll.protection[`armor${i}`].isspecialized;
 					const armorDamageType = roll.protection[`armor${i}`].damagetype;
-					const weaponDamageType = attacker.weapon.damagetype;
+					const weaponDamageType = roll.attacker.weapon.damagetype;
 					const baseAR = roll.protection[`armor${i}`].ar;
 					const realAR = 
 						isSpecialized && armorDamageType === weaponDamageType ?
@@ -15245,14 +15754,14 @@
 					//outcome.damage -= realAR;
 					//outcome.damage = outcome.damage < 0 ? 0 : outcome.damage;
 					clog(debug, timer, `realAR =`, realAR);
-					const damageRemainder = outcome.damage < realAR ?
-						0 : outcome.damage - realAR;
+					const damageRemainder = roll.outcome.damage < realAR ?
+						0 : roll.outcome.damage - realAR;
 					if(roll.protection.conversion.type === 0 && roll.protection.conversion.hasescalate) {
-						outcome.converted += outcome.damage - damageRemainder;
-						clog(debug, timer, 'outcome.converted =', outcome.converted);
+						roll.outcome.converted += roll.outcome.damage - damageRemainder;
+						clog(debug, timer, 'roll.outcome.converted =', roll.outcome.converted);
 					}
-					outcome.damage = damageRemainder;
-					clog(debug, timer, `outcome.damage`, outcome.damage);
+					roll.outcome.damage = damageRemainder;
+					clog(debug, timer, `roll.outcome.damage`, roll.outcome.damage);
 					/*
 					clog(debug, timer, `armor${i}`, '');
 					clog(debug, timer, `isSpecialized =`, isSpecialized);
@@ -15265,17 +15774,17 @@
 			}
 		}
 		
-		function applyShieldToDamage(debug, timer, roll, outcome) {
+		function applyShieldToDamage(debug, timer, roll) {
 			if(roll.protection.shield.ar !== 0 && roll.maneuver.name === 'doesnothing') {
 				clog(debug, timer, 'Fired!', '', 'applyShieldToDamage()');
-				const damageRemainder = outcome.damage < roll.protection.shield.ar ?
-					0 : outcome.damage - roll.protection.shield.ar;
+				const damageRemainder = roll.outcome.damage < roll.protection.shield.ar ?
+					0 : roll.outcome.damage - roll.protection.shield.ar;
 				if(roll.protection.conversion.type === 0 && roll.protection.conversion.hasescalate) {
-					outcome.converted += outcome.damage - damageRemainder;
-					clog(debug, timer, 'outcome.converted =', outcome.converted);
+					roll.outcome.converted += roll.outcome.damage - damageRemainder;
+					clog(debug, timer, 'roll.outcome.converted =', roll.outcome.converted);
 				}
-				outcome.damage = damageRemainder;
-				clog(debug, timer, 'outcome.damage =', outcome.damage);
+				roll.outcome.damage = damageRemainder;
+				clog(debug, timer, 'roll.outcome.damage =', roll.outcome.damage);
 			}
 		}
 		
@@ -15289,10 +15798,10 @@
 			return isBlocked;
 		}
 		
-		async function applyForcefieldToDamage(debug, timer, roll, outcome, value, attacker) {
+		async function applyForcefieldToDamage(debug, timer, roll, value) {
 			clog(debug, timer, 'roll.protection.forcefield.ar =', roll.protection.forcefield.ar, 'applyForcefieldToDamage()');
 			if(roll.protection.forcefield.ar !== 0) {
-				const weaponHasInsidious = attacker.weapon.insidious;
+				const weaponHasInsidious = roll.attacker.weapon.insidious;
 				const canBlockInsidious = doesForcefieldBlockInsidious(debug, timer, value);
 				if(weaponHasInsidious && !canBlockInsidious) {
 					clog(debug, timer, 'weaponHasInsidious =', weaponHasInsidious);
@@ -15300,13 +15809,13 @@
 					return;
 				}
 				if(attacker.weapon.damagetype === 'disease' && !forcefield.hasairtight) {
-					clog(debug, timer, 'attacker.weapon.damagetype =', attacker.weapon.damagetype);
+					clog(debug, timer, 'roll.attacker.weapon.damagetype =', roll.attacker.weapon.damagetype);
 					clog(debug, timer, 'forcefield.hasairtight =', forcefield.hasairtight);
 					return;
 				}
 				const forcefieldDamageCategory = roll.protection.forcefield.damagecategory;
 				clog(debug, timer, 'forcefieldDamageCategory =', forcefieldDamageCategory);
-				const weaponDamageCategory = getWeaponDamageCategory(debug, timer, attacker.weapon.damagetype);
+				const weaponDamageCategory = getWeaponDamageCategory(debug, timer, roll.attacker.weapon.damagetype);
 				clog(debug, timer, 'weaponDamageCategory =', weaponDamageCategory);
 				const isSpecific = 
 					forcefieldDamageCategory !== false ?
@@ -15315,7 +15824,8 @@
 						1;
 				clog(debug, timer, 'isSpecific =', isSpecific);
 				const actualAR = roll.protection.forcefield.ar * isSpecific;
-				const damageRemainder = outcome.damage < actualAR ? 0 : outcome.damage - actualAR;
+				const damageRemainder = roll.outcome.damage < actualAR ? 0 : 
+					roll.outcome.damage - actualAR;
 				clog(debug, timer, 'damageRemainder =', damageRemainder);
 				if(damageRemainder > 0) {
 					const newForcefieldAR = //isSpecific === 0 ? 
@@ -15324,16 +15834,16 @@
 					//await commitChanges(debug, timer, value, ['protection_forcefield_ar'], [newForcefieldAR]);
 					await commitChanges(debug, timer, value, { protection_forcefield_ar: newForcefieldAR });
 					if(roll.protection.conversion.type === 0 && roll.protection.conversion.hasescalate) {
-						outcome.converted += outcome.damage - damageRemainder;
-						clog(debug, timer, 'outcome.converted =', outcome.converted);
+						roll.outcome.converted += roll.outcome.damage - damageRemainder;
+						clog(debug, timer, 'roll.outcome.converted =', roll.outcome.converted);
 					}
-					outcome.damage = damageRemainder;
+					roll.outcome.damage = damageRemainder;
 				} else {
 					if(roll.protection.conversion.type === 0) {
-						outcome.converted = outcome.damage;
-						clog(debug, timer, 'outcome.converted =', outcome.converted);
+						roll.outcome.converted = outcome.damage;
+						clog(debug, timer, 'roll.outcome.converted =', roll.outcome.converted);
 					}
-					outcome.damage = 0;
+					roll.outcome.damage = 0;
 				}
 			}
 		}
@@ -15360,7 +15870,7 @@
 			return damageCategory;
 		}
 		
-		function setProtectionValues(debug, timer, roll, attacker, value, attrdb) {
+		function setProtectionValues(debug, timer, roll, value, attrdb) {
 			clog(debug, timer, 'Fired!', '', 'setProtectionValues(TEST)');
 			clog(debug, timer, 'attrdb.conversion.length =', attrdb.conversion.length);
 			const conversion = attrdb.conversion.length !== 0 ? 
@@ -15374,10 +15884,10 @@
 			_.each(protection_array, p => {
 				clog(debug, timer, 'Protection =', p);
 				roll.protection[p].ar = 
-					p === 'mindshield' && attacker.weapon.psychic ?	
+					p === 'mindshield' && roll.attacker.weapon.psychic ?	
 						parseInt(value[`protection_${p}_ar`]) || 0 :
 					p === 'shield' && roll.maneuver.name !== 'doesnothing' ? 0 :
-					p !== 'mindshield' && !attacker.weapon.psychic ?
+					p !== 'mindshield' && !roll.attacker.weapon.psychic ?
 						parseInt(value[`protection_${p}_ar`]) || 0 :
 					0;
 				clog(debug, timer, `roll.protection[${p}].ar =`, roll.protection[p].ar);
@@ -15519,18 +16029,59 @@
 				targetedmdState ? targetedmdLevel : 0;
 		}
 		
-		function getActiveWeapon(debug, timer, roll, value, attrdb) {
-			const activeweapon = value.active_weapon;
-			const type = value.active_weapon !== undefined ? 
-				value[`repeating_attr_${activeweapon}_attribute`] : 'unarmed';
+		async function getActiveWeapon(debug, timer, value) {
+			clog(debug, timer, 'value.mainhand_source =', value.mainhand_source, 'getActiveWeapon(TEST)');
+			clog(debug, timer, 'value.offhand_source =', value.offhand_source);
+			clog(debug, timer, 'value.extraarmIDs:', value.extraarmIDs);
+			const extraArmsArmedSources = value.extraarmIDs.length !== 0 ?
+				_.chain(value.extraarmIDs).map(id => {
+					return value[`repeating_extraarm_${id}_source`];
+				}).compact().value() : [];
+			if (value.mainhand_source === '' && value.offhand_source === '' && 
+				extraArmsArmedSources.length === 0) {
+					return 'unarmed';
+			} else {
+				let rollBase = '! {{weaponselection=[[0[?{Select Weapon';
+				if (value.mainhand_source) {
+					rollBase += `|${value[`repeating_attr_${value.mainhand_source}_name`]},` +
+						`${value.mainhand_source}`;
+				}
+				if (value.offhand_source && value.offhand_source !== value.mainhand_source) {
+					rollBase += `|${value[`repeating_attr_${value.offhand_source}_name`]},` +
+						`${value.offhand_source}`;
+				}
+				if (extraArmsArmedSources.length !== 0) {
+					const uniqueSources = [];
+					_.each(extraArmsArmedSources, id => {
+						if (uniqueSources.indexOf(id) === -1) {
+							uniqueSources.push(id);
+							rollBase += `|${value[`repeating_attr_${id}_name`]},${id}`;
+						}
+					});
+				}
+				rollBase += '|Unarmed,unarmed}] ]] }}';
+				const doRoll = await startRoll(rollBase);
+				const source = doRoll.results.weaponselection.expression.match(rxGrab)[1];
+				clog(debug, timer, 'source =', source, 'getActiveWeapon()');
+				finishRoll(doRoll.rollId);
+				return source;
+			}
+		}
+		
+		async function buildActiveWeapon(debug, timer, roll, value, attrdb) {
+			const activeWeaponID = await getActiveWeapon(debug, timer, value);
+			clog(debug, timer, 'activeWeaponID =', activeWeaponID, 'buildActiveWeapon(TEST)');
+			const type = activeWeaponID === 'unarmed' ? 
+				activeWeaponID : value[`repeating_attr_${activeWeaponID}_attribute`];
+			clog(debug, timer, 'type =', type);
 			const weapon = 
-				_.find(attrdb[`${type}`], o => { if (o.source == activeweapon) return o; });
-			const isWeapon = getIsObject(weapon);
+				_.find(attrdb[`${type}`], o => { if (o.source == activeWeaponID) return o; });
+			clog(debug, timer, 'weapon:', weapon);
+			roll.weapon.isweapon = getIsObject(weapon);
 			
-			if (isWeapon) roll.weapon = Object.assign(roll.weapon, weapon);
-			roll.weapon.isweapon = isWeapon;
+			if (roll.weapon.isweapon) roll.weapon = Object.assign(roll.weapon, weapon);
 			roll.weapon.isnaturalweapon = 
-				activeweapon === '' || activeweapon === undefined ? true : false;
+				activeWeaponID === '' || activeWeaponID === undefined;
 			roll.weapon.isstun = 
 				getIsStun(debug, timer, roll, value, attrdb, roll.weapon.isnaturalweapon, weapon);
 			roll.weapon.name = roll.weapon.isweapon ? weapon.name : 'Unarmed';
@@ -15544,72 +16095,14 @@
 				_.find(weapon.customizations, o => { 
 					if (o.name === 'muscle') return 1; 
 				}) || 0;
-		
-			_.each(weapon.customizations, c => {
-				roll.weapon[c.name] = c.rank;
-			});
-			/*
-			roll.weapon.hasinsidious = roll.weapon.isweapon ? 
-				getCustomizationExists('insidious', weapon.customizations) : false;
-			roll.weapon.haspsychic = roll.weapon.isweapon ?
-				getCustomizationExists('psychic', weapon.customizations) : false;
-			roll.weapon.istelekinesis = 
-				roll.weapon.isweapon ? weapon.attribute === 'telekinesis' : false;
-			roll.weapon.isswarm = 
-				roll.weapon.isweapon ? weapon.attribute === 'swarm' : false;
-			roll.weapon.aoe = 
-				_.find(weapon.customizations, o => { 
-					if (o.name === 'area') return 'area'; }) ||
-				_.find(weapon.customizations, o => { 
-					if (o.name === 'spreading') return 'spreading'; }) ||
-				false;
-			if (roll.weapon.aoe !== false) {
-				roll.weapon.selective = 
-					_.find(weapon.customizations, o => { 
-						if (o.name === 'selective') return true; }) || 
-					false;
-			}
-			roll.weapon.stoppable = 
-				_.find(weapon.customizations, o => { 
-					if (o.name === 'stoppable') return true; }) ||
-				false;
-		
-			/*
-			const isWeapon = getIsObject(weapon);
-			const hasInsidious = isWeapon ? 
-				getCustomizationExists('insidious', weapon.customizations) : false;
-			const hasPsychic = isWeapon ?
-				getCustomizationExists('psychic', weapon.customizations) : false;
-			const isStun = getIsStun(debug, timer, roll, value, attrdb, isNaturalWeapon, weapon);
-			const isTelekinesis = isWeapon ? weapon.attribute === 'telekinesis' : false;
-			const isSwarm = isWeapon ? weapon.attribute === 'swarm' : false;
-			const name = isWeapon ? weapon.name : 'Unarmed';
-			const level = isWeapon ? weapon.level :
-				getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'brutal') || 0;
-			const weaponclass = isWeapon ? weapon.focus : 'unarmed';
-			const damagetype = isWeapon ? weapon.damagetype : 'blunt';
-			const isMelee = type === 'shield' ? true : getIsMelee(debug, timer, weaponclass);
-			const muscle = isMelee !== 0 ? 1 :
-					_.find(weapon.customizations, o => { 
-						if (o.name === 'muscle') return 1; 
-					}) || 0;
+			clog(debug, timer, 'roll:', roll);
 			
-			if (isWeapon) roll.weapon = Object.assign(roll.weapon, weapon);
-			roll.weapon.isweapon = isWeapon;
-			roll.weapon.isnaturalweapon = isNaturalWeapon;
-			roll.weapon.hasinsidious = hasInsidious;
-			roll.weapon.haspsychic = hasPsychic;
-			roll.weapon.isstun = isStun;
-			roll.weapon.istelekinesis = isTelekinesis;
-			roll.weapon.isswarm = isSwarm;
-			roll.weapon.name = name;
-			roll.weapon.level = level;
-			roll.weapon.weaponclass = weaponclass;
-			roll.weapon.damagetype = damagetype;
-			roll.weapon.ismelee = isMelee;
-			roll.weapon.muscle = muscle;
-			*/
-			clog(debug, timer, 'roll.weapon:', roll.weapon, 'getActiveWeapon()');
+			if (type !== 'unarmed') {
+				_.each(weapon.customizations, c => {
+					roll.weapon[c.name] = c.rank;
+				});
+			}
+			clog(debug, timer, 'roll.weapon:', roll.weapon, 'buildActiveWeapon()');
 		}
 		
 		function setCombatRoll(debug, timer, value, attrdb, rowID, sourceAttr, setObj, invertState = false) {
@@ -15629,8 +16122,6 @@
 			const targetedmdLevel = 
 				getTargetedLevel(attrdb, 'massivedamage') || 0;
 			const targetedmd = 
-				//invertState && sourceAttr == 'damage' ?
-				//targetedmdState > 0 ? 0 : targetedmdLevel :
 				targetedmdState ? targetedmdLevel : 0;
 			const rushattackState =
 				isNaN(parseInt(setObj.static_button_targeted_rushdamage)) ?
@@ -16447,6 +16938,7 @@
 					//"static_button_stat_seriousinjury",
 					"static_button_forcefield_regenerate",
 					"static_button_combat_roll",
+					"static_button_combat_react",
 					"static_button_ammo_reload",
 					"static_button_targeted_rushdamage",
 					"static_button_targeted_damage",
@@ -16591,30 +17083,7 @@
 			});
 			});
 		});
-		/*
-		$20('.theme-selector').on('change', eventInfo => {
-			const timer = {
-				start:Date.now(),
-				elapsed:0,
-				cache:0
-			};
-			clog(3, timer, '', '', 'selector = theme-selector', 'start');
-			clog(3, timer, 'eventInfo:', eventInfo);
-			const selector = eventInfo.htmlAttributes.name.slice(5);
-			clog(3, timer, 'selector =', selector);
-			const themeClasses = {
-				1: 'theme-input-red',
-				2: 'theme-input-orange'
-			};
 		
-			getAttrs([selector], value => {
-				const theme = parseInt(value.theme);
-				clog(3, timer, 'theme =', theme);
-				$20('foreground-component').removeClass('active');
-				$20('foreground-component').addClass('active');
-			});
-		});
-		*/
 		on("clicked:attrgroup1 clicked:attrgroup2 clicked:attrgroup3 clicked:attrgroup4 clicked:attrgroup5 clicked:attrgroup6 clicked:attrgroup7 clicked:attrgroup8 clicked:attrgroup9 clicked:attrgroup10 clicked:skillgroup1 clicked:skillgroup2 clicked:skillgroup3 clicked:skillgroup4 clicked:skillgroup5", (eventInfo) => {
 			const button = eventInfo.triggerName.substring(8, eventInfo.triggerName.length);
 			const section = button.replace(/[0-9]/g, "");
@@ -16665,7 +17134,7 @@
 					eventInfo.sourceAttribute = `${eventInfo.sourceAttribute}${button}`;
 				}
 		
-				setPreviousValue(eventInfo);
+				setStartingPreviousValue(eventInfo);
 				
 				clog(debug, timer, 'eventInfo:', eventInfo, 'Event Listener', 'info');
 				clog(debug, timer, 'value:', value, 'getAttrs()', 'info');
@@ -16982,6 +17451,9 @@
 									break;
 									case 'roll':
 										await doCombatRoll(debug, timer, value, attrdb, setObj);
+									break;
+									case 'react':
+										await doCombatReactRoll(debug, timer, eventInfo, value, attrdb, setObj);
 									break;
 									case 'regenerate':
 										doRegenerateForcefield(debug, timer, value, attrdb, setObj);

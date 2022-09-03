@@ -102,6 +102,7 @@ div.input-component,
 span.input-component,
 input.input-component {
 	text-align: center;
+	font-weight: normal;
 	border: 1px solid;
 	border-radius: 5px;
 	padding: 4px 5px 3px 5px;
@@ -2336,17 +2337,11 @@ div.flex-skillchild-button {
 
 /***************** Roll Templates *****************/
 
-/*.sheet-rolltemplate-besm .sheet-besm-outer {*/
-.sheet-besm-outer {
-    border: 5px solid #E83278;
+.sheet-rolltemplate-besm .sheet-besm-outer,
+.sheet-rolltemplate-besm-result .sheet-besm-result-outer {
+    /*border: 5px solid #E83278;*/
 	border-radius: 20px 20px 20px 20px;
 	padding: 10% 0% 10% 0%;
-}
-
-.sheet-besm-outer.sheet-conclusion {
-    border: 5px solid #000;
-	border-radius: 0px 0px 20px 20px;
-	padding: -10% 0% 10% 0%;
 }
 
 .sheet-rolltemplate-besm .sheet-besm-header {
@@ -2369,19 +2364,16 @@ div.flex-skillchild-button {
     padding: 1% 0% 3% 0%;
 }
 
-.sheet-rolltemplate-besm .sheet-conclusion .sheet-besm-title {
+.sheet-rolltemplate-besm-result .sheet-besm-result-header .sheet-besm-title {
 	font-size: 1.1em;
     line-height: 1.1em;
-    margin: 0% -6% 0% -6%;
-    border: 5px solid #000;
-    border-radius: 50px 50px 50px 50px;
-    padding: 1% 0% 3% 0%;
-	background-color: #36286D;
+    padding: 0% 10% 0% 10%;
+	text-align: center;
 }
 
 .sheet-rolltemplate-besm .sheet-action .sheet-besm-header .sheet-besm-title,
 .sheet-rolltemplate-besm .sheet-reaction .sheet-besm-header .sheet-besm-title,
-.sheet-rolltemplate-besm .sheet-conclusion .sheet-besm-header .sheet-besm-title {
+.sheet-rolltemplate-besm-result .sheet-besm-result-header .sheet-besm-title {
 	font-family: 'Long Cang', cursive;
 	font-weight: bold;
 	font-size: 3em;
@@ -2400,12 +2392,25 @@ div.flex-skillchild-button {
 	/*background: #fbdfe7;*/
 	background: #ffb4c9;
 }
+
 .sheet-rolltemplate-besm .sheet-besm-outer.sheet-reaction .sheet-grid-besmrt:nth-child(even) {
 	background: #bfb7df;
 }
 
+.sheet-rolltemplate-besm-result .sheet-besm-result-outer .sheet-result-succeed.sheet-grid-besmrt:nth-child(even) {
+	/*background: #E60000;*/
+	background: #FF6969;
+}
+
+.sheet-rolltemplate-besm-result .sheet-besm-result-outer .sheet-result-fails.sheet-grid-besmrt:nth-child(even) {
+	/*background: #70AD47;*/
+	background: #C5E0B4;
+}
+
 .sheet-rolltemplate-besm .sheet-besm-outer.sheet-action .sheet-grid-besmrt:nth-child(odd),
-.sheet-rolltemplate-besm .sheet-besm-outer.sheet-reaction .sheet-grid-besmrt:nth-child(odd) {
+.sheet-rolltemplate-besm .sheet-besm-outer.sheet-reaction .sheet-grid-besmrt:nth-child(odd),
+.sheet-rolltemplate-besm .sheet-besm-react-outer .sheet-grid-besmrt:nth-child(odd),
+.sheet-rolltemplate-besm-result .sheet-besm-result-outer .sheet-grid-besmrt:nth-child(odd) {
 	background: #fff;
 }
 
@@ -2422,7 +2427,8 @@ div.flex-skillchild-button {
     pointer-events: none;
 }
 
-.sheet-rolltemplate-besm .sheet-besm-body {
+.sheet-rolltemplate-besm .sheet-besm-body,
+.sheet-rolltemplate-besm-result .sheet-besm-body {
 	font-weight: bold;
 }
 
@@ -2487,7 +2493,8 @@ div.flex-skillchild-button {
 	background-color: #786DA1;
 }
 
-.sheet-rolltemplate-besm .sheet-rt-header.sheet-attacksucceeded
+.sheet-rolltemplate-besm-result .sheet-besm-result-header.sheet-attacksucceeded
+.sheet-rolltemplate-besm-result .sheet-besm-result-outer .sheet-result-succeed.sheet-grid-besmrt:nth-child(even)
 {
 	background-color: red;
 }
@@ -2630,6 +2637,8 @@ div.flex-skillchild-button {
 }
 
 /*** ROLL TEMPLATE STYLING ENDS HERE **/
+
+
 
 
 /* overall wrapper to fix moving width issues with overflow on hidden sections */
@@ -3118,7 +3127,8 @@ div.screen-rolls {
 	grid-area: rolls;
 }
 
-.sheet-rolltemplate-besm .sheet-grid-besmrt {
+.sheet-rolltemplate-besm .sheet-grid-besmrt,
+.sheet-rolltemplate-besm-result .sheet-grid-besmrt {
 	display: grid;
 	grid-template-columns: auto auto;
 	column-gap: 5px;
@@ -3127,11 +3137,13 @@ div.screen-rolls {
 	font-size: 1.25em;
 }
 
-.sheet-rolltemplate-besm .sheet-besmrt-key {
+.sheet-rolltemplate-besm .sheet-besmrt-key,
+.sheet-rolltemplate-besm-result .sheet-besmrt-key {
 	grid-area: key;
 }
 
-.sheet-rolltemplate-besm .sheet-besmrt-value {
+.sheet-rolltemplate-besm .sheet-besmrt-value,
+.sheet-rolltemplate-besm-result .sheet-besmrt-value {
 	grid-area: value;
 	text-align: right;
 }
@@ -5552,3 +5564,58 @@ div.screen-rolls {
 }
 
 /* End custom Pure grid css (24 cols) */
+
+/* REACTIVE ROLL SYSTEM */
+
+.sheet-rolltemplate-besm .sheet-besm-react-outer,
+.sheet-rolltemplate-besm .sheet-besm-result-outer {
+	width: 92%;
+	margin: auto;	
+	border-radius: 10px;
+	font-family: corbel;
+	margin-top: -4%;
+}
+.sheet-rolltemplate-besm .sheetsheet-besm-react-outer .sheet-besm-react-header,
+.sheet-rolltemplate-besm-result .sheetsheet-besm-result-outer .sheet-besm-result-header {
+	font-size: 1.3em;
+	line-height: 1.3em;
+	font-style: italic;
+	font-weight: 900;
+	margin: 0% 0% 0% 0%;
+}
+.sheet-rolltemplate-besm .sheet-besm-react-outer .sheet-besm-react-button {
+	margin-top: -3px;
+	margin-bottom: -3px;
+}
+.sheet-rolltemplate-besm .sheet-besm-react-outer .sheet-besm-row {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	align-items: center;
+	font-size: 0.9em;
+	line-height: 0.9em;
+	width: 90%;
+	margin: auto;
+	border-top: 1px black solid;
+	padding: 2% 0% 2% 0%
+}
+.sheet-besm-react-button .inlinerollresult {
+	background: none;
+	border: none;
+	color: #2c324f;
+	pointer-events: none;
+}
+.sheet-rolltemplate-besm .sheet-besm-react-outer .sheet-besm-react-button {
+	font-family: dicefontd6;
+	font-weight: 900;
+	color: #0038ac;
+	border: 2px solid #305679;
+	background-color: #f2fffe;
+	border-radius: 10px;
+	font-size: 1.6em;
+	padding: 0% 6px 0% 6px;
+	line-height:1.1em;
+}
+.sheet-besm-react-button a[href*="apply"] {
+	font-family: 'pictos';
+	font-weight: 300;
+}
