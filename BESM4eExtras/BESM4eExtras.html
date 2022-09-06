@@ -8719,17 +8719,27 @@
 				</div>
 			</div>
 			<div class="besm-body">
-				{{#autofire}}
+				{{#range}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Range</div>
+					<div class="besmrt-value mouseover-hideroll">{{range}}</div>
+				</div>
+				{{/range}} {{#area}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Area (radius)</div>
+					<div class="besmrt-value mouseover-hideroll">{{area}}</div>
+				</div>
+				{{/area}} {{#autofire}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">Autofire Hits</div>
 					<div class="besmrt-value mouseover-hideroll">{{autofire}}</div>
 				</div>
-				{{/autofire}} {{#damagetaken}}
+				{{/autofire}} {{^succeed}} {{#damagetaken}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">{{stun}}Damage {{#autofire}}per Hit{{/autofire}}{{^autofire}}Taken{{/autofire}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{damagetaken}}</div>
 				</div>
-				{{/damagetaken}} {{#forcefield}}
+				{{/damagetaken}} {{/succeed}} {{#forcefield}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">{{forcefieldname}} Stopped</div>
 					<div class="besmrt-value mouseover-hideroll">{{forcefield}}</div>
@@ -9551,7 +9561,7 @@
 		const defense_manuevers_array = ['defend', 'defendother', 'escape'];
 		const defense_maneuvers_regex = /(defend|defendother|escape)/i;
 		const non_damaging_attack_regex = /(disarm|grab|pin|defend|defendother|doesnothing|escape)/i;
-		const non_damaging_attack_array = ['disarm','grab','pin','defend','defendother','doesnothing','escape'];
+		const non_damaging_attack_array = ['disarm','grab','pin'];//,'defend','defendother','doesnothing','escape'];
 		const minor_obstacle_maneuvers_regex = /(bite|reducearmor|defendother)/i;
 		const minor_obstacle_maneuvers_array = ['bite','reducearmor','defendother'];
 		const major_obstacle_maneuvers_regex = /(bypassarmor|vitalspot)/i;
@@ -9628,6 +9638,38 @@
 			}
 		})();
 		
+		const rollEscape = {
+			chars: {
+				'"': '%quot;',
+				',': '%comma;',
+				':': '%colon;',
+				'}': '%rcub;',
+				'{': '%lcub;',
+			},
+			escape(str) {
+				str = (typeof(str) === 'object') ? JSON.stringify(str) : (typeof(str) === 'string') ? str : null;
+				return (str) ? `${str}`.replace(new RegExp(`[${Object.keys(this.chars)}]`, 'g'), (r) => this.chars[r]) : null;
+			},
+			unescape(str) {
+				str = `${str}`.replace(new RegExp(`(${Object.values(this.chars).join('|')})`, 'g'), (r) => Object.entries(this.chars).find(e=>e[1]===r)[0]);
+				return JSON.parse(str);
+			}
+		}
+		
+		async function fetchAttrs(debug, timer, method, keys) {
+			let fetchString = '!';
+			_.each(keys, key => {
+				fetchString += ` {{[[0[${method}|${key}]]]}}`;
+			});
+			fetchString += `}}`;
+			const getValues = startRoll(fetchString);
+			const fetchedValues = {};
+			_.each(keys, key => {
+				fetchedValues[`key`] = getValues.results['key'].expression.match(rxGrab)[1];
+			});
+			return fetchedValues;
+		}
+		
 		async function getTarget(debug, timer, roll) {
 			const target = {};
 			const getTargetMethodRoll = '! {{targetmethod=[[0[?{Target Method' +
@@ -9658,24 +9700,6 @@
 			}
 			clog(debug, timer, 'target:', target, 'getTarget()');
 			return target;
-		}
-		
-		const rollEscape = {
-			chars: {
-				'"': '%quot;',
-				',': '%comma;',
-				':': '%colon;',
-				'}': '%rcub;',
-				'{': '%lcub;',
-			},
-			escape(str) {
-				str = (typeof(str) === 'object') ? JSON.stringify(str) : (typeof(str) === 'string') ? str : null;
-				return (str) ? `${str}`.replace(new RegExp(`[${Object.keys(this.chars)}]`, 'g'), (r) => this.chars[r]) : null;
-			},
-			unescape(str) {
-				str = `${str}`.replace(new RegExp(`(${Object.values(this.chars).join('|')})`, 'g'), (r) => Object.entries(this.chars).find(e=>e[1]===r)[0]);
-				return JSON.parse(str);
-			}
 		}
 		
 		function getTimestamp(timer) {
@@ -14453,8 +14477,8 @@
 		}
 		
 		function getIsGrappling(maneuver) {
-			const grappling_maneuvers_array = ['bite','disarm','grab','lock','pin','throw'];
-			return grappling_maneuvers_array.indexOf(maneuver) !== -1 ? true : false;
+			const grappling_maneuvers_array = ['bite','escape','grab','lock','pin','throw'];
+			return grappling_maneuvers_array.indexOf(maneuver) !== -1;
 		}
 		
 		function setRange(debug, timer, attrdb, customization, selection, setObj) {
@@ -14505,14 +14529,14 @@
 			const actualrange = 
 				`${Math.round((baserange * (extended + 1)) * getRangeDistance(debug, timer, selection))}`;
 			const length = actualrange.length;
-			const result = 
+			const range = 
 				length > 6 ? 
 				`${parseInt(actualrange)/1000000}M km` :
 				length > 3 ? 
 				`${parseInt(actualrange)/1000} km` :
 				`${actualrange} m`;
-			clog(debug, timer, 'result =', result, 'getRange()');
-			return result;
+			clog(debug, timer, 'range =', range, 'getRange()');
+			return range;
 		}
 		
 		function getDuration(debug, timer, rank) {
@@ -15191,8 +15215,10 @@
 			};
 			roll.attacker = rollEscape.unescape(eventInfo.originalRollId);
 			
+			buildWeaponList(debug, timer, value, roll);
+			await buildAvailableManeuvers(debug, timer, attrdb, value, roll);
 			await buildActiveWeapon(debug, timer, roll, value, attrdb);
-			await buildManeuverOptions(debug, timer, roll, attrdb);
+			//await buildManeuverOptions(debug, timer, roll, attrdb);
 			roll.target = roll.maneuver.name === 'defendother' ? await getTarget(debug, timer, roll) : '';
 		
 			setCV(debug, timer, roll, value, attrdb, setObj);
@@ -15239,22 +15265,21 @@
 			roll.outcome.attackdifference = Math.max(roll.attacker.results.total - roll.outcome.roll1, 1);
 		
 			if (roll.attacker.weapon.isweapon){
-				_.each(roll.weapon.customizations, customization => {
+				_.each(roll.attacker.weapon.customizations, customization => {
 					switch (customization.name) {
 						case 'area':
 							roll.resulttemplate += 
-								` {{area=${get1or3(customization.rank, 3) * (10 ** (Math.ceil((customization.rank) / 2)))}}}`;
+								` {{area=${get1or3(customization.rank, 3) * (10 ** (Math.ceil((customization.rank) / 2)))} m}}`;
 						break;
 						case 'autofire':
-							const firemode = parseInt(setObj[`static_weapon_autofire_selection`]) || 
-								parseInt(value[`static_weapon_autofire_selection`]) || 1;
 							const autofirehits = Math.ceil(roll.outcome.attackdifference/3);
 							roll.resulttemplate += 
-								firemode === 3 ?
+								roll.attacker.weapon.rof === 3 ?
 									` {{autofire=${autofirehits > 3 ? 3 : autofirehits}}}` :
-								firemode === 6 ?
+								roll.attacker.weapon.rof === 6 ?
 									` {{autofire=${autofirehits}}}` : '';
 						break;
+						/*
 						case 'backblast':
 							const bystander = customization.rank > 1 ? 'User and bystanders' :
 								customization.rank > 0 ? 'Bystanders only' : '';
@@ -15350,17 +15375,14 @@
 							const fissure = fissureobj[customization.rank] || "0";
 							result = `${result} {{${customization.name}=${customization.rank}}} {{fissure=${fissure}}}`;
 						break;
+						*/
 						case 'range':
-							const selection = customization.rank > 2 ?
-								parseInt(setObj.static_weapon_range_selection) || 
-								parseInt(value.static_weapon_range_selection) ||
-								1 :
-								1;
-							setRange(debug, timer, attrdb, customization, selection, setObj);
-							const range = setObj.weapon_range_distance;
-							rollmod = rollmod + getRangeRollmod(debug, timer, selection);
-							result = `${result} {{${customization.name}=${customization.rank}}} {{range=${range}}}`;
+							roll.resulttemplate += ` {{range=${roll.attacker.weapon.distance}}}`;
+							//setRange(debug, timer, attrdb, customization, selection, setObj);
+							//const range = setObj.weapon_range_distance;
+							//result = `${result} {{${customization.name}=${customization.rank}}} {{range=${range}}}`;
 						break;
+						/*
 						case 'stoppable':
 							const stopdamage = parseInt(value[`repeating_attr_${rowID}_level`]) * 10;
 							const timetostop = customization.rank > 3 ? '1 hour' :
@@ -15406,6 +15428,7 @@
 						case 'spreading':
 						case 'stunonly':
 							result = `${result} {{${customization.name}=${customization.rank}}}`;
+						*/
 					}
 				});
 			}
@@ -15475,6 +15498,34 @@
 			finishRoll(getManeuver.rollId);
 		}
 		
+		async function queryFireMode(debug, timer, roll) {
+			const firemodeString = '! {{rof=[[0[?{Select Firemode|Single,1|Burst,3|Full-auto,6}] ]] }}';
+			const getFireMode = await startRoll(firemodeString);
+			const firemode = getFireMode.results.rof.expression.match(rxGrab)[1];
+			finishRoll(getFireMode.rollId);
+			roll.weapon.rof = parseInt(firemode);
+			clog(debug, timer, 'firemode =', firemode, 'getFireMode()');
+		}
+		
+		async function queryRangeDistance(debug, timer, attrdb, roll) {
+			const distances = _.map([1,2,3], d => {
+				const distance = getRange(debug, timer, attrdb, {rank:roll.weapon.range}, d);
+				return distance;
+			});
+			const selectRangeString = `! {{range=[[0[?{Select Range Target Is Within` +
+				`|${distances[0]} (Effective),0` +
+				`|${distances[1]} (Intermediate),1` +
+				`|${distances[2]} (Remote),2` +
+				`}] ]] }}`;
+			const getSelectedRange = await startRoll(selectRangeString);
+			clog(debug, timer, 'getSelectedRange', getSelectedRange, 'roll.weapon.range(TEST)');
+			const rangedRollMod = parseInt(getSelectedRange.results.range.expression.match(rxGrab)[1]);
+			clog(debug, timer, 'rangedRollMod', rangedRollMod);
+			finishRoll(getSelectedRange.rollId);
+			roll.mod.obstacle += rangedRollMod;
+			roll.weapon.distance = distances[rangedRollMod];
+		}
+		
 		async function doCombatRoll(debug, timer, value, attrdb, setObj) {
 			clog(debug, timer, 'Fired!', '', 'doAttackRoll()');
 			const roll = { 
@@ -15488,9 +15539,16 @@
 				template: '&{template:besm} ',
 				weapon: {}
 			};
+			
+			buildWeaponList(debug, timer, value, roll);
+			await buildAvailableManeuvers(debug, timer, attrdb, value, roll);
 		
 			await buildActiveWeapon(debug, timer, roll, value, attrdb);
-			await buildManeuverOptions(debug, timer, roll, attrdb);
+		
+			if (roll.weapon.range) await queryRangeDistance(debug, timer, attrdb, roll);
+			if (roll.weapon.autofire) await queryFireMode(debug, timer, roll, value);
+		
+			//await buildManeuverOptions(debug, timer, roll, attrdb);
 		
 			// Define default roll attributes.
 			roll.maneuver.titlecase = capital(roll.maneuver.selected);
@@ -15925,20 +15983,22 @@
 		}
 		
 		function setRollMod(debug, timer, roll) {
-			roll.weapon.isweapon ? _.find(roll.weapon.customizations, c => { 
+			if (roll.weapon.isweapon) {
+				_.find(roll.weapon.customizations, c => { 
 					if (c.name == 'accurate' || c.name == 'parry') {
-						roll.mod.edge = c.rank || 0;
-						roll.mod.obstacle = 0;
+						roll.mod.edge += c.rank;// || 0;
+						//roll.mod.obstacle = 0;
 						return true; 
 					} else if (c.name == 'inaccurate') {
-						roll.mod.obstacle = c.rank || 0;
-						roll.mod.edge = 0;
+						roll.mod.obstacle += c.rank;// || 0;
+						//roll.mod.edge = 0;
 						return true; 
 					} else {
-						roll.mod.edge = 0;
-						roll.mod.obstacle = 0;
+						//roll.mod.edge = 0;
+						//roll.mod.obstacle = 0;
 					}
-				}) : roll.mod = { edge: 0, obstacle: 0 };
+				});
+			}// : false;//roll.mod = { edge: 0, obstacle: 0 };
 				
 			const maneuver = removeWhiteSpace(roll.maneuver.name);
 		
@@ -15957,7 +16017,7 @@
 			clog(debug, timer, 'Fired!', '', 'setDamage()');
 			if (non_damaging_attack_array.indexOf(roll.maneuver.name) !== -1) {
 				clog(debug, timer, 'Non-damaging attack', '');
-				roll.damage.total = 0;
+				roll.damage.base = 0;
 			} else {
 				const massivedamage = 
 					getSumOfActiveAttrLevels(attrdb, 'massivedamage', roll.weapon.weaponclass) || 0;
@@ -16029,10 +16089,38 @@
 				targetedmdState ? targetedmdLevel : 0;
 		}
 		
-		async function getActiveWeapon(debug, timer, value) {
+		function buildWeaponList(debug, timer, value, roll) {
+			const weaponList = ['unarmed'];
+			const extraArmsArmedSources = value.extraarmIDs.length !== 0 ?
+				_.chain(value.extraarmIDs).map(id => {
+					return value[`repeating_extraarm_${id}_source`];
+				}).compact().value() : [];
+		
+			if (value.mainhand_source !== '') {
+				weaponList.push(value.mainhand_source);
+			}
+			if (value.offhand_source !== '' && 
+			value.offhand_source !== value.mainhand_source) {
+				weaponList.push(value.offhand_source);
+			}
+			if (extraArmsArmedSources.length !== 0) {
+				const uniqueSources = [];
+				_.each(extraArmsArmedSources, id => {
+					if (uniqueSources.indexOf(id) === -1) {
+						uniqueSources.push(id);
+						weaponList.push(id);
+					}
+				});
+			}
+			clog(debug, timer, 'weaponList', weaponList,'buildWeaponList()');
+			roll.weapon.list = weaponList;
+		}
+		
+		async function getActiveWeapon(debug, timer, roll, value) {
 			clog(debug, timer, 'value.mainhand_source =', value.mainhand_source, 'getActiveWeapon(TEST)');
 			clog(debug, timer, 'value.offhand_source =', value.offhand_source);
 			clog(debug, timer, 'value.extraarmIDs:', value.extraarmIDs);
+			const isAttacker = _.keys(roll).indexOf('attacker') === -1;
 			const extraArmsArmedSources = value.extraarmIDs.length !== 0 ?
 				_.chain(value.extraarmIDs).map(id => {
 					return value[`repeating_extraarm_${id}_source`];
@@ -16060,6 +16148,18 @@
 					});
 				}
 				rollBase += '|Unarmed,unarmed}] ]] }}';
+		
+				if (isAttacker &&
+					getIsGrappling(roll.maneuver.selected)) {
+						return 'unarmed';
+					}
+				if (!isAttacker && (
+				roll.maneuver.selected === 'personal' ||
+				roll.maneuver.selected === 'movement' ||
+				getIsGrappling(roll.maneuver.selected))) {
+					return 'unarmed';
+				}
+		
 				const doRoll = await startRoll(rollBase);
 				const source = doRoll.results.weaponselection.expression.match(rxGrab)[1];
 				clog(debug, timer, 'source =', source, 'getActiveWeapon()');
@@ -16067,9 +16167,150 @@
 				return source;
 			}
 		}
+		/*
+		function buildWeaponList(debug, timer, value, roll) {
+			clog(debug, timer, 'value.mainhand_source =', value.mainhand_source, 'buildWeaponList(TEST)');
+			clog(debug, timer, 'value.offhand_source =', value.offhand_source);
+			clog(debug, timer, 'value.extraarmIDs:', value.extraarmIDs);
+			const extraArmsArmedSources = value.extraarmIDs.length !== 0 ?
+				_.chain(value.extraarmIDs).map(id => {
+					return value[`repeating_extraarm_${id}_source`];
+				}).compact().value() : [];
+			if (value.mainhand_source === '' && value.offhand_source === '' && 
+				extraArmsArmedSources.length === 0) {
+					roll.weapon.list.push({
+						name: 'Unarmed',
+						source: 'unarmed'
+					});
+			} else {
+				if (value.mainhand_source) {
+					roll.weapon.list.push({
+						name: value[`repeating_attr_${value.mainhand_source}_name`],
+						source: value.mainhand_source
+					});
+				}
+				if (value.offhand_source && value.offhand_source !== value.mainhand_source) {
+					roll.weapon.list.push({
+						name: value[`repeating_attr_${value.offhand_source}_name`],
+						source: value.offhand_source
+					});
+				}
+				if (extraArmsArmedSources.length !== 0) {
+					const uniqueSources = [];
+					_.each(extraArmsArmedSources, id => {
+						if (uniqueSources.indexOf(id) === -1) {
+							uniqueSources.push(id);
+							roll.weapon.list.push({
+								name: value[`repeating_attr_${id}_name`],
+								source: id
+							});
+						}
+					});
+				}
+			}
+		}
+		*/
+		async function buildAvailableManeuvers(debug, timer, attrdb, value, roll) {
+			const available = {
+				maneuvers: [],
+				rangedWeapons: [],
+				meleeWeapons: [],
+				shield: {},
+				query: '! {{maneuver=[[0[?{Select Maneuver'
+			};
+			const maneuverObj = {
+				'attack': '|Attack,attack',
+				'block': '|Block,block',
+				'calledshot': 
+					'|Called Shot,?{Select Called Shot' +
+					'&#124;Bypass Armor&#44;bypass armor&#124;Reduce Armor&#44;reduce armor' +
+					'&#124;Vital Spot&#44;vital spot&#124;Weak Point&#44;weak point&#125;',
+				'defense': 
+					'|Defend,defend|Defend Other,defend other' +
+					'|Do Nothing,do nothing',
+				'deflection': '|Deflection,deflection',
+				'disarm': '|Disarm,disarm',
+				'escape': '|Escape,escape',
+				'grappling': 
+					'|Grapple,?{Select Grapping Maneuver' +
+					'&#124;Bite&#44;bite&#124;Grab&#44;grab&#124;Lock&#44;lock' +
+					'&#124;Pin&#44;pin&#124;Throw&#44;throw&#124;Touch&#44;touch&#125;',
+				'parry': '|Parry,parry',
+				'rangeddefense': 
+					'|Ranged Defense,?{Ranged Defense Type' +
+					'&#124;Cover/Dodge (Personal)&#44;personal' +
+					'&#124;Evade (Movement)&#44;movement&#124;&#125;',
+				'trip': '|Trip,trip',
+				'test': '|-,-'
+			};
+			const isAttacker = _.keys(roll).indexOf('attacker') === -1;
+			const weaponList = roll.weapon.list || [];
+			clog(debug, timer, 'isAttacker', isAttacker, 'buildAvailableActions(TEST)');
+			clog(debug, timer, 'roll', roll);
+			_.each(weaponList, id => {
+				if (value[`repeating_attr_${id}_attribute`] === 'shield') {
+					available.shield.name = value[`repeating_attr_${id}_name`];
+					available.shield.source = id;
+				} else if (_.keys(`repeating_attr_${id}_customizations`).indexOf('range') !== -1) {
+					available.rangedWeapons.push({
+						name: value[`repeating_attr_${id}_name`],
+						source: id
+					});
+				} else {
+					if (id === 'unarmed') {
+						available.meleeWeapons.push({
+							name: 'Unarmed',
+							source: 'unarmed'
+						});
+					} else {
+						available.meleeWeapons.push({
+							name: value[`repeating_attr_${id}_name`],
+							source: id
+						});
+					}
+				}
+			});
+			clog(debug, timer, 'available', available);
+			if (isAttacker) {
+				available.maneuvers = ['attack','calledshot','disarm','grappling'];
+				if (getIsObject(_.find(weaponList, id => {
+					if (_.keys(`repeating_attr_${id}_customizations`)
+					.indexOf('felxible') !== -1) return true; 
+				}))) available.maneuvers.push('trip');
+			} else {
+				if (available.shield.source !== undefined) {
+					available.maneuvers.push('block');
+				}
+				if (getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'defelction') !== 0 &&
+				roll.attacker.weapon.range) {
+					available.maneuvers.push('deflect');
+				}
+				if (getIsGrappling(roll.attacker.maneuver.name)) {
+					available.maneuvers.push('escape');
+				}
+				if (roll.attacker.weapon.range === undefined) {
+					available.maneuvers.push('parry');
+				}
+				if (roll.attacker.weapon.range !== undefined) {
+					available.maneuvers.push('rangeddefense');
+				}
+				available.maneuvers.push('test');
+			}
+			_.each(available.maneuvers, action => {
+				available.query += maneuverObj[action];
+			}); available.query += '}] ]] }}';
+			clog(debug, timer, 'available', available, 'buildAvailableActions()');
+		
+			const getManeuver = await startRoll(available.query);
+			clog(debug, timer, 'getManeuver:', getManeuver);
+			
+			roll.maneuver.selected = getManeuver.results.maneuver.expression.match(rxGrab)[1];
+			clog(debug, timer, 'roll.maneuver.selected =', roll.maneuver.selected);
+			finishRoll(getManeuver.rollId);
+		}
 		
 		async function buildActiveWeapon(debug, timer, roll, value, attrdb) {
-			const activeWeaponID = await getActiveWeapon(debug, timer, value);
+			const activeWeaponID = await getActiveWeapon(debug, timer, roll, value);
 			clog(debug, timer, 'activeWeaponID =', activeWeaponID, 'buildActiveWeapon(TEST)');
 			const type = activeWeaponID === 'unarmed' ? 
 				activeWeaponID : value[`repeating_attr_${activeWeaponID}_attribute`];
