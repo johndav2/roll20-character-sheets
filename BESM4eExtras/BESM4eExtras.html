@@ -8676,6 +8676,17 @@
 			</div>
 			<!-- BODY -->
 			<div class="besm-body">
+				{{#range}}
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Range{{rangepenalty}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{range}}</div>
+				</div>
+				{{/range}} {{#area}}
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Area (radius)</div>
+					<div class="besmrt-value mouseover-hideroll">{{area}}</div>
+				</div>
+				{{/area}}
 				<div class="grid-besmrt">
 					<div class="besmrt-key">{{cvtype}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{cv}}</div>
@@ -8717,52 +8728,52 @@
 				<div class="sheet-besm-title">
 					{{result-header}}
 				</div>
+				{{#emote}}
+				<div class="besm-emote">
+					<span>{{emote}}</span>
+				</div>
+				{{/emote}}
 			</div>
 			<div class="besm-body">
-				{{#range}}
-				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">Range</div>
-					<div class="besmrt-value mouseover-hideroll">{{range}}</div>
-				</div>
-				{{/range}} {{#area}}
-				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">Area (radius)</div>
-					<div class="besmrt-value mouseover-hideroll">{{area}}</div>
-				</div>
-				{{/area}} {{#autofire}}
+				{{#autofire}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">Autofire Hits</div>
 					<div class="besmrt-value mouseover-hideroll">{{autofire}}</div>
 				</div>
-				{{/autofire}} {{^succeed}} {{#damagetaken}}
+				{{/autofire}} {{#blight}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Blight! Roll Body stat to resist...</div>
+					<div class="besmrt-value mouseover-hideroll">TN {{blight}}</div>
+				</div>
+				{{/blight}} {{^succeed}} {{#damagetaken}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">{{stun}}Damage {{#autofire}}per Hit{{/autofire}}{{^autofire}}Taken{{/autofire}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{damagetaken}}</div>
 				</div>
 				{{/damagetaken}} {{/succeed}} {{#forcefield}}
 				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">{{forcefieldname}} Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">{{forcefield}}</div>
+					<div class="besmrt-key">Damage Stopped By Forcefield</div>
+					<div class="besmrt-value mouseover-hideroll">({{forcefield}})</div>
 				</div>
 				{{/forcefield}} {{#shield}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">{{shieldname}} Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">{{shield}}</div>
+					<div class="besmrt-value mouseover-hideroll">({{shield}})</div>
 				</div>
 				{{/shield}} {{#armor1}}
 				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">{{armor1name}} Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">{{armor1}}</div>
+					<div class="besmrt-key">Armor1 Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">({{armor1}})</div>
 				</div>
 				{{/armor1}} {{#armor2}}
 				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">{{armor2name}} Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">{{armor2}}</div>
+					<div class="besmrt-key">Armor2 Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">({{armor2}})</div>
 				</div>
 				{{/armor2}} {{#armor3}}
 				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">{{armor3name}} Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">{{armor3}}</div>
+					<div class="besmrt-key">Armor3 Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">({{armor3}})</div>
 				</div>
 				{{/armor3}} {{#mindshield}}
 				<div class="sheet-result-fail grid-besmrt">
@@ -9557,6 +9568,7 @@
 		const heightenedsense_array = ['heightenedsight', 'heightenedhearing', 'heightenedtouch', 'heightenedsmell', 'heightenedtaste'];
 		const sense_array = ['sight', 'hearing', 'touch', 'smell', 'taste'];
 		const attack_manuevers_array = ['attack', 'bite', 'bypassarmor', 'disarm', 'grab', 'lock', 'pin', 'reducearmor', 'throw', 'vitalspot', 'weakpoint'];
+		const calledshot_maneuvers_array = ['bypassarmor', 'reducearmor', 'specificlocation', 'vitalspot', 'weakpoint'];
 		const attack_maneuvers_regex = /(attack|bite|bypassarmor|disarm|grab|lock|pin|reducearmor|throw|vitalspot|weakpoint)/i;
 		const defense_manuevers_array = ['defend', 'defendother', 'escape'];
 		const defense_maneuvers_regex = /(defend|defendother|escape)/i;
@@ -12990,6 +13002,7 @@
 			clog(debug, timer, 'result =', result, 'exposeAttrSettingsOnCustomizationChange()');
 			clog(debug, timer, 'set =', set);
 			setObj[`${source}_${result}`] = set;
+			if (attribute === 'specialized') setObj[`${source}_normaldamage`] = set;
 		}
 		
 		function setAvailableDamageTypes(debug, timer, value, rowID, setObj) {
@@ -15191,11 +15204,13 @@
 		}
 		*/
 		async function doCombatReactRoll(debug, timer, eventInfo, value, attrdb, setObj) {
-			clog(debug, timer, 'Fired!', '', 'doDefenseRoll()');
+			const temp = {};
+			clog(debug, timer, '', temp, 'doDefenseRoll()');
 			//const besmdb_id = await getBesmdbID(debug, timer, value);
 			const roll = {
 				attacker: {},
-				maneuver: { name: '', type: 0 }, 
+				character: { name: value.charactername, pronoun: value.pronoun },
+				maneuver: { emote: '', name: '', type: 0 }, 
 				mod: { edge: 0, obstacle: 0 }, 
 				outcome: {},
 				protection: {
@@ -15209,237 +15224,337 @@
 					absorption2: { ar: 0 },
 					conversion: { level: 0 }
 				},
-				results: { cv: 0, total: 0 }, 
+				results: { cv: 0, emote: '', total: 0 }, 
 				template: '&{template:besm} ',
 				weapon: {}
 			};
+			clog(debug, timer, 'roll', roll);
 			roll.attacker = rollEscape.unescape(eventInfo.originalRollId);
 			
 			buildWeaponList(debug, timer, value, roll);
 			await buildAvailableManeuvers(debug, timer, attrdb, value, roll);
 			await buildActiveWeapon(debug, timer, roll, value, attrdb);
-			//await buildManeuverOptions(debug, timer, roll, attrdb);
+		
+			roll.maneuver.titlecase = capital(roll.maneuver.selected);
+			roll.maneuver.name = removeWhiteSpace(roll.maneuver.selected);
+			roll.maneuver.type = 
+				attack_manuevers_array.indexOf(roll.maneuver.name) !== -1 ? 1 : 
+				defense_manuevers_array.indexOf(roll.maneuver.name) !== -1 ||
+					roll.maneuver.name === 'doesnothing' ? 2 :
+				3;
+			
 			roll.target = roll.maneuver.name === 'defendother' ? await getTarget(debug, timer, roll) : '';
+		
+			if(roll.attacker.weapon.spreading) roll.mod.obstacle += 2;
+			if(roll.attacker.weapon.quake) roll.mod.edge += 2;
+			if(roll.attacker.weapon.balanced) roll.mod.edge += parseInt(roll.attacker.weapon.balanced);
+			if(roll.attacker.weapon.unbalanced) roll.mod.obstacle += parseInt(roll.attacker.weapon.unbalanced);
 		
 			setCV(debug, timer, roll, value, attrdb, setObj);
 			setRollMod(debug, timer, roll);
+			buildEmote(debug, timer, roll);
 			
 			if(roll.maneuver.name === 'doesnothing') {
 				roll.template += `{{doesnothing=1}} {{title=Does Nothing}} {{maneuver=does nothing}} ` +
 						`{{roll1=[[0d6]]}}`;
 			} else {
-				roll.template += `{{emote=${value.charactername} performs a ${roll.maneuver.titlecase} with ${value.pronoun} ${roll.weapon.name}}}`;
+				roll.template += `{{emote=${roll.maneuver.emote}}}`;
 		
 				roll.template += ` {{reaction=0}} {{succeed=0}} {{title=DEFENSE}} {{color=#786DA1}}` +
 				`{{background=#bfb7df}} {{cvtype=DCV}} {{cv=[[0d6 + ${roll.results.cv}]]}} ` +
 				`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
 				`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
 				`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
-				/*
-				roll.template += ` {{defense=1}} {{title=DEFENSE}} {{dcv=[[0d6 + ${roll.results.cv}]]}} ` +
-					`{{weapon_name=${roll.weapon.name}}} {{maneuver=${roll.maneuver.titlecase}}}` +
-					`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
-					`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
-					`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
-				*/
 			}
-			
-			//roll.template += ` {{damage=${roll.outcome.damage}}} {{shock=${roll.outcome.shocktn}}}`
-			
-			
-			const defenseRoll = await startRoll(roll.template);
-				clog(debug, timer, 'defenseRoll:', defenseRoll);
-				roll.outcome.roll1 = parseInt(defenseRoll.results.roll1.result) + roll.results.cv;
+		
+			roll.resulttemplate = '&{template:besm-result}';
+		
+			temp.defenseRoll = await startRoll(roll.template);
+				roll.outcome.roll1 = parseInt(temp.defenseRoll.results.roll1.result) + roll.results.cv;
 				roll.outcome.succeed = roll.outcome.roll1 > roll.attacker.results.total;
 				if (!roll.outcome.succeed) {
 					setProtectionValues(debug, timer, roll, value, attrdb);
 					await calculateDamage(debug, timer, roll, value, attrdb);
 				}
-			finishRoll(defenseRoll.rollId,{
+			finishRoll(temp.defenseRoll.rollId,{
 				roll1: roll.outcome.roll1,
 			});
 		
-			roll.resulttemplate = `&{template:besm-result}`;
 			roll.resulttemplate += roll.outcome.succeed ? ' {{succeed=[[1d1]]}}' : ''; 
-			roll.resulttemplate += ` {{result-header=${roll.attacker.name} vs ${roll.attacker.target.name}}}`;
-			roll.outcome.attackdifference = Math.max(roll.attacker.results.total - roll.outcome.roll1, 1);
+			roll.resulttemplate += ` {{result-header=${roll.attacker.character.name} vs ${roll.attacker.target.name}}}`;
 		
-			if (roll.attacker.weapon.isweapon){
-				_.each(roll.attacker.weapon.customizations, customization => {
-					switch (customization.name) {
-						case 'area':
-							roll.resulttemplate += 
-								` {{area=${get1or3(customization.rank, 3) * (10 ** (Math.ceil((customization.rank) / 2)))} m}}`;
-						break;
-						case 'autofire':
-							const autofirehits = Math.ceil(roll.outcome.attackdifference/3);
-							roll.resulttemplate += 
-								roll.attacker.weapon.rof === 3 ?
-									` {{autofire=${autofirehits > 3 ? 3 : autofirehits}}}` :
-								roll.attacker.weapon.rof === 6 ?
-									` {{autofire=${autofirehits}}}` : '';
-						break;
-						/*
-						case 'backblast':
-							const bystander = customization.rank > 1 ? 'User and bystanders' :
-								customization.rank > 0 ? 'Bystanders only' : '';
-							result = `${result} {{bystander=${bystander}}} {{${customization.name}=${customization.rank}}} {{continuing2=${Math.round((damage * 0.25)/5)}}} {{continuing3=${Math.round((damage * 0.35)/5)}}} {{continuing4=${Math.round((damage * 0.45)/5)}}} {{continuing5=${Math.round((damage * 0.55)/5)}}} {{continuing6=${Math.round((damage * 0.65)/5)}}} {{continuing7=${Math.round((damage * 0.75)/5)}}} {{continuing8=${Math.round((damage * 0.9)/5)}}} {{continuing9=${Math.round((damage * 1.05)/5)}}} {{continuing10=${Math.round((damage * 1.2)/5)}}} {{continuing11=${Math.round((damage * 1.35)/5)}}} {{continuing12=${Math.round((damage * 1.5)/5)}}}`;
-						break;
-						case 'blight':
-							const blightrank = customization.rank > 2 ? 18 :
-								customization.rank > 1 ? 15 :
-								customization.rank > 0 ? 12 : 0;
-							result = `${result} {{${customization.name}=${blightrank}}}`;
-						break;
-						case 'continuing':
-							result = `${result} {{${customization.name}=${customization.rank}}} {{continuing2=${Math.round((damage * 0.25)/5)}}} {{continuing3=${Math.round((damage * 0.35)/5)}}} {{continuing4=${Math.round((damage * 0.45)/5)}}} {{continuing5=${Math.round((damage * 0.55)/5)}}} {{continuing6=${Math.round((damage * 0.65)/5)}}} {{continuing7=${Math.round((damage * 0.75)/5)}}} {{continuing8=${Math.round((damage * 0.9)/5)}}} {{continuing9=${Math.round((damage * 1.05)/5)}}} {{continuing10=${Math.round((damage * 1.2)/5)}}} {{continuing11=${Math.round((damage * 1.35)/5)}}} {{continuing12=${Math.round((damage * 1.5)/5)}}}`;
-						break;
-						case 'drain':
-							const draintype = value[`repeating_attr_${rowID}_draintype`] || '';
-							result = `${result} {{${customization.name}=${customization.rank}}} {{draintype=${draintype}}}`;
-						break;
-						case 'duration':
-							const timeobj = {
-								1:"2 rounds",
-								2:"5 rounds",
-								3:"10 rounds",
-								4:"1 minute",
-								5:"1 hour",
-								6:"1 day",
-								10:"Permanent"
-							};
-							const time = timeobj[customization.rank] || "0";
-							result = `${result} {{${customization.name}=${customization.rank}}} {{time=${time}}}`;
-						break;
-						case 'enervation':
-							result = `${result} {{${customization.name}=${customization.rank * 5}}}`;
-						break;
-						case 'flareaudible':
-						case 'flarescent':
-						case 'flaretactile':
-						case 'flaretaste':
-						case 'flarevisual':
-							const sense = customization.name.replace(/flare/g, '');
-							const obstacle = customization.rank > 2 ? 'Major' :
-								customization.rank > 1 ? 'Minor' : 'No';
-							result = `${result} {{flare=${customization.rank}}} {{sense=${sense}}} {{obstacle=${obstacle}}}`;
-						break;
-						case `flexible`: 
-							rollmod = (getIsGrappling(maneuver)) ? rollmod - customization.rank : rollmod;
-							result = `${result} {{${customization.name}=${customization.rank}}}`;
-						break;
-						case `homing`: 
-							rollmod = rollmod + customization.rank; 
-							result = `${result} {{${customization.name}=${customization.rank}}}`;
-						break;
-						case `indirect`: 
-							rollmod = rollmod - 1;
-							result = `${result} {{${customization.name}=${customization.rank}}}`;
-						break;
-						case 'incapacitating':
-						case 'irritant':
-							const hasobstacle = customization.rank > 2 ? 'major' :
-								customization.rank > 1 ? 'minor' : 'none';
-							result = `${result} {{${customization.name}=${customization.rank}}} {{obstacle=${hasobstacle}}}`;
-						break;
-						case 'incurable':
-							const recovery = customization.rank > 2 ? 'special' :
-							customization.rank > 1 ? 'slow' : 'normal';
-							result = `${result} {{${customization.name}=${customization.rank}}} {{recovery=${recovery}}}`;
-						break;
-						case 'knockback':
-							const kb = 1 << customization.rank -1;
-							result = `${result} {{${customization.name}=${customization.rank}}} {{kb=${kb}}}`;
-						break;
-						case 'nonpenetrating':
-							const wontpenetrate = parseInt(customization.rank * 10);
-							result = `${result} {{${customization.name}=${customization.rank}}} {{wontpenetrate=${wontpenetrate}}}`;
-						break;
-						case 'penetrating':
-						case 'piercing':
-							const penname = customization.name == 'penetrating' ? 'Armor' :
-								customization.name == 'piercing' ? 'Forcefield' : '';
-							const pen = customization.rank * 10;
-							const pentype = capital(customization.name);
-							result = `${result} {{penname=${penname}}} {{pentype=${pentype}}} {{pen=${pen}}}`;
-						break;
-						case 'quake':
-							const fissureobj = {
-								1:"2",
-								2:"5",
-								3:"10",
-								4:"30",
-								5:"100",
-								6:"300"
-							};
-							const fissure = fissureobj[customization.rank] || "0";
-							result = `${result} {{${customization.name}=${customization.rank}}} {{fissure=${fissure}}}`;
-						break;
-						*/
-						case 'range':
-							roll.resulttemplate += ` {{range=${roll.attacker.weapon.distance}}}`;
-							//setRange(debug, timer, attrdb, customization, selection, setObj);
-							//const range = setObj.weapon_range_distance;
-							//result = `${result} {{${customization.name}=${customization.rank}}} {{range=${range}}}`;
-						break;
-						/*
-						case 'stoppable':
-							const stopdamage = parseInt(value[`repeating_attr_${rowID}_level`]) * 10;
-							const timetostop = customization.rank > 3 ? '1 hour' :
-								customization.rank > 2 ? '1 minute' :
-								customization.rank > 1 ? '5 rounds' :
-								customization.rank > 0 ? '1 round' : '';
-							result = `${result} {{${customization.name}=${customization.rank}}} {{timetostop=${timetostop}}} {{stopdamage=${stopdamage}}}`;
-						break;
-						case 'tangle':
-							result = `${result} {{${customization.name}=${customization.rank * 5}}}`;
-						break;
-						case 'exclusive':
-						case 'targeted':
-							const hasenemy = value[`repeating_attr_${rowID}_enemy`] || '';
-							result = `${result} {{${customization.name}=${customization.rank}}} {{hasenemy=${hasenemy}}}`;
-						break;
-						case 'toxic':
-							const escapable = customization.rank > 1 ? 'Escapable' :
-								customization.rank > 0 ? 'Non-escapable' : '';
-							result = `${result} {{${customization.name}=${customization.rank}}} {{escapable=${escapable}}}`;
-						break;
-						case 'unreliable':
-							const failure = customization.rank > 1 ? `${customization.rank + 1} or less` :
-								customization.rank > 0 ? '2' : '';
-							result = `${result} {{${customization.name}=${customization.rank}}} {{failure=${failure}}}`;
-						break;
-						case 'vampiric':
-							const stolenhealth = customization.rank > 2 ? 'Increase' :
-								customization.rank > 0 ? 'Restore' : '';
-							result = `${result} {{${customization.name}=${customization.rank}}} {{stolenhealth=${stolenhealth}}}`;
-						break;
-						case 'contact':
-						case 'contagious':
-						case 'fieldless':
-						case 'helper':
-						case 'inconspicuous':
-						case 'insidious':
-						case 'multidimensional':
-						case 'nostun':
-						case 'psychic':
-						case 'reach':
-						case 'selective':
-						case 'spreading':
-						case 'stunonly':
-							result = `${result} {{${customization.name}=${customization.rank}}}`;
-						*/
+			roll.outcome.attackdifference = Math.max(roll.attacker.results.total - roll.outcome.roll1, 1);
+			
+			if (!roll.outcome.succeed) {
+				roll.resulttemplate += roll.attacker.results.critical === 'hit' ? 
+					' {{emote=Critical Hit!!!}}' :
+					' {{emote=Attack Succeeded!}}';
+		
+				if (roll.attacker.weapon.isweapon){
+					_.each(roll.attacker.weapon.customizations, customization => {
+						switch (customization.name) {
+							/*
+							case 'area':
+								roll.resulttemplate += 
+									` {{area=${get1or3(customization.rank, 3) * (10 ** (Math.ceil((customization.rank) / 2)))} m}}`;
+							break;
+							*/
+							case 'autofire':
+								temp.autofirehits = Math.ceil(roll.outcome.attackdifference/3);
+								roll.resulttemplate += 
+									roll.attacker.weapon.rof === 3 ?
+										` {{autofire=${temp.autofirehits > 3 ? 3 : temp.autofirehits}}}` :
+									roll.attacker.weapon.rof === 6 ?
+										` {{autofire=${temp.autofirehits}}}` : '';
+							break;
+							case 'blight':
+								temp.blighttn = customization.rank === 3 ? 18 :
+									customization.rank === 2 ? 15 :
+									customization.rank === 1 ? 12 : 0;
+								roll.resulttemplate += ` {{blight=${temp.blighttn}}}`;
+							break;
+							/*
+							case 'continuing':
+								const continuingDamage = ;
+								roll.resulttemplate += ` {{continuing=${blighttn}}}`;
+								result = `${result} {{${customization.name}=${customization.rank}}} {{continuing2=${Math.round((damage * 0.25)/5)}}} {{continuing3=${Math.round((damage * 0.35)/5)}}} {{continuing4=${Math.round((damage * 0.45)/5)}}} {{continuing5=${Math.round((damage * 0.55)/5)}}} {{continuing6=${Math.round((damage * 0.65)/5)}}} {{continuing7=${Math.round((damage * 0.75)/5)}}} {{continuing8=${Math.round((damage * 0.9)/5)}}} {{continuing9=${Math.round((damage * 1.05)/5)}}} {{continuing10=${Math.round((damage * 1.2)/5)}}} {{continuing11=${Math.round((damage * 1.35)/5)}}} {{continuing12=${Math.round((damage * 1.5)/5)}}}`;
+							break;
+							
+							case 'drain':
+								const draintype = value[`repeating_attr_${rowID}_draintype`] || '';
+								result = `${result} {{${customization.name}=${customization.rank}}} {{draintype=${draintype}}}`;
+							break;
+							case 'duration':
+								const timeobj = {
+									1:"2 rounds",
+									2:"5 rounds",
+									3:"10 rounds",
+									4:"1 minute",
+									5:"1 hour",
+									6:"1 day",
+									10:"Permanent"
+								};
+								const time = timeobj[customization.rank] || "0";
+								result = `${result} {{${customization.name}=${customization.rank}}} {{time=${time}}}`;
+							break;
+							case 'enervation':
+								result = `${result} {{${customization.name}=${customization.rank * 5}}}`;
+							break;
+							case 'flareaudible':
+							case 'flarescent':
+							case 'flaretactile':
+							case 'flaretaste':
+							case 'flarevisual':
+								const sense = customization.name.replace(/flare/g, '');
+								const obstacle = customization.rank > 2 ? 'Major' :
+									customization.rank > 1 ? 'Minor' : 'No';
+								result = `${result} {{flare=${customization.rank}}} {{sense=${sense}}} {{obstacle=${obstacle}}}`;
+							break;
+							case `flexible`: 
+								rollmod = (getIsGrappling(maneuver)) ? rollmod - customization.rank : rollmod;
+								result = `${result} {{${customization.name}=${customization.rank}}}`;
+							break;
+							case `homing`: 
+								rollmod = rollmod + customization.rank; 
+								result = `${result} {{${customization.name}=${customization.rank}}}`;
+							break;
+							case `indirect`: 
+								rollmod = rollmod - 1;
+								result = `${result} {{${customization.name}=${customization.rank}}}`;
+							break;
+							case 'incapacitating':
+							case 'irritant':
+								const hasobstacle = customization.rank > 2 ? 'major' :
+									customization.rank > 1 ? 'minor' : 'none';
+								result = `${result} {{${customization.name}=${customization.rank}}} {{obstacle=${hasobstacle}}}`;
+							break;
+							case 'incurable':
+								const recovery = customization.rank > 2 ? 'special' :
+								customization.rank > 1 ? 'slow' : 'normal';
+								result = `${result} {{${customization.name}=${customization.rank}}} {{recovery=${recovery}}}`;
+							break;
+							case 'knockback':
+								const kb = 1 << customization.rank -1;
+								result = `${result} {{${customization.name}=${customization.rank}}} {{kb=${kb}}}`;
+							break;
+							case 'nonpenetrating':
+								const wontpenetrate = parseInt(customization.rank * 10);
+								result = `${result} {{${customization.name}=${customization.rank}}} {{wontpenetrate=${wontpenetrate}}}`;
+							break;
+							*/
+							case 'penetrating':
+							case 'piercing':
+								temp.pen = customization.rank * 10;
+								roll.resulttemplate += ` {{${customization.name}=${temp.pen}}}`;
+							break;
+							/*
+							case 'quake':
+								const fissureobj = {
+									1:"2",
+									2:"5",
+									3:"10",
+									4:"30",
+									5:"100",
+									6:"300"
+								};
+								const fissure = fissureobj[customization.rank] || "0";
+								result = `${result} {{${customization.name}=${customization.rank}}} {{fissure=${fissure}}}`;
+							break;
+							
+							case 'range':
+								roll.resulttemplate += ` {{range=${roll.attacker.weapon.distance}}}`;
+								//setRange(debug, timer, attrdb, customization, selection, setObj);
+								//const range = setObj.weapon_range_distance;
+								//result = `${result} {{${customization.name}=${customization.rank}}} {{range=${range}}}`;
+							break;
+							
+							case 'stoppable':
+								const stopdamage = parseInt(value[`repeating_attr_${rowID}_level`]) * 10;
+								const timetostop = customization.rank > 3 ? '1 hour' :
+									customization.rank > 2 ? '1 minute' :
+									customization.rank > 1 ? '5 rounds' :
+									customization.rank > 0 ? '1 round' : '';
+								result = `${result} {{${customization.name}=${customization.rank}}} {{timetostop=${timetostop}}} {{stopdamage=${stopdamage}}}`;
+							break;
+							case 'tangle':
+								result = `${result} {{${customization.name}=${customization.rank * 5}}}`;
+							break;
+							case 'exclusive':
+							case 'targeted':
+								const hasenemy = value[`repeating_attr_${rowID}_enemy`] || '';
+								result = `${result} {{${customization.name}=${customization.rank}}} {{hasenemy=${hasenemy}}}`;
+							break;
+							case 'toxic':
+								const escapable = customization.rank > 1 ? 'Escapable' :
+									customization.rank > 0 ? 'Non-escapable' : '';
+								result = `${result} {{${customization.name}=${customization.rank}}} {{escapable=${escapable}}}`;
+							break;
+							case 'unreliable':
+								const failure = customization.rank > 1 ? `${customization.rank + 1} or less` :
+									customization.rank > 0 ? '2' : '';
+								result = `${result} {{${customization.name}=${customization.rank}}} {{failure=${failure}}}`;
+							break;
+							case 'vampiric':
+								const stolenhealth = customization.rank > 2 ? 'Increase' :
+									customization.rank > 0 ? 'Restore' : '';
+								result = `${result} {{${customization.name}=${customization.rank}}} {{stolenhealth=${stolenhealth}}}`;
+							break;
+							case 'contact':
+							case 'contagious':
+							case 'fieldless':
+							case 'helper':
+							case 'inconspicuous':
+							case 'insidious':
+							case 'multidimensional':
+							case 'nostun':
+							case 'psychic':
+							case 'reach':
+							case 'selective':
+							case 'spreading':
+							case 'stunonly':
+								result = `${result} {{${customization.name}=${customization.rank}}}`;
+							*/
+						}
+					});
+					/*
+					//Apply protections to damage taken
+					if (roll.attacker.weapon.ispsychic) {
+						if (roll.protection.mindshield.ar !== 0) {
+							roll.attacker.damage.total -= roll.protection.mindshield.ar;
+							roll.attacker.damage.total = roll.attacker.damage.total < 0 ? 
+								0 : roll.attacker.damage.total;
+							roll.template += ` {{mindshield=${roll.attacker.damage.total}}}`;
+						}
+					} else {
+						if (roll.protection.forcefield.ar !== 0) {
+							temp.forcefield = 
+								roll.protection.forcefield.ar - roll.attacker.weapon.penetrating;
+							roll.attacker.damage.total -= temp.forcefield < 0 ? 
+								0 : temp.forcefield;
+							roll.attacker.damage.total = roll.attacker.damage.total < 0 ? 
+								0 : roll.attacker.damage.total;
+							roll.template += ` {{forcefield=${roll.attacker.damage.total}}}`;
+						}
+						if (roll.protection.shield.ar !== 0) {
+							temp.shield = 
+								roll.protection.shield.ar - roll.attacker.weapon.penetrating;
+							roll.attacker.damage.total -= temp.shield < 0 ? 
+								0 : temp.shield;
+							roll.attacker.damage.total = roll.attacker.damage.total < 0 ? 
+								0 : roll.attacker.damage.total;
+							roll.template += ` {{shield=${roll.attacker.damage.total}}}`;
+						}
+						if (roll.protection.armor1.ar !== 0) {
+							temp.armor1 = 
+								roll.protection.armor1.ar - roll.attacker.weapon.penetrating;
+							roll.attacker.damage.total -= temp.armor1 < 0 ? 
+								0 : temp.armor1;
+							roll.attacker.damage.total = roll.attacker.damage.total < 0 ? 
+								0 : roll.attacker.damage.total;
+							roll.template += ` {{armor1=${roll.attacker.damage.total}}}`;
+						}
+						if (roll.protection.armor2.ar !== 0) {
+							temp.armor2 = 
+								roll.protection.armor2.ar - roll.attacker.weapon.penetrating;
+							roll.attacker.damage.total -= temp.armor2 < 0 ? 
+								0 : temp.armor2;
+							roll.attacker.damage.total = roll.attacker.damage.total < 0 ? 
+								0 : roll.attacker.damage.total;
+							roll.template += ` {{armor2=${roll.attacker.damage.total}}}`;
+						}
+						if (roll.protection.armor3.ar !== 0) {
+							temp.armor3 = 
+								roll.protection.armor3.ar - roll.attacker.weapon.penetrating;
+							roll.attacker.damage.total -= temp.armor3 < 0 ? 
+								0 : temp.armor3;
+							roll.attacker.damage.total = roll.attacker.damage.total < 0 ? 
+								0 : roll.attacker.damage.total;
+							roll.template += ` {{armor3=${roll.attacker.damage.total}}}`;
+						}
 					}
-				});
+					if (roll.protection.absorption1.ar !== 0) {
+						roll.attacker.damage.total -= roll.protection.absorption1.ar;
+						roll.attacker.damage.total = roll.attacker.damage.total < 0 ? 
+							0 : roll.attacker.damage.total;
+						roll.template += ` {{absorption1=${roll.attacker.damage.total}}}`;
+					}
+					if (roll.protection.absorption2.ar !== 0) {
+						roll.attacker.damage.total -= roll.protection.absorption2.ar;
+						roll.attacker.damage.total = roll.attacker.damage.total < 0 ? 
+							0 : roll.attacker.damage.total;
+						roll.template += ` {{absorption2=${roll.attacker.damage.total}}}`;
+					}
+					if (roll.protection.conversion.ar !== 0) {}
+					*/
+				}
+			} else {
+				temp.adverb = {
+					1: 'artfully',
+					2: 'gracefully',
+					3: 'quickly',
+					4: 'successfully'
+				};
+				temp.pastTenseManeuvers = {
+					'deflect': 'deflected',
+					//'dodged',
+					'parry': 'parried',
+					'personal': 'found cover from',
+					'movement': 'out maneuvered',
+					'evade': 'evaded',
+					'escape': 'escaped'
+				};
+				roll.resulttemplate += ` {{emote=${roll.character.name} ` +
+					`${temp.adverb[Math.floor(Math.random()*4)+1]} ` +
+					`${temp.pastTenseManeuvers[roll.maneuver.name]} ` +
+					`${roll.attacker.character.name}'s attack!}}`
 			}
-			
-			
+		
 			roll.resulttemplate += ` {{damagetaken=${roll.attacker.damage.total}}}`;
 			
-			const resultRoll = await startRoll(roll.resulttemplate);
-			finishRoll(resultRoll.rollId);
+			temp.resultRoll = await startRoll(roll.resulttemplate);
+			finishRoll(temp.resultRoll.rollId);
 		}
-		
+		/*
 		async function buildManeuverOptions(debug, timer, roll, attrdb) {
 			const maneuverObj = {
 				'attack': '|Attack,attack',
@@ -15497,7 +15612,7 @@
 			clog(debug, timer, 'roll.maneuver.selected =', roll.maneuver.selected);
 			finishRoll(getManeuver.rollId);
 		}
-		
+		*/
 		async function queryFireMode(debug, timer, roll) {
 			const firemodeString = '! {{rof=[[0[?{Select Firemode|Single,1|Burst,3|Full-auto,6}] ]] }}';
 			const getFireMode = await startRoll(firemodeString);
@@ -15508,47 +15623,121 @@
 		}
 		
 		async function queryRangeDistance(debug, timer, attrdb, roll) {
-			const distances = _.map([1,2,3], d => {
+			const temp = {};
+			clog(debug, timer, '', temp, 'queryRangeDistance()');
+			temp.distances = _.map([1,2,3], d => {
 				const distance = getRange(debug, timer, attrdb, {rank:roll.weapon.range}, d);
 				return distance;
 			});
-			const selectRangeString = `! {{range=[[0[?{Select Range Target Is Within` +
-				`|${distances[0]} (Effective),0` +
-				`|${distances[1]} (Intermediate),1` +
-				`|${distances[2]} (Remote),2` +
+			temp.selectRangeString = `! {{range=[[0[?{Target Is Within` +
+				`|${temp.distances[0]} (Effective),0` +
+				`|${temp.distances[1]} (Intermediate),1` +
+				`|${temp.distances[2]} (Remote),2` +
 				`}] ]] }}`;
-			const getSelectedRange = await startRoll(selectRangeString);
-			clog(debug, timer, 'getSelectedRange', getSelectedRange, 'roll.weapon.range(TEST)');
-			const rangedRollMod = parseInt(getSelectedRange.results.range.expression.match(rxGrab)[1]);
-			clog(debug, timer, 'rangedRollMod', rangedRollMod);
-			finishRoll(getSelectedRange.rollId);
-			roll.mod.obstacle += rangedRollMod;
-			roll.weapon.distance = distances[rangedRollMod];
+			temp.getSelectedRange = await startRoll(temp.selectRangeString);
+			temp.rangedRollMod = parseInt(temp.getSelectedRange.results.range.expression.match(rxGrab)[1]);
+			finishRoll(temp.getSelectedRange.rollId);
+			roll.mod.obstacle += temp.rangedRollMod;
+			roll.weapon.distance = temp.distances[temp.rangedRollMod];
+			roll.weapon.rangepenalty = 
+				temp.rangedRollMod === 0 ? ' (effective)' :
+				temp.rangedRollMod === 1 ? ' (intermediate)' :
+				' (remote)';
+		}
+		
+		function buildEmote(debug, timer, roll) {
+			const maneuver = 
+				calledshot_maneuvers_array.indexOf(roll.maneuver.name) !== -1 ? 'calledshot' : 
+				getIsGrappling(roll.maneuver.name) ? 'grappling' :
+				roll.maneuver.name;
+				clog(debug, timer, 'maneuver', maneuver, 'buildEmote()');
+			const actor = _.keys(roll).indexOf('attacker') === -1 ? 
+				'attacker' : 'defender';
+			clog(debug, timer, 'actor', actor);
+			const adverbSelect = Math.floor(Math.random() * 2) + 1;
+			clog(debug, timer, 'adverbSelect', adverbSelect);
+			const adverb = {
+				attacker: {
+					1: 'attempts',
+					2: 'tries'
+				},
+				defender: {
+					1: 'attempts',
+					2: 'tries'
+				}
+			};
+			clog(debug, timer, `adverb[${actor}][${adverbSelect}]`, adverb[actor][adverbSelect]);
+			const weapon = roll.weapon.isweapon ? 
+				` with ${roll.character.pronoun} ${roll.weapon.name}` : '';
+			switch(maneuver) {
+				case 'attack':
+					roll.maneuver.emote = `${roll.character.name} attacks ${roll.target.name}${weapon}`;
+				break;
+				case 'block':
+				case 'deflect':
+				case 'parry':
+					roll.maneuver.emote = `${roll.character.name} ${adverb[actor][adverbSelect]} to ${roll.maneuver.titlecase} ${roll.attacker.character.name}'s attack${weapon}`;
+				break;
+				case 'calledshot':
+					roll.maneuver.emote = `${roll.character.name} attempts a Called Shot (${roll.maneuver.titlecase}) on ${roll.target.name}${weapon}`;
+				break;
+				case 'escape':
+					roll.maneuver.emote = `${roll.character.name} ${adverb[actor][adverbSelect]} to wrestle free from ${roll.attacker.character.name}'s ${roll.maneuver.titlecase}`;
+				break;
+				case 'evade':
+					roll.maneuver.emote = ``;
+				break;
+				case 'grappling':
+					roll.maneuver.emote = `${roll.character.name} ${adverb[actor][adverbSelect]} to ${roll.maneuver.titlecase} ${roll.target.name}`;
+				break;
+				case 'disarm':
+					roll.maneuver.emote = `${roll.character.name} attempts to disarm ${roll.target.name}${weapon}`;
+				break;
+				case 'movement':
+					roll.maneuver.emote = `${roll.character.name} ${adverb[actor][adverbSelect]} out maneuver ${roll.attacker.character.name}'s attack`;
+				break;
+				case 'personal':
+					roll.maneuver.emote = `${roll.character.name} dives for cover from ${roll.attacker.character.name} attack`;
+				break;
+				case 'unarmed':
+					roll.maneuver.emote = `${roll.character.name} lunges at ${roll.target.name} with an unarmed strike`;
+				break;
+				/*
+				case '':
+					roll.maneuver.emote = "";
+				break;
+				*/
+			}	
+			
+		
 		}
 		
 		async function doCombatRoll(debug, timer, value, attrdb, setObj) {
-			clog(debug, timer, 'Fired!', '', 'doAttackRoll()');
+			const temp = {};
 			const roll = { 
+				character: { name: value.charactername, pronoun: value.pronoun },
 				damage: {},
-				maneuver: { name: '', options: '', selected: '', type: 0 },
+				maneuver: { emote: '', name: '', options: '', selected: '', type: 0 },
 				mod: { edge: 0, obstacle: 0 }, 
-				name: value.charactername,
 				outcome: {},
-				results: { cv: 0, total: 0 }, 
+				results: { critical: '', cv: 0, emote: '', total: 0 }, 
 				target: {},
 				template: '&{template:besm} ',
 				weapon: {}
 			};
-			
+			clog(debug, timer, '', temp, 'doAttackRoll()');
+			clog(debug, timer, 'roll:', roll);
+		
 			buildWeaponList(debug, timer, value, roll);
 			await buildAvailableManeuvers(debug, timer, attrdb, value, roll);
-		
 			await buildActiveWeapon(debug, timer, roll, value, attrdb);
 		
 			if (roll.weapon.range) await queryRangeDistance(debug, timer, attrdb, roll);
 			if (roll.weapon.autofire) await queryFireMode(debug, timer, roll, value);
-		
-			//await buildManeuverOptions(debug, timer, roll, attrdb);
+			if (roll.weapon.indirect) roll.mod.obstacle += 1;
+			if (roll.weapon.homing) roll.mod.edge += parseInt(roll.weapon.homing);
+			if (roll.weapon.accurate) roll.mod.edge += parseInt(roll.weapon.accurate);
+			if (roll.weapon.inaccurate) roll.mod.edge += parseInt(roll.weapon.inaccurate);
 		
 			// Define default roll attributes.
 			roll.maneuver.titlecase = capital(roll.maneuver.selected);
@@ -15564,11 +15753,12 @@
 			getTargetedDM(debug, timer, roll, value, attrdb);
 			setCV(debug, timer, roll, value, attrdb, setObj);
 			setRollMod(debug, timer, roll);
+			buildEmote(debug, timer, roll);
 			
 			// Define maneuver specific roll attributes and do roll.
 			switch(roll.maneuver.type) {
 				case 1://attack
-					const damageMod = {
+					temp.damageMod = {
 						2: 0.25,
 						3: 0.35, 
 						4: 0.45,
@@ -15583,9 +15773,7 @@
 					};
 					setDamage(debug, timer, roll, attrdb);
 		
-					roll.template += `{{emote=${value.charactername} performs a ` +
-						`${roll.maneuver.titlecase} manuever to attack ${roll.target.name} ` +
-						`with ${value.pronoun} ${roll.weapon.name}}}`;
+					roll.template += `{{emote=${roll.maneuver.emote}}}`;
 		
 					roll.template += ` {{react=1}} {{action=1}} {{title=ATTACK}} {{color=#E83278}}` +
 					`{{cvtype=ACV}} {{cv=[[0d6 + ${roll.results.cv}]]}} ` +
@@ -15597,15 +15785,27 @@
 					`{{roll1data=[[0]]}} {{reactbutton1label=L}} ` +
 					`{{roll1link=static_button_combat_react}} {{roll1target=${roll.target.id}}}`;
 		
-					const attackRoll = await startRoll(roll.template);
-					clog(debug, timer, 'attackRoll:', attackRoll);
-					roll.results.roll1 = parseInt(attackRoll.results.roll1.result);
+					if (roll.weapon.backblast) roll.template += 
+						parseInt(roll.weapon.backblast) === 1 ? ' {{backblast=Attacker and bystanders}}' :
+						' {{backblast=Bystanders only}}';
+					if (roll.weapon.area) roll.template += 
+						` {{area=${get1or3(roll.weapon.area, 3) * (10 ** (Math.ceil((roll.weapon.area) / 2)))} m}}`;
+					if (roll.weapon.range) roll.template += ` {{range=${roll.weapon.distance}}}` +
+						` {{rangepenalty=${roll.weapon.rangepenalty}}}`;
+		
+					temp.attackRoll = await startRoll(roll.template);
+					roll.results.roll1 = parseInt(temp.attackRoll.results.roll1.result);
+		
+					roll.results.critical = 
+						roll.results.roll1 === 2 ? 'failure' :
+						roll.results.roll1 === 12 ? 'hit' : '';
+		
 					roll.results.total = roll.results.roll1 + roll.results.cv;
 					roll.damage.total = 
-						parseInt(attackRoll.results.roll2.result) + 
-						Math.round(roll.damage.base * parseFloat(damageMod[roll.results.roll1]));
+						parseInt(temp.attackRoll.results.roll2.result) + 
+						Math.round(roll.damage.base * parseFloat(temp.damageMod[roll.results.roll1]));
 					
-					finishRoll(attackRoll.rollId, {
+					finishRoll(temp.attackRoll.rollId, {
 						roll1: roll.results.total,
 						roll2: roll.damage.total,
 						roll1data: rollEscape.escape(roll)
@@ -15673,7 +15873,7 @@
 				*/
 				break;
 			}
-			clog(debug, timer, 'roll:', roll);
+			//clog(debug, timer, 'roll:', roll);
 		}
 		
 		async function calculateDamage(debug, timer, roll, value, attrdb) {
@@ -15790,44 +15990,31 @@
 		}
 		
 		function applyArmorToDamage(debug, timer, roll) {
-			clog(debug, timer, 'Fired!', '', 'applyArmorToDamage()');
-			//const weaponHasInsidious = attacker.weapon.insidious;
+			const temp = {};
+			clog(debug, timer, '', temp, 'applyArmorToDamage()');
 			if(roll.attacker.weapon.insidious) return;
 			for(let i = 1; i <= 3; i++) {
 				if(roll.protection[`armor${i}`].ar !== 0 && roll.outcome.damage !== 0) {
-					clog(debug, timer, `armor${i}`, '');
-					const isSpecialized = roll.protection[`armor${i}`].isspecialized;
-					const armorDamageType = roll.protection[`armor${i}`].damagetype;
-					const weaponDamageType = roll.attacker.weapon.damagetype;
-					const baseAR = roll.protection[`armor${i}`].ar;
-					const realAR = 
-						isSpecialized && armorDamageType === weaponDamageType ?
-							baseAR * 2 :
-						isSpecialized === 1 ? 
-							Math.round(baseAR/2) :
-						isSpecialized === 2 ? 
+					temp[`isSpecialized${i}`] = roll.protection[`armor${i}`].isspecialized;
+					temp[`armorDamageType${i}`] = roll.protection[`armor${i}`].damagetype;
+					temp[`weaponDamageType${i}`] = roll.attacker.weapon.damagetype;
+					temp[`baseAR${i}`] = roll.protection[`armor${i}`].ar;
+					temp[`realAR${i}`] = 
+						temp[`isSpecialized${i}`] && temp[`armorDamageType${i}`] === temp[`weaponDamageType${i}`] ?
+							temp[`baseAR${i}`] * 2 :
+						temp[`isSpecialized${i}`] === 1 && temp[`armorDamageType${i}`] !== temp[`weaponDamageType${i}`] ?
+							Math.round(temp[`baseAR${i}`]/2) :
+						temp[`isSpecialized${i}`] === 2 && temp[`armorDamageType${i}`] !== temp[`weaponDamageType${i}`] ?
 							0 :
-						baseAR;
+						temp[`baseAR${i}`];
 		
-					//outcome.damage -= realAR;
-					//outcome.damage = outcome.damage < 0 ? 0 : outcome.damage;
-					clog(debug, timer, `realAR =`, realAR);
-					const damageRemainder = roll.outcome.damage < realAR ?
-						0 : roll.outcome.damage - realAR;
+					temp.damageRemainder = roll.outcome.damage < temp[`realAR${i}`] ?
+						0 : roll.outcome.damage - temp[`realAR${i}`];
 					if(roll.protection.conversion.type === 0 && roll.protection.conversion.hasescalate) {
-						roll.outcome.converted += roll.outcome.damage - damageRemainder;
-						clog(debug, timer, 'roll.outcome.converted =', roll.outcome.converted);
+						roll.outcome.converted += roll.outcome.damage - temp.damageRemainder;
 					}
-					roll.outcome.damage = damageRemainder;
-					clog(debug, timer, `roll.outcome.damage`, roll.outcome.damage);
-					/*
-					clog(debug, timer, `armor${i}`, '');
-					clog(debug, timer, `isSpecialized =`, isSpecialized);
-					clog(debug, timer, `armorDamageType =`, armorDamageType);
-					clog(debug, timer, `weaponDamageType =`, weaponDamageType);
-					clog(debug, timer, `baseAR =`, baseAR);
-					clog(debug, timer, `realAR =`, realAR);
-					*/
+					roll.resulttemplate += ` {{armor${i}=${roll.outcome.damage - temp.damageRemainder}}}`;
+					roll.outcome.damage = temp.damageRemainder;
 				}
 			}
 		}
@@ -15857,50 +16044,41 @@
 		}
 		
 		async function applyForcefieldToDamage(debug, timer, roll, value) {
-			clog(debug, timer, 'roll.protection.forcefield.ar =', roll.protection.forcefield.ar, 'applyForcefieldToDamage()');
+			const temp = {};
+			clog(debug, timer, '', temp, 'applyForcefieldToDamage()');
 			if(roll.protection.forcefield.ar !== 0) {
-				const weaponHasInsidious = roll.attacker.weapon.insidious;
-				const canBlockInsidious = doesForcefieldBlockInsidious(debug, timer, value);
-				if(weaponHasInsidious && !canBlockInsidious) {
-					clog(debug, timer, 'weaponHasInsidious =', weaponHasInsidious);
-					clog(debug, timer, 'canBlockInsidious =', canBlockInsidious);
+				temp.weaponHasInsidious = roll.attacker.weapon.insidious;
+				temp.canBlockInsidious = doesForcefieldBlockInsidious(debug, timer, value);
+				if(temp.weaponHasInsidious && !temp.canBlockInsidious) {
 					return;
 				}
-				if(attacker.weapon.damagetype === 'disease' && !forcefield.hasairtight) {
-					clog(debug, timer, 'roll.attacker.weapon.damagetype =', roll.attacker.weapon.damagetype);
-					clog(debug, timer, 'forcefield.hasairtight =', forcefield.hasairtight);
+				if(roll.attacker.weapon.damagetype === 'disease' && !roll.protection.forcefield.hasairtight) {
 					return;
 				}
-				const forcefieldDamageCategory = roll.protection.forcefield.damagecategory;
-				clog(debug, timer, 'forcefieldDamageCategory =', forcefieldDamageCategory);
-				const weaponDamageCategory = getWeaponDamageCategory(debug, timer, roll.attacker.weapon.damagetype);
-				clog(debug, timer, 'weaponDamageCategory =', weaponDamageCategory);
-				const isSpecific = 
-					forcefieldDamageCategory !== false ?
-						forcefieldDamageCategory === weaponDamageCategory ?
+				temp.forcefieldDamageCategory = roll.protection.forcefield.damagecategory;
+				temp.weaponDamageCategory = getWeaponDamageCategory(debug, timer, roll.attacker.weapon.damagetype);
+				temp.isSpecific = 
+					temp.forcefieldDamageCategory !== false ?
+						temp.forcefieldDamageCategory === temp.weaponDamageCategory ?
 							2 : 0 : 
 						1;
-				clog(debug, timer, 'isSpecific =', isSpecific);
-				const actualAR = roll.protection.forcefield.ar * isSpecific;
-				const damageRemainder = roll.outcome.damage < actualAR ? 0 : 
-					roll.outcome.damage - actualAR;
-				clog(debug, timer, 'damageRemainder =', damageRemainder);
-				if(damageRemainder > 0) {
-					const newForcefieldAR = //isSpecific === 0 ? 
-						//roll.protection.forcefield.ar : 
+				temp.actualAR = roll.protection.forcefield.ar * temp.isSpecific;
+				temp.damageRemainder = roll.outcome.damage < temp.actualAR ? 0 : 
+					roll.outcome.damage - temp.actualAR;
+				if(temp.damageRemainder > 0) {
+					roll.resulttemplate += ` {{forcefield=${roll.outcome.damage - temp.damageRemainder}}}`;
+					temp.newForcefieldAR = 
 						roll.protection.forcefield.ar - 10;
-					//await commitChanges(debug, timer, value, ['protection_forcefield_ar'], [newForcefieldAR]);
-					await commitChanges(debug, timer, value, { protection_forcefield_ar: newForcefieldAR });
+					await commitChanges(debug, timer, value, { protection_forcefield_ar: temp.newForcefieldAR });
 					if(roll.protection.conversion.type === 0 && roll.protection.conversion.hasescalate) {
-						roll.outcome.converted += roll.outcome.damage - damageRemainder;
-						clog(debug, timer, 'roll.outcome.converted =', roll.outcome.converted);
+						roll.outcome.converted += roll.outcome.damage - temp.damageRemainder;
 					}
-					roll.outcome.damage = damageRemainder;
+					roll.outcome.damage = temp.damageRemainder;
 				} else {
 					if(roll.protection.conversion.type === 0) {
-						roll.outcome.converted = outcome.damage;
-						clog(debug, timer, 'roll.outcome.converted =', roll.outcome.converted);
+						roll.outcome.converted = roll.outcome.damage;
 					}
+					roll.resulttemplate += ` {{forcefield=${roll.outcome.damage}}}`;
 					roll.outcome.damage = 0;
 				}
 			}
@@ -15929,18 +16107,15 @@
 		}
 		
 		function setProtectionValues(debug, timer, roll, value, attrdb) {
-			clog(debug, timer, 'Fired!', '', 'setProtectionValues(TEST)');
-			clog(debug, timer, 'attrdb.conversion.length =', attrdb.conversion.length);
-			const conversion = attrdb.conversion.length !== 0 ? 
+			const temp = {};
+			clog(debug, timer, '', temp, 'setProtectionValues()');
+			temp.conversion = attrdb.conversion.length !== 0 ? 
 				_.find(attrdb.conversion, c => {
-					clog(debug, timer, 'looking for conversion:', c);
 					if(c.type === 0) return true;
 				}) : { level: 0 };
-			clog(debug, timer, 'conversion:', conversion);
-			roll.protection.conversion = { ...conversion };
-			const protection_array = ['forcefield','shield','armor1','armor2','armor3','mindshield','absorption1','absorption2'];
-			_.each(protection_array, p => {
-				clog(debug, timer, 'Protection =', p);
+			roll.protection.conversion = { ...temp.conversion };
+			temp.protection_array = ['forcefield','shield','armor1','armor2','armor3','mindshield','absorption1','absorption2'];
+			_.each(temp.protection_array, p => {
 				roll.protection[p].ar = 
 					p === 'mindshield' && roll.attacker.weapon.psychic ?	
 						parseInt(value[`protection_${p}_ar`]) || 0 :
@@ -15948,36 +16123,33 @@
 					p !== 'mindshield' && !roll.attacker.weapon.psychic ?
 						parseInt(value[`protection_${p}_ar`]) || 0 :
 					0;
-				clog(debug, timer, `roll.protection[${p}].ar =`, roll.protection[p].ar);
-				if(p === 'forcefield' && roll.protection[p].ar !== 0) { //parseInt(value[`protection_${p}_ar`]) !== 0) {
-					const forcefield = _.find(attrdb.forcefield, ff => {
+				if(p === 'forcefield' && roll.protection[p].ar !== 0) {
+					temp[p] = _.find(attrdb.forcefield, ff => {
 						if(ff.source === value.protection_forcefield_source) return true;
 					});
-					const damageCategory = forcefield !== undefined ?
-						forcefield.damagecategory : false;
-					roll.protection[p].damagecategory = damageCategory;
-					const hasAirTight = 
-						getCustomizationValue(debug, timer, value, forcefield.source, 'rank', 'airtight');
-					roll.protection[p].hasairtight;
+					temp.damageCategory = temp[p] !== undefined ?
+						temp[p].damagecategory : false;
+					roll.protection[p].damagecategory = temp.damageCategory;
+					temp.hasAirTight = 
+						getCustomizationValue(debug, timer, value, temp[p].source, 'rank', 'airtight');
+					roll.protection[p].hasairtight = temp.hasAirTight;
 				}
 				if(p.indexOf('armor') !== -1 && roll.protection[p].ar !== 0) {
-					const armor = _.find(attrdb.armor, a => {
+					temp[p] = _.find(attrdb.armor, a => {
 						if(a.source === value[`protection_${p}_source`]) return true;
 					});
-					const isSpecialized = armor.isspecialized;
-					const damageType = armor !== undefined && isSpecialized ?
-						armor.damagetype : false;
-					roll.protection[p].damagetype = damageType;
-					roll.protection[p].isspecialized = isSpecialized;
+					temp.isSpecialized = temp[p].isspecialized;
+					temp.damageType = temp[p] !== undefined && temp.isSpecialized ?
+						temp[p].damagetype : false;
+					roll.protection[p].damagetype = temp.damageType;
+					roll.protection[p].isspecialized = temp.isSpecialized;
 				}
 				if(p.indexOf('absorption') !== -1 && roll.protection[p].ar !== 0) {
-					const absorption = _.find(attrdb.absorption, a => {
-						clog(debug, timer, 'name =', a.name);
-						clog(debug, timer, 'source =', a.source);
+					temp[p] = _.find(attrdb.absorption, a => {
 						if(a.source === value[`protection_${p}_source`]) return true;
 					});
-					roll.protection[p].issynergistic = absorption.issynergistic;
-					roll.protection[p].iscapped = absorption.iscapped;
+					roll.protection[p].issynergistic = temp[p].issynergistic;
+					roll.protection[p].iscapped = temp[p].iscapped;
 				}
 			});
 		}
@@ -16014,32 +16186,29 @@
 		}
 		
 		function setDamage(debug, timer, roll, attrdb) {
-			clog(debug, timer, 'Fired!', '', 'setDamage()');
+			const temp = {};
+			clog(debug, timer, '', temp, 'setDamage()');
 			if (non_damaging_attack_array.indexOf(roll.maneuver.name) !== -1) {
-				clog(debug, timer, 'Non-damaging attack', '');
+				temp.message = 'non-damaging attack';
 				roll.damage.base = 0;
 			} else {
-				const massivedamage = 
+				temp.massivedamage = 
 					getSumOfActiveAttrLevels(attrdb, 'massivedamage', roll.weapon.weaponclass) || 0;
-				clog(debug, timer, 'massivedamage =', massivedamage);
-				const superstrength = 
+				temp.superstrength = 
 					getSumOfActiveAttrLevels(attrdb, 'superstrength') || 0;
-				clog(debug, timer, 'superstrength =', superstrength);
 				roll.damage.base = 
 					roll.weapon.level === -1 ? 0 :
 					roll.weapon.swarm ?
 						Math.round(weapon.weapon.critters / 10) :
 					roll.weapon.telekinesis ?
-						(((roll.weapon.level - 2) + massivedamage + roll.damage.targeted) * 5) + 
+						((roll.weapon.level - 2) * (5 + temp.massivedamage + roll.damage.targeted)) + 
 						roll.cv :
 					roll.weapon.weaponclass === 'unarmed' && roll.weapon.level === 0 ?
-						(superstrength * 5) + (massivedamage * 5) + (roll.damage.targeted || 0 * 5) + 
+						(temp.superstrength * 5) + (temp.massivedamage * 5) + (roll.damage.targeted || 0 * 5) + 
 						(roll.damage.rush || 0 * 5) + roll.results.cv || 0 :
-					(roll.weapon.level * ((superstrength * roll.weapon.muscle  || 0) + 
-						massivedamage + roll.damage.targeted  || 0 + roll.damage.rush || 0 + 5)) + 
+					(roll.weapon.level * ((temp.superstrength * roll.weapon.muscle || 0) + 
+						temp.massivedamage + roll.damage.targeted || 0 + roll.damage.rush || 0 + 5)) + 
 						roll.results.cv;
-				//clog(debug, timer, 'roll.damage.total =', roll.damage.total);
-				clog(debug, timer, 'roll:', roll);
 			}
 		}
 		
@@ -16090,81 +16259,97 @@
 		}
 		
 		function buildWeaponList(debug, timer, value, roll) {
-			const weaponList = ['unarmed'];
-			const extraArmsArmedSources = value.extraarmIDs.length !== 0 ?
+			const temp = { weaponlist: ['unarmed'], extraarmsources: [] };
+			//const weaponList = ['unarmed'];
+			//const extraArmsArmedSources = value.extraarmIDs.length !== 0 ?
+			temp.extraarmsources = value.extraarmIDs.length !== 0 ?
 				_.chain(value.extraarmIDs).map(id => {
 					return value[`repeating_extraarm_${id}_source`];
 				}).compact().value() : [];
 		
 			if (value.mainhand_source !== '') {
-				weaponList.push(value.mainhand_source);
+				temp.weaponlist.push(value.mainhand_source);
 			}
 			if (value.offhand_source !== '' && 
 			value.offhand_source !== value.mainhand_source) {
-				weaponList.push(value.offhand_source);
+				temp.weaponlist.push(value.offhand_source);
 			}
-			if (extraArmsArmedSources.length !== 0) {
+			if (temp.extraarmsources.length !== 0) {
 				const uniqueSources = [];
-				_.each(extraArmsArmedSources, id => {
+				_.each(temp.extraarmsources, id => {
 					if (uniqueSources.indexOf(id) === -1) {
 						uniqueSources.push(id);
-						weaponList.push(id);
+						temp.weaponlist.push(id);
 					}
 				});
 			}
-			clog(debug, timer, 'weaponList', weaponList,'buildWeaponList()');
-			roll.weapon.list = weaponList;
+			clog(debug, timer, '', temp, 'buildWeaponList()');
+			roll.weapon.list = temp.weaponlist;
 		}
 		
 		async function getActiveWeapon(debug, timer, roll, value) {
-			clog(debug, timer, 'value.mainhand_source =', value.mainhand_source, 'getActiveWeapon(TEST)');
-			clog(debug, timer, 'value.offhand_source =', value.offhand_source);
-			clog(debug, timer, 'value.extraarmIDs:', value.extraarmIDs);
-			const isAttacker = _.keys(roll).indexOf('attacker') === -1;
-			const extraArmsArmedSources = value.extraarmIDs.length !== 0 ?
+			const temp = {};
+			clog(debug, timer, '', temp, 'getActiveWeapon()');
+			temp.isAttacker = _.keys(roll).indexOf('attacker') === -1;
+			temp.extraArmsArmedSources = value.extraarmIDs.length !== 0 ?
 				_.chain(value.extraarmIDs).map(id => {
 					return value[`repeating_extraarm_${id}_source`];
 				}).compact().value() : [];
 			if (value.mainhand_source === '' && value.offhand_source === '' && 
-				extraArmsArmedSources.length === 0) {
+				temp.extraArmsArmedSources.length === 0) {
 					return 'unarmed';
 			} else {
-				let rollBase = '! {{weaponselection=[[0[?{Select Weapon';
+				let rollBase = '! {{weaponselection=[[0[?{Weapon';
 				if (value.mainhand_source) {
-					rollBase += `|${value[`repeating_attr_${value.mainhand_source}_name`]},` +
-						`${value.mainhand_source}`;
+					if (!temp.isAttacker && roll.attacker.weapon.ismelee && 
+						!getIsObject(_.find(value[`repeating_attr_${value.mainhand_source}_customizations`], c => {
+							return c.name === 'range';
+						})) || temp.isAttacker) {
+							rollBase += `|${value[`repeating_attr_${value.mainhand_source}_name`]},` +
+								`${value.mainhand_source}`;
+					}
 				}
 				if (value.offhand_source && value.offhand_source !== value.mainhand_source) {
-					rollBase += `|${value[`repeating_attr_${value.offhand_source}_name`]},` +
-						`${value.offhand_source}`;
+					if (!temp.isAttacker && roll.attacker.weapon.ismelee && 
+						!getIsObject(_.find(value[`repeating_attr_${value.offhand_source}_customizations`], c => {
+							return c.name === 'range';
+						})) || temp.isAttacker) {
+							rollBase += `|${value[`repeating_attr_${value.offhand_source}_name`]},` +
+								`${value.offhand_source}`;
+					}
 				}
-				if (extraArmsArmedSources.length !== 0) {
-					const uniqueSources = [];
-					_.each(extraArmsArmedSources, id => {
-						if (uniqueSources.indexOf(id) === -1) {
-							uniqueSources.push(id);
-							rollBase += `|${value[`repeating_attr_${id}_name`]},${id}`;
+				if (temp.extraArmsArmedSources.length !== 0) {
+					temp.uniqueSources = [];
+					_.each(temp.extraArmsArmedSources, id => {
+						if (temp.uniqueSources.indexOf(id) === -1) {
+							temp.uniqueSources.push(id);
+							if (!temp.isAttacker && roll.attacker.weapon.ismelee && 
+								!getIsObject(_.find(value[`repeating_attr_${id}_customizations`], c => {
+									return c.name === 'range';
+								})) || temp.isAttacker) {
+									rollBase += `|${value[`repeating_attr_${id}_name`]},${id}`;
+							}
 						}
 					});
 				}
 				rollBase += '|Unarmed,unarmed}] ]] }}';
 		
-				if (isAttacker &&
+				if (temp.isAttacker &&
 					getIsGrappling(roll.maneuver.selected)) {
 						return 'unarmed';
 					}
-				if (!isAttacker && (
+				if (!temp.isAttacker && (
 				roll.maneuver.selected === 'personal' ||
 				roll.maneuver.selected === 'movement' ||
 				getIsGrappling(roll.maneuver.selected))) {
 					return 'unarmed';
 				}
 		
-				const doRoll = await startRoll(rollBase);
-				const source = doRoll.results.weaponselection.expression.match(rxGrab)[1];
-				clog(debug, timer, 'source =', source, 'getActiveWeapon()');
-				finishRoll(doRoll.rollId);
-				return source;
+				temp.doRoll = await startRoll(rollBase);
+				temp.source = temp.doRoll.results.weaponselection.expression.match(rxGrab)[1];
+				//clog(debug, timer, 'source =', source, 'getActiveWeapon()');
+				finishRoll(temp.doRoll.rollId);
+				return temp.source;
 			}
 		}
 		/*
@@ -16211,13 +16396,15 @@
 		}
 		*/
 		async function buildAvailableManeuvers(debug, timer, attrdb, value, roll) {
-			const available = {
+			const temp = {
+				isRangedWeapon: [],
 				maneuvers: [],
+				meleeWeapons: [],		
+				query: '! {{maneuver=[[0[?{Maneuver',
 				rangedWeapons: [],
-				meleeWeapons: [],
 				shield: {},
-				query: '! {{maneuver=[[0[?{Select Maneuver'
 			};
+			clog(debug, timer, '', temp, 'buildAvailableManeuvers()');
 			const maneuverObj = {
 				'attack': '|Attack,attack',
 				'block': '|Block,block',
@@ -16228,7 +16415,7 @@
 				'defense': 
 					'|Defend,defend|Defend Other,defend other' +
 					'|Do Nothing,do nothing',
-				'deflection': '|Deflection,deflection',
+				'deflect': '|Deflection,deflection',
 				'disarm': '|Disarm,disarm',
 				'escape': '|Escape,escape',
 				'grappling': 
@@ -16238,112 +16425,114 @@
 				'parry': '|Parry,parry',
 				'rangeddefense': 
 					'|Ranged Defense,?{Ranged Defense Type' +
-					'&#124;Cover/Dodge (Personal)&#44;personal' +
-					'&#124;Evade (Movement)&#44;movement&#124;&#125;',
+					'&#124;Personal (Cover/Dodge)&#44;personal' +
+					'&#124;Movement (Evade)&#44;movement&#125;',
 				'trip': '|Trip,trip',
-				'test': '|-,-'
+				//'test': '|-,-'-
 			};
-			const isAttacker = _.keys(roll).indexOf('attacker') === -1;
-			const weaponList = roll.weapon.list || [];
-			clog(debug, timer, 'isAttacker', isAttacker, 'buildAvailableActions(TEST)');
-			clog(debug, timer, 'roll', roll);
-			_.each(weaponList, id => {
+			temp.isAttacker = _.keys(roll).indexOf('attacker') === -1;
+			temp.weaponList = roll.weapon.list || [];
+			_.each(temp.weaponList, (id,i) => {
+				temp.isRangedWeapon[i] = getIsObject(_.find(value[`repeating_attr_${id}_customizations`], c => {
+					return c.name === "range";
+				}));
 				if (value[`repeating_attr_${id}_attribute`] === 'shield') {
-					available.shield.name = value[`repeating_attr_${id}_name`];
-					available.shield.source = id;
-				} else if (_.keys(`repeating_attr_${id}_customizations`).indexOf('range') !== -1) {
-					available.rangedWeapons.push({
+					temp.shield.name = value[`repeating_attr_${id}_name`];
+					temp.shield.source = id;
+				} else if (temp.isRangedWeapon[i]) {
+					temp.rangedWeapons.push({
 						name: value[`repeating_attr_${id}_name`],
 						source: id
 					});
 				} else {
 					if (id === 'unarmed') {
-						available.meleeWeapons.push({
+						temp.meleeWeapons.push({
 							name: 'Unarmed',
 							source: 'unarmed'
 						});
 					} else {
-						available.meleeWeapons.push({
+						temp.meleeWeapons.push({
 							name: value[`repeating_attr_${id}_name`],
 							source: id
 						});
 					}
 				}
 			});
-			clog(debug, timer, 'available', available);
-			if (isAttacker) {
-				available.maneuvers = ['attack','calledshot','disarm','grappling'];
-				if (getIsObject(_.find(weaponList, id => {
-					if (_.keys(`repeating_attr_${id}_customizations`)
+			if (temp.isAttacker) {
+				temp.maneuvers = ['attack','calledshot','disarm','grappling'];
+				if (getIsObject(_.find(temp.weaponList, id => {
+					if (_.keys(value[`repeating_attr_${id}_customizations`])
 					.indexOf('felxible') !== -1) return true; 
-				}))) available.maneuvers.push('trip');
+				}))) temp.maneuvers.push('trip');
 			} else {
-				if (available.shield.source !== undefined) {
-					available.maneuvers.push('block');
+				if (temp.shield.source !== undefined) {
+					temp.maneuvers.push('block');
 				}
 				if (getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'defelction') !== 0 &&
 				roll.attacker.weapon.range) {
-					available.maneuvers.push('deflect');
+					temp.maneuvers.push('deflect');
 				}
 				if (getIsGrappling(roll.attacker.maneuver.name)) {
-					available.maneuvers.push('escape');
+					temp.maneuvers.push('escape');
 				}
 				if (roll.attacker.weapon.range === undefined) {
-					available.maneuvers.push('parry');
+					temp.maneuvers.push('parry');
 				}
 				if (roll.attacker.weapon.range !== undefined) {
-					available.maneuvers.push('rangeddefense');
+					temp.maneuvers.push('rangeddefense');
 				}
-				available.maneuvers.push('test');
+				//temp.maneuvers.push('test');
 			}
-			_.each(available.maneuvers, action => {
-				available.query += maneuverObj[action];
-			}); available.query += '}] ]] }}';
-			clog(debug, timer, 'available', available, 'buildAvailableActions()');
-		
-			const getManeuver = await startRoll(available.query);
-			clog(debug, timer, 'getManeuver:', getManeuver);
-			
-			roll.maneuver.selected = getManeuver.results.maneuver.expression.match(rxGrab)[1];
-			clog(debug, timer, 'roll.maneuver.selected =', roll.maneuver.selected);
-			finishRoll(getManeuver.rollId);
+			temp.maneuverslength = temp.maneuvers.length;
+			if (temp.maneuverslength === 1 && temp.maneuvers[0] !== 'rangeddefense') {
+				roll.maneuver.selected = temp.maneuvers[0];
+			} else {
+				_.each(temp.maneuvers, action => {
+					if (temp.maneuverslength === 1 && action === 'rangeddefense') {
+						temp.query = '! {{maneuver=[[0[?{Ranged Defense Type' +
+							'|Personal (Cover/Dodge),personal' +
+							'|Movement (Evade),movement';
+					} else {
+						temp.query += maneuverObj[action];
+					}
+				}); 
+				temp.query += '}] ]] }}';
+				temp.getManeuver = await startRoll(temp.query);
+				roll.maneuver.selected = temp.getManeuver.results.maneuver.expression.match(rxGrab)[1];
+				finishRoll(temp.getManeuver.rollId);
+			}
 		}
 		
 		async function buildActiveWeapon(debug, timer, roll, value, attrdb) {
-			const activeWeaponID = await getActiveWeapon(debug, timer, roll, value);
-			clog(debug, timer, 'activeWeaponID =', activeWeaponID, 'buildActiveWeapon(TEST)');
-			const type = activeWeaponID === 'unarmed' ? 
-				activeWeaponID : value[`repeating_attr_${activeWeaponID}_attribute`];
-			clog(debug, timer, 'type =', type);
-			const weapon = 
-				_.find(attrdb[`${type}`], o => { if (o.source == activeWeaponID) return o; });
-			clog(debug, timer, 'weapon:', weapon);
-			roll.weapon.isweapon = getIsObject(weapon);
-			
-			if (roll.weapon.isweapon) roll.weapon = Object.assign(roll.weapon, weapon);
+			const temp = {};
+			clog(debug, timer, '', temp, 'buildActiveWeapon()');
+			temp.activeWeaponID = await getActiveWeapon(debug, timer, roll, value);
+			temp.type = temp.activeWeaponID === 'unarmed' ? 
+			temp.activeWeaponID : value[`repeating_attr_${temp.activeWeaponID}_attribute`];
+			temp.weapon =
+				_.find(attrdb[`${temp.type}`], o => { if (o.source == temp.activeWeaponID) return o; });
+			roll.weapon.isweapon = getIsObject(temp.weapon);
+			if (roll.weapon.isweapon) roll.weapon = Object.assign(roll.weapon, temp.weapon);
 			roll.weapon.isnaturalweapon = 
-				activeWeaponID === '' || activeWeaponID === undefined;
+				temp.activeWeaponID === '' || temp.activeWeaponID === undefined;
 			roll.weapon.isstun = 
-				getIsStun(debug, timer, roll, value, attrdb, roll.weapon.isnaturalweapon, weapon);
-			roll.weapon.name = roll.weapon.isweapon ? weapon.name : 'Unarmed';
-			roll.weapon.level = roll.weapon.isweapon ? weapon.level :
+				getIsStun(debug, timer, roll, value, attrdb, roll.weapon.isnaturalweapon, temp.weapon);
+			roll.weapon.name = roll.weapon.isweapon ? temp.weapon.name : 'Unarmed';
+			roll.weapon.level = roll.weapon.isweapon ? temp.weapon.level :
 				getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'brutal') || 0;
-			roll.weapon.weaponclass = roll.weapon.isweapon ? weapon.focus : 'unarmed';
-			roll.weapon.damagetype = roll.weapon.isweapon ? weapon.damagetype : 'blunt';
+			roll.weapon.weaponclass = roll.weapon.isweapon ? temp.weapon.focus : 'unarmed';
+			roll.weapon.damagetype = roll.weapon.isweapon ? temp.weapon.damagetype : 'blunt';
 			roll.weapon.ismelee = 
-				type === 'shield' ? true : getIsMelee(debug, timer, roll.weapon.weaponclass);
+				temp.type === 'shield' ? true : getIsMelee(debug, timer, roll.weapon.weaponclass);
 			roll.weapon.muscle = roll.weapon.ismelee !== 0 ? 1 :
-				_.find(weapon.customizations, o => { 
+				_.find(temp.weapon.customizations, o => { 
 					if (o.name === 'muscle') return 1; 
 				}) || 0;
-			clog(debug, timer, 'roll:', roll);
-			
-			if (type !== 'unarmed') {
-				_.each(weapon.customizations, c => {
+			if (temp.type !== 'unarmed') {
+				_.each(temp.weapon.customizations, c => {
 					roll.weapon[c.name] = c.rank;
 				});
 			}
-			clog(debug, timer, 'roll.weapon:', roll.weapon, 'buildActiveWeapon()');
 		}
 		
 		function setCombatRoll(debug, timer, value, attrdb, rowID, sourceAttr, setObj, invertState = false) {
@@ -16922,7 +17111,7 @@
 		}
 		
 		function recordSheetChanges(timer, eventInfo, value, setObj) {
-			const sheet_change_array = ['show_debug_messages','weapon_ammo_reloads','weapon_ammo_capacity','theme'];
+			const sheet_change_array = ['show_debug_messages','weapon_ammo_reloads','weapon_ammo_capacity','theme','pronoun'];
 			const recordChange = sheet_change_array.indexOf(eventInfo.sourceAttribute) !== -1 ?
 				true : false;
 			if (recordChange) {
@@ -17106,6 +17295,7 @@
 		function registerEvents() {
 			const eventsToRegister = [
 				//"theme",
+				"pronoun",
 				"static_options_theme_selector",
 				"static_template_size_selection",
 				"static_rules_deplete_alt",
