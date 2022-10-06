@@ -15281,7 +15281,7 @@
 			});
 		
 			roll.resulttemplate += roll.outcome.succeed ? ' {{succeed=[[1d1]]}}' : ''; 
-			roll.resulttemplate += ` {{result-header=${roll.attacker.character.name} vs ${roll.attacker.target.name}}}`;
+			roll.resulttemplate += ` {{result-header=${roll.attacker.character.name} vs ${roll.character.name}}}`;
 		
 			roll.outcome.attackdifference = Math.max(roll.attacker.results.total - roll.outcome.roll1, 1);
 			
@@ -15646,17 +15646,17 @@
 		}
 		
 		function buildEmote(debug, timer, roll) {
-			const maneuver = 
+			const temp = {};
+			clog(debug, timer, '', temp, 'buildEmote()');
+			temp.maneuver = 
 				calledshot_maneuvers_array.indexOf(roll.maneuver.name) !== -1 ? 'calledshot' : 
 				getIsGrappling(roll.maneuver.name) ? 'grappling' :
+				roll.weapon.area !== undefined ? 'area' :
 				roll.maneuver.name;
-				clog(debug, timer, 'maneuver', maneuver, 'buildEmote()');
-			const actor = _.keys(roll).indexOf('attacker') === -1 ? 
+			temp.actor = _.keys(roll).indexOf('attacker') === -1 ? 
 				'attacker' : 'defender';
-			clog(debug, timer, 'actor', actor);
-			const adverbSelect = Math.floor(Math.random() * 2) + 1;
-			clog(debug, timer, 'adverbSelect', adverbSelect);
-			const adverb = {
+			temp.adverbSelect = Math.floor(Math.random() * 2) + 1;
+			temp.adverb = {
 				attacker: {
 					1: 'attempts',
 					2: 'tries'
@@ -15666,35 +15666,36 @@
 					2: 'tries'
 				}
 			};
-			clog(debug, timer, `adverb[${actor}][${adverbSelect}]`, adverb[actor][adverbSelect]);
-			const weapon = roll.weapon.isweapon ? 
+			temp.weapon = roll.weapon.isweapon ? 
 				` with ${roll.character.pronoun} ${roll.weapon.name}` : '';
-			switch(maneuver) {
-				case 'attack':
-					roll.maneuver.emote = `${roll.character.name} attacks ${roll.target.name}${weapon}`;
+			switch(temp.maneuver) {
+				case 'area':
+					roll.maneuver.emote = `${roll.character.name} uses an area effect attack${temp.weapon}!`;
 				break;
-				case 'block':
+				case 'attack':
+					roll.maneuver.emote = `${roll.character.name} attacks ${roll.target.name}${temp.weapon}`;
+				break;
+				case 'defend':
 				case 'deflect':
-				case 'parry':
-					roll.maneuver.emote = `${roll.character.name} ${adverb[actor][adverbSelect]} to ${roll.maneuver.titlecase} ${roll.attacker.character.name}'s attack${weapon}`;
+					roll.maneuver.emote = `${roll.character.name} ${temp.adverb[temp.actor][temp.adverbSelect]} to ${roll.maneuver.titlecase} ${roll.attacker.character.name}'s attack${temp.weapon}`;
 				break;
 				case 'calledshot':
-					roll.maneuver.emote = `${roll.character.name} attempts a Called Shot (${roll.maneuver.titlecase}) on ${roll.target.name}${weapon}`;
+					roll.maneuver.emote = `${roll.character.name} attempts a Called Shot (${roll.maneuver.titlecase}) on ${roll.target.name}${temp.weapon}`;
 				break;
 				case 'escape':
-					roll.maneuver.emote = `${roll.character.name} ${adverb[actor][adverbSelect]} to wrestle free from ${roll.attacker.character.name}'s ${roll.maneuver.titlecase}`;
+					roll.maneuver.emote = `${roll.character.name} ${temp.adverb[temp.actor][temp.adverbSelect]} to wrestle free from ${roll.attacker.character.name}'s ${roll.maneuver.titlecase}`;
 				break;
 				case 'evade':
 					roll.maneuver.emote = ``;
 				break;
 				case 'grappling':
-					roll.maneuver.emote = `${roll.character.name} ${adverb[actor][adverbSelect]} to ${roll.maneuver.titlecase} ${roll.target.name}`;
+					roll.maneuver.emote = `${roll.character.name} ${temp.adverb[temp.actor][temp.adverbSelect]} to ${roll.maneuver.titlecase} ${roll.target.name}`;
 				break;
 				case 'disarm':
-					roll.maneuver.emote = `${roll.character.name} attempts to disarm ${roll.target.name}${weapon}`;
+					roll.maneuver.emote = `${roll.character.name} attempts to disarm ${roll.target.name}${temp.weapon}`;
 				break;
 				case 'movement':
-					roll.maneuver.emote = `${roll.character.name} ${adverb[actor][adverbSelect]} out maneuver ${roll.attacker.character.name}'s attack`;
+					roll.maneuver.emote = `${roll.character.name} ${temp.adverb[temp.actor][temp.adverbSelect]} out maneuver ${roll.attacker.character.name}'s attack`;
 				break;
 				case 'personal':
 					roll.maneuver.emote = `${roll.character.name} dives for cover from ${roll.attacker.character.name} attack`;
@@ -15748,7 +15749,9 @@
 					roll.maneuver.name === 'doesnothing' ? 2 :
 				3;
 		
-			roll.target = await getTarget(debug, timer, roll);
+			if (roll.maneuver.selected === 'attack' && roll.weapon.area === undefined) {
+				roll.target = await getTarget(debug, timer, roll);
+			}
 			
 			getTargetedDM(debug, timer, roll, value, attrdb);
 			setCV(debug, timer, roll, value, attrdb, setObj);
@@ -15778,7 +15781,7 @@
 					roll.template += ` {{react=1}} {{action=1}} {{title=ATTACK}} {{color=#E83278}}` +
 					`{{cvtype=ACV}} {{cv=[[0d6 + ${roll.results.cv}]]}} ` +
 					`{{damage_type=${roll.weapon.damagetype}}} {{roll2=[[1d1-1]]}} ` +
-					`{{reactbutton1name=${roll.target.name} Defense}} ` +
+					`{{reactbutton1name=${getDefenderLabel(debug, timer, roll)}}} ` +
 					`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
 					`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
 					`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}} ` +
@@ -15874,6 +15877,21 @@
 				break;
 			}
 			//clog(debug, timer, 'roll:', roll);
+		}
+		
+		function getDefenderLabel(debug, timer, roll) {
+			const temp = {};
+			clog(debug, timer, '', temp, 'getDefenderLabel()');
+			if (roll.weapon.area !== undefined) {
+				temp.label = 'Select Defender in Area';
+			} else if (roll.target.name !== undefined) {
+				temp.label = `Select ${roll.target.name} to Defend`;
+			} else if (roll.target.number !== undefined) {
+				temp.label = `Target Number: ${roll.target.number}`;
+			} else {
+				temp.label = '';
+			}
+			return temp.label;
 		}
 		
 		async function calculateDamage(debug, timer, roll, value, attrdb) {
@@ -16412,11 +16430,10 @@
 					'|Called Shot,?{Select Called Shot' +
 					'&#124;Bypass Armor&#44;bypass armor&#124;Reduce Armor&#44;reduce armor' +
 					'&#124;Vital Spot&#44;vital spot&#124;Weak Point&#44;weak point&#125;',
-				'defense': 
-					'|Defend,defend|Defend Other,defend other' +
-					'|Do Nothing,do nothing',
+				'defend': '|Defend,defend',
 				'deflect': '|Deflection,deflection',
 				'disarm': '|Disarm,disarm',
+				'doesnothing': '|Do Nothing,doesnothing',
 				'escape': '|Escape,escape',
 				'grappling': 
 					'|Grapple,?{Select Grapping Maneuver' +
@@ -16468,20 +16485,20 @@
 				if (temp.shield.source !== undefined) {
 					temp.maneuvers.push('block');
 				}
+				if (roll.attacker.weapon.range === undefined) {
+					temp.maneuvers.push('defend');
+				}
 				if (getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'defelction') !== 0 &&
-				roll.attacker.weapon.range) {
+				roll.attacker.weapon.range !== undefined) {
 					temp.maneuvers.push('deflect');
 				}
+				temp.maneuvers.push('doesnothing');
 				if (getIsGrappling(roll.attacker.maneuver.name)) {
 					temp.maneuvers.push('escape');
-				}
-				if (roll.attacker.weapon.range === undefined) {
-					temp.maneuvers.push('parry');
 				}
 				if (roll.attacker.weapon.range !== undefined) {
 					temp.maneuvers.push('rangeddefense');
 				}
-				//temp.maneuvers.push('test');
 			}
 			temp.maneuverslength = temp.maneuvers.length;
 			if (temp.maneuverslength === 1 && temp.maneuvers[0] !== 'rangeddefense') {
@@ -16506,6 +16523,7 @@
 		async function buildActiveWeapon(debug, timer, roll, value, attrdb) {
 			const temp = {};
 			clog(debug, timer, '', temp, 'buildActiveWeapon()');
+			if (roll.maneuver.selected === 'doesnothing') return;
 			temp.activeWeaponID = await getActiveWeapon(debug, timer, roll, value);
 			temp.type = temp.activeWeaponID === 'unarmed' ? 
 			temp.activeWeaponID : value[`repeating_attr_${temp.activeWeaponID}_attribute`];
