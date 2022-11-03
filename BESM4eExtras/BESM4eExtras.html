@@ -5180,20 +5180,29 @@
 															</div>
 														</div>
 													</div>
-													<!--
 													<div>
-														<input type="checkbox" class="block-switch" name="attr_showconditions" value="1" />
+														<input type="checkbox" class="block-switch" name="attr_showblight" value="1" />
 														<div class="block-a"></div>
 														<div class="block-b">
-															<div class="col-1 padr">
-																<h4 class="input-component">
-																	<span>Source</span>
-																	<select class="border" name="attr_conditions"><option value=1>Divine</option><option value=2>Magical</option><option value=3>Mutation</option><option value=4>Natural</option><option value=5>Psionics</option><option value=6>Social</option><option value=7>Skilled</option><option value=8>Supernatural</option><option value=9>Technological</option></select>
-																</h4>
+															<div class="flex-container-evenlyspace padr">
+																<div class="flex-1 input-component">
+																	<div class="flex-container-evenlyspace">
+																		<div class="flex-1">
+																			<span>Blight Applies To</span>
+																		</div>
+																	</div>
+																	<div class="flex-container-evenlyspace">
+																		<div class="flex-13-16">
+																			<input type="text" class="center border" name="attr_blight" value="" placeholder="Not Configured" readonly />
+																		</div>
+																		<div class="flex-1-8">
+																			<button class="pictos input-component" type="action" name="act_configureblight">y</button>
+																		</div>
+																	</div>
+																</div>
 															</div>
 														</div>
 													</div>
-													-->
 													<div>
 														<input type="checkbox" class="block-switch" name="attr_showcapacitytype" value="1" />
 														<div class="block-a"></div>
@@ -8644,6 +8653,7 @@
 		<button type="action" name="act_react-death"></button>
 		<button type="action" name="act_react-stat"></button>
 		<button type="action" name="act_static_button_combat_react"></button>
+		<button type="action" name="act_static_button_roll_stat"></button>
 	</div>
 
 	<!-- ************************ Roll Templates ************************ -->
@@ -8663,7 +8673,7 @@
 -->
 
 	<rolltemplate class="sheet-rolltemplate-besm">
-		<div class="sheet-besm-outer{{#action}} sheet-action{{/action}}{{#reaction}} reaction{{/reaction}}" style="border: 5px solid {{#color}}{{color}}{{/color}}{{^color}}#E83278{{/color}}; border-radius: 20px 20px 20px 20px; padding: 5% 0% 5% 0%; background-color: {{#background}}{{background}}{{/background}}{{^background}}#ffb4c9{{/background}};">
+		<div class="sheet-besm-outer{{#action}} sheet-action{{/action}}{{#reaction}} reaction{{/reaction}}" style="border: 5px solid {{#color}}{{color}}{{/color}}{{^color}}#E83278{{/color}}; border-radius: 20px 20px 20px 20px; padding: 7% 0% 9% 0%; background-color: {{#background}}{{background}}{{/background}}{{^background}}#ffb4c9{{/background}};{{^react}} margin-bottom: 10%;{{/react}}">
 			<!-- NON-REACT HEADER/BODY 
 			{{^react}}-->
 			<div class="besm-header">
@@ -8702,7 +8712,7 @@
 			</div>
 		</div>
 		{{#react}}
-		<div class="sheet-besm-react-outer" style="background-color: #94b1cc; border: #4f4f4f solid 5px;">
+		<div class="sheet-besm-react-outer" style="background-color: #94b1cc; border: #4f4f4f solid 5px; margin-bottom: 3%">
 			<div class="sheet-besm-react-header center" style="color: #1f1f4f;">
 				<span>Reactive rolls:</span>
 			</div>
@@ -8723,8 +8733,10 @@
 	</rolltemplate>
 
 	<rolltemplate class="sheet-rolltemplate-besm-result">
-		<div class="sheet-besm-result-outer" style="background-color: {{#succeed}}#C5E0B4{{/succeed}}{{^succeed}}#FF6969{{/succeed}}; border: {{#succeed}}#70AD47{{/succeed}}{{^succeed}}#E60000{{/succeed}} solid 5px;">
-			<div class="sheet-besm-result-header" style="color: #fff; background-color: {{#succeed}}#70AD47{{/succeed}}{{^succeed}}#E60000{{/succeed}};">
+		<div class="sheet-besm-result-outer" style="background-color: {{#defended}}#C5E0B4{{/defended}}{{^defended}}#FF6969{{/defended}}; border-color: {{#defended}}#70AD47{{/defended}}{{^defended}}#E60000{{/defended}}; border-style: {{^bottom-continue}}solid{{/bottom-continue}}{{#bottom-continue}}none{{/bottom-continue}} solid {{^top-continue}}solid{{/top-continue}}{{#top-continue}}none{{/top-continue}} solid; boarder-width: 5px; border-radius: {{^bottom-continue}}20px 20px{{/bottom-continue}}{{#bottom-continue}}0px 0px{{/bottom-continue}} {{^top-continue}}20px 20px{{/top-continue}}{{#top-continue}}0px 0px{{/top-continue}};{{^body-continue}} padding: {{^bottom-continue}}7%{{/bottom-continue}}{{#bottom-continue}}0%{{/bottom-continue}} 0% {{^top-continue}}9%{{/top-continue}}{{#top-continue}}3%{{/top-continue}} 0%;{{/body-continue}}">
+			{{^resume}}
+			<div class="sheet-header-spacer"></div>
+			<div class="sheet-besm-result-header" style="color: #fff; background-color: {{#defended}}#70AD47{{/defended}}{{^defended}}#E60000{{/defended}};">
 				<div class="sheet-besm-title">
 					{{result-header}}
 				</div>
@@ -8734,137 +8746,231 @@
 				</div>
 				{{/emote}}
 			</div>
+			{{/resume}}
 			<div class="besm-body">
 				{{#autofire}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">Autofire Hits</div>
 					<div class="besmrt-value mouseover-hideroll">{{autofire}}</div>
 				</div>
-				{{/autofire}} {{#blight}}
+				{{/autofire}} {{^defended}} {{#damage}}
 				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">Blight! Roll Body stat to resist...</div>
-					<div class="besmrt-value mouseover-hideroll">TN {{blight}}</div>
+					<div class="besmrt-key">{{stun}}Damage{{#autofire}} per Hit{{/autofire}}</div>
+					<div class="besmrt-value mouseover-hideroll">+{{damage}}</div>
 				</div>
-				{{/blight}} {{^succeed}} {{#damagetaken}}
+				{{/damage}} {{#penetrating}}
 				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">{{stun}}Damage {{#autofire}}per Hit{{/autofire}}{{^autofire}}Taken{{/autofire}}</div>
-					<div class="besmrt-value mouseover-hideroll">{{damagetaken}}</div>
+					<div class="besmrt-key">Penetrating (armor)</div>
+					<div class="besmrt-value mouseover-hideroll">{{penetrating}}</div>
 				</div>
-				{{/damagetaken}} {{/succeed}} {{#forcefield}}
+				{{/penetrating}} {{#piercing}}
 				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">Damage Stopped By Forcefield</div>
-					<div class="besmrt-value mouseover-hideroll">({{forcefield}})</div>
+					<div class="besmrt-key">Piercing (forcefield)</div>
+					<div class="besmrt-value mouseover-hideroll">{{piercing}}</div>
+				</div>
+				{{/piercing}} {{/defended}} {{#forcefield}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Forcefield Stopped</div>
+					<div class="besmrt-value mouseover-hideroll">-{{forcefield}}</div>
 				</div>
 				{{/forcefield}} {{#shield}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">{{shieldname}} Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">({{shield}})</div>
+					<div class="besmrt-value mouseover-hideroll">-{{shield}}</div>
 				</div>
 				{{/shield}} {{#armor1}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">Armor1 Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">({{armor1}})</div>
+					<div class="besmrt-value mouseover-hideroll">-{{armor1}}</div>
 				</div>
 				{{/armor1}} {{#armor2}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">Armor2 Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">({{armor2}})</div>
+					<div class="besmrt-value mouseover-hideroll">-{{armor2}}</div>
 				</div>
 				{{/armor2}} {{#armor3}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">Armor3 Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">({{armor3}})</div>
+					<div class="besmrt-value mouseover-hideroll">-{{armor3}}</div>
 				</div>
 				{{/armor3}} {{#mindshield}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">{{mindshieldname}} Stopped</div>
-					<div class="besmrt-value mouseover-hideroll">{{mindshield}}</div>
+					<div class="besmrt-value mouseover-hideroll">-{{mindshield}}</div>
 				</div>
 				{{/mindshield}} {{#absorption1}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">{{absorption1name}} Absorbed</div>
-					<div class="besmrt-value mouseover-hideroll">{{absorption1}}</div>
+					<div class="besmrt-value mouseover-hideroll">-{{absorption1}}</div>
 				</div>
 				{{/absorption1}} {{#absorption2}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">{{absorption2name}} Absorbed</div>
-					<div class="besmrt-value mouseover-hideroll">{{absorption2}}</div>
+					<div class="besmrt-value mouseover-hideroll">-{{absorption2}}</div>
 				</div>
 				{{/absorption2}} {{#conversion}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">{{conversionname}} Converted</div>
 					<div class="besmrt-value mouseover-hideroll">{{conversion}}</div>
 				</div>
-				{{/conversion}} {{#seriouswound}}
+				{{/conversion}} {{#blight}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Blight!</div>
+					<div class="besmrt-value mouseover-hideroll">TN {{blight}}</div>
+				</div>
+				{{/blight}} {{#statroll}}
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Stat Roll Base</div>
+					<div class="besmrt-value mouseover-hideroll">{{rollbase}}</div>
+				</div>
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Stat Roll Total</div>
+					<div class="besmrt-value">{{statroll}}</div>
+				</div>
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Stat Roll Total</div>
+					<div class="besmrt-value mouseover-hideroll">{{rolltotal}}</div>
+				</div>
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Stat Roll Result</div>
+					<div class="besmrt-value mouseover-hideroll">{{#^rollLess() rolltotal target}}Success{{/^rollLess() rolltotal target}}{{#rollLess() rolltotal target}}Failed{{/rollLess() rolltotal target}}</div>
+				</div>
+				<!--<div class="grid-besmrt">
+					<div>roll0 = {{roll0}}</div>
+					<div>roll1 = {{roll1}}</div>
+					<div>roll2 = {{roll2}}</div>
+				</div>-->
+				{{/statroll}} {{^blight}} {{#seriouswound}}
 				<div class="sheet-result-fail grid-besmrt center">
 					<span>Seriously Wounded!!!</span>
 				</div>
 				{{/seriouswound}} {{#wounds}}
 				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">Wounds Received</div>
-					<div class="besmrt-value mouseover-hideroll">{{wounds}}</div>
+					<div class="besmrt-key">Damage Taken</div>
+					<div class="besmrt-value mouseover-hideroll">+{{wounds}}</div>
 				</div>
 				{{/wounds}} {{#shocktn}}
 				<div class="sheet-result-fail grid-besmrt">
-					<div class="besmrt-key">System Shock TN</div>
-					<div class="besmrt-value mouseover-hideroll">{{shocktn}}</div>
+					<div class="besmrt-key">System Shock</div>
+					<div class="besmrt-value mouseover-hideroll">TN {{shocktn}}</div>
 				</div>
-				{{/shocktn}} {{#reactvalue1}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				{{/shocktn}} {{/blight}} {{#reactvalue1}}
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey1}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue1}}</div>
 				</div>
 				{{/reactvalue1}} {{#reactvalue2}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey2}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue2}}</div>
 				</div>
 				{{/reactvalue2}} {{#reactvalue3}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey3}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue3}}</div>
 				</div>
 				{{/reactvalue3}} {{#reactvalue4}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey4}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue4}}</div>
 				</div>
 				{{/reactvalue4}} {{#reactvalue5}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey5}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue5}}</div>
 				</div>
 				{{/reactvalue5}} {{#reactvalue6}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey6}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue6}}</div>
 				</div>
 				{{/reactvalue6}} {{#reactvalue7}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey7}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue7}}</div>
 				</div>
 				{{/reactvalue7}} {{#reactvalue8}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey8}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue8}}</div>
 				</div>
 				{{/reactvalue8}} {{#reactvalue9}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey9}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue9}}</div>
 				</div>
 				{{/reactvalue9}} {{#reactvalue10}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey10}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue10}}</div>
 				</div>
 				{{/reactvalue10}} {{#reactvalue11}}
-				<div class="sheet-result-{{#succeed}}succeed{{/succeed}}{{^succeed}}fail{{/succeed}} grid-besmrt">
+				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey11}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue11}}</div>
 				</div>
 				{{/reactvalue11}}
+			</div>
+		</div>
+		<div class="sheet-footer-spacer"></div>
+		{{#react}}
+		<div class="sheet-besm-react-outer" style="background-color: #94b1cc; border: #4f4f4f solid 5px;">
+			<div class="sheet-besm-react-header center" style="color: #1f1f4f;">
+				<span>Reactive rolls:</span>
+			</div>
+			<!--{{#reactbutton1name}}{{#^rollTotal() computed::reactbutton1name 1}}-->
+			<div class="sheet-besm-row">
+				<div class="sheet-besm-react-buttonname">
+					{{reactbutton1name}}
+				</div>
+				<!--{{#reactbutton1label}}-->
+				<div class="sheet-besm-react-button">
+					[{{reactbutton1label}}](~selected|{{roll1link}}||{{computed::roll1data}})
+				</div>
+				<!--{{/reactbutton1label}}-->
+			</div>
+			<!--{{/^rollTotal() computed::reactbutton1name 1}}{{/reactbutton1name}}-->
+		</div>
+		{{/react}}
+	</rolltemplate>
+
+	<rolltemplate class="sheet-rolltemplate-besm-statroll">
+		<div class="sheet-besm-result-outer" style="background-color: #A5A5A5; border: #7C7C7C solid 5px;">
+			<div class="sheet-besm-result-header" style="color: #fff; background-color: #7C7C7C;">
+				<div class="sheet-besm-title">
+					{{statroll-header}}
+				</div>
+				{{#emote}}
+				<div class="besm-emote">
+					<span>{{emote}}</span>
+				</div>
+				{{/emote}}
+			</div>
+			<div class="besm-body">
+				{{#statrolltn}}
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Target Number</div>
+					<div class="besmrt-value mouseover-hideroll">{{statrolltn}}</div>
+				</div>
+				{{/statrolltn}}
+				{{^statrolltn}}
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Opposed Roll</div>
+					<div class="besmrt-value mouseover-hideroll">{{opposedroll}}</div>
+				</div>
+				{{/statrolltn}}
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Roll Base</div>
+					<div class="besmrt-value mouseover-hideroll">{{rollbase}}</div>
+				</div>
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Stat Roll</div>
+					<div class="besmrt-value">{{statroll}}</div>
+				</div>
+				<div class="grid-besmrt">
+					<div class="besmrt-key">Roll Total</div>
+					<div class="besmrt-value mouseover-hideroll">{{computed::rolltotal}}</div>
+				</div>
 			</div>
 		</div>
 	</rolltemplate>
@@ -9578,7 +9684,7 @@
 		const minor_obstacle_maneuvers_array = ['bite','reducearmor','defendother'];
 		const major_obstacle_maneuvers_regex = /(bypassarmor|vitalspot)/i;
 		const major_obstacle_maneuvers_array = ['bypassarmor','vitalspot'];
-		const weapon_customizations_array = ['accurate', 'area', 'duration', 'range', 'aura', 'autofire', 'blight', 'contact', 'contageous', 'continuing', 'drain', 'enervation', 'flare', 'flexible', 'homing', 'inaccurate', 'incapacitating', 'incurable', 'insidious', 'irritant', 'knockback', 'multidimensional', 'penetrating', 'piercing', 'psychic', 'quake', 'reach', 'selective', 'spreading', 'stun', 'tangle', 'trap', 'vampiric'];
+		const weapon_enhancements_array = ['accurate', 'area', 'duration', 'range', 'aura', 'autofire', 'blight', 'contact', 'contageous', 'continuing', 'drain', 'enervation', 'flare', 'flexible', 'homing', 'incapacitating', 'incurable', 'insidious', 'irritant', 'knockback', 'multidimensional', 'penetrating', 'piercing', 'psychic', 'quake', 'reach', 'selective', 'spreading', 'stun', 'tangle', 'trap', 'vampiric'];
 		const combattechniques_array = ['blackout','blindfighting','blindshooting','brutal','concealment','criticalstrike','deadeye','defelction','enhancedknockback','extendedrange','farshot','hardboiled','judgeopponent','lethalblow','lightningreflexes','multipletargets','portablearmory','preciseaim','reflection','rushattack','steadyhand','tournamentencyclopedia','twoweapons','weaponsencyclopedia'];
 		const stats_array = ['stat_total_seriousinjuries','static_stat_type_set', 'static_stat_temp_energy', 'static_stat_temp_health', 'stat_total_social', 'static_stat_total_shame', 'stat_total_sanity', 'static_stat_total_maddness', 'stat_total_energy', 'static_stat_total_fatigue', 'stat_total_health', 'static_stat_total_wounds', 'static_character_points_spent', 'bodystate', 'mindstate', 'soulstate', 'static_stat_base_body', 'static_stat_base_mind', 'static_stat_base_soul', 'stat_total_body', 'stat_total_mind', 'stat_total_soul', 'stat_total_acv', 'stat_total_dcv', 'stat_total_str', 'stat_total_cre', 'stat_total_com', 'stat_total_awa', 'stat_total_dex', 'stat_total_agi', 'stat_total_con', 'stat_total_int', 'stat_total_per', 'stat_total_rea', 'stat_total_wil', 'stat_total_cha', 'strstate', 'agistate', 'dexstate', 'constate', 'intstate', 'reastate', 'perstate', 'crestate', 'wilstate', 'chastate', 'awastate', 'comstate'];
 		const rolls_array = ['static_roll_type_selection','static_button_personal_defense','static_button_movement_defense'];
@@ -10139,6 +10245,7 @@
 				'attribute',
 				'attrsrc',
 				'augmentedstat',
+				'blight',
 				'bonus',
 				'broadcategory',
 				'capacity',
@@ -10415,14 +10522,13 @@
 			clog(debug, timer, 'cost =', cost, 'setDefectPointsByRankChange()');
 		}
 		
-		function setEffectiveLevelByLevelChange(debug, timer, eventInfo, value, sectionName, rowID, sourceAttr, setObj) {
-			const newLevel = parseInt(eventInfo.newValue) || 0;
-			const previousLevel = parseInt(eventInfo.previousValue) || 0;
-			const diffLevel = newLevel - previousLevel;
-			const effectivelevel = parseInt(getAttrValue(value, `repeating_${sectionName}_${rowID}`, "effectivelevel", setObj)) || 0;
-			const result = effectivelevel + diffLevel;
-			clog(debug, timer, 'result =', result,'setEffectiveLevelByLevelChange()');
-			setObj[`repeating_${sectionName}_${rowID}_effectivelevel`] = result;
+		function setEffectiveLevelByLevelChange(debug, timer, eventInfo, value, attrdb, sectionName, rowID, setObj) {
+			const temp = {};
+			clog(debug, timer, '', temp, 'setEffectiveLevelByLevelChange()');
+			temp.offset = getCustomizationsTotal(debug, timer, attrdb, rowID);
+			temp.newLevel = parseInt(eventInfo.newValue) || 0;
+			temp.effectivelevel = temp.newLevel + temp.offset;
+			setObj[`repeating_${sectionName}_${rowID}_effectivelevel`] = temp.effectivelevel;
 		}
 		
 		function getFluxGroupIsNotActive(debug, timer, value, rowID){
@@ -11111,7 +11217,7 @@
 		function setAllAspectStats(debug, timer, eventInfo, attrdb, value, setObj, stat) {
 			if (allaspects_stats_array.indexOf(stat) === -1) return;
 			const newValue = getStatBase(value, stat);
-			const augmented = getSumOfActiveAttrLevels(attrdb, 'augmented', stat) || 0;
+			const augmented = getSumOfActiveAttrLevels(debug, timer, attrdb, 'augmented', stat) || 0;
 			const shortcoming = getShortcomingRank(debug, timer, attrdb, value, stat);
 			const result = newValue + augmented - shortcoming;
 			//setObj[`stat_total_${stat}`] = result;
@@ -11171,7 +11277,7 @@
 			const allaspectstat = aspect.length > 3 ?
 				aspect : getAllAspectStat(aspect);
 			const statbase = getStatBase(value, allaspectstat);
-			const augmented = getSumOfActiveAttrLevels(attrdb, 'augmented', allaspectstat) || 0;
+			const augmented = getSumOfActiveAttrLevels(debug, timer, attrdb, 'augmented', allaspectstat) || 0;
 			const aggregateShorcomingRanks = getAggregateShortcomingRanks(debug, timer, value, defectdb, aspect, setObj);
 			const result = statbase + augmented - aggregateShorcomingRanks;
 			clog(debug, timer, `${aspect} =`, result, 'getStatAspectLevel()');
@@ -12974,35 +13080,62 @@
 		}
 		
 		function exposeAttrSettingsOnCustomizationChange(debug, timer, eventInfo, source, customization, setObj) {
-			const rank = parseInt(eventInfo.newValue);
-			const attribute = getIsObject(customization) ? 
+			const temp = {};
+			clog(debug, timer, '', temp, 'exposeAttrSettingsOnCustomizationChange()');
+			temp.rank = parseInt(eventInfo.newValue);
+			temp.attribute = getIsObject(customization) ? 
 				removeWhiteSpace(customization.name) :
 				'default';
-			const set = rank ? 1 : 0;
-			let result = '';
-			switch (attribute) {
-				case 'ammo': result = 'showammo'; break;
-				case 'attrsrc': result = 'showattrsrc'; break;
-				case 'broadcategory': result ='showbroadcategory'; break;
-				case 'charges': result = 'showcharges'; break;
-				case 'continuing': result = 'showcontinuing'; break;
-				//case 'deplete': result = 'showendurance'; break;
-				case 'drain': result = 'showdrain'; break;
-				case 'enemy': result = 'showenemy'; break;
-				case 'focuseddamage': result = 'showweaponclass'; break;
-				case 'intensity': result ='showintensity'; break;
-				case 'objects': result = 'showobject'; break;
-				case 'specialized': result = 'showdamagetype'; break;
-				case 'specific': result = 'showdamagecategory'; break;
-				case 'targeted': result = 'showenemy'; break;
-				case 'targeteddamage': result = 'showenemy'; break;
-				case 'uniquephenomena': result = 'showuniquephenomena'; break;
-				case 'unpredictable': result = 'showvariablestat'; break;
+			temp.set = temp.rank ? 1 : 0;
+			temp.result = '';
+			switch (temp.attribute) {
+				case 'ammo': temp.result = 'showammo'; break;
+				case 'attrsrc': temp.result = 'showattrsrc'; break;
+				case 'blight': temp.result = 'showblight'; break;
+				case 'broadcategory': temp.result = 'showbroadcategory'; break;
+				case 'charges': temp.result = 'showcharges'; break;
+				case 'continuing': temp.result = 'showcontinuing'; break;
+				//case 'deplete': temp.result = 'showendurance'; break;
+				case 'drain': temp.result = 'showdrain'; break;
+				case 'enemy': temp.result = 'showenemy'; break;
+				case 'focuseddamage': temp.result = 'showweaponclass'; break;
+				case 'intensity': temp.result = 'showintensity'; break;
+				case 'objects': temp.result = 'showobject'; break;
+				case 'specialized': temp.result = 'showdamagetype'; break;
+				case 'specific': temp.result = 'showdamagecategory'; break;
+				case 'targeted': temp.result = 'showenemy'; break;
+				case 'targeteddamage': temp.result = 'showenemy'; break;
+				case 'uniquephenomena': temp.result = 'showuniquephenomena'; break;
+				case 'unpredictable': temp.result = 'showvariablestat'; break;
 			}
-			clog(debug, timer, 'result =', result, 'exposeAttrSettingsOnCustomizationChange()');
-			clog(debug, timer, 'set =', set);
-			setObj[`${source}_${result}`] = set;
-			if (attribute === 'specialized') setObj[`${source}_normaldamage`] = set;
+			setObj[`${source}_${temp.result}`] = temp.set;
+			if (temp.attribute === 'specialized') setObj[`${source}_normaldamage`] = temp.set;
+		}
+		
+		async function configureAttrSetting(debug, timer, value, configureAttr, rowID, setObj) {
+			const temp = {};
+			clog(debug, timer, '', temp, 'configureAttrSetting()');
+			switch(configureAttr) {
+				case 'blight':
+					temp.getSettingTemplate = '! {{getsetting=[[0[?{Select Weapon Customization' +
+						'|Damage,damage';
+					temp.customizations = value[`repeating_attr_${rowID}_customizations`];
+					_.each(temp.customizations, c => {
+						if (weapon_enhancements_array.indexOf(c.name) !== -1 && c.name !== 'blight') {
+							temp.getSettingTemplate += `|${capital(c.name)},${c.name}`;
+						}
+					});
+					temp.getSettingTemplate += '|Clear,clear}] ]]}}';
+					
+					temp.getsetting = await startRoll(temp.getSettingTemplate);
+					temp.setting = 
+						temp.getsetting.results.getsetting.expression.match(rxGrab)[1];
+					finishRoll(temp.getsetting.rollId);
+					temp.writeSetting = temp.setting === 'clear' ?
+						'' : capital(temp.setting);
+					setObj[`repeating_attr_${rowID}_blight`] = temp.writeSetting;
+				break;
+			}
 		}
 		
 		function setAvailableDamageTypes(debug, timer, value, rowID, setObj) {
@@ -13193,7 +13326,7 @@
 			const perception = parseInt(setObj.stat_total_per) || 
 				parseInt(value.stat_total_per) || 0;
 			const heightenedawareness = 
-				getSumOfActiveAttrLevels(attrdb, 'heightenedawareness') || 0;
+				getSumOfActiveAttrLevels(debug, timer, attrdb, 'heightenedawareness') || 0;
 			const result = perception + heightenedawareness;
 			clog(debug, timer, 'result =', result, 'getPerceptionRollBase()');
 			return result;
@@ -13603,16 +13736,17 @@
 			return result;
 		}
 		
-		function getSumOfActiveAttrLevels(attrdb, attribute, focus = '') {
-			var result = 0;
+		function getSumOfActiveAttrLevels(debug, timer, attrdb, attribute, focus = '') {
+			const temp = { level: 0 };
+			clog(debug, timer, '', temp, 'getSumOfActiveAttrLevels()');
 			_.each(attrdb[`${attribute}`], (o) => {
-				if (o.targeted == undefined) {
-					if (focus == o.focus || o.focus == undefined) {
-						result = result + o.level;
+				if (o.targeted === undefined) {
+					if (focus === o.focus || o.focus === undefined) {
+						temp.level += parseInt(o.level);
 					}
 				}
 			});
-			return result;
+			return temp.level;
 		}
 		
 		function setArms(debug, timer, value, rowID, setObj, name, isActive, hand) {
@@ -14374,15 +14508,29 @@
 		}
 		
 		function getCustomizationTypeTotal(debug, timer, customizations, type) {
-			const result = _.chain(customizations)
+			const temp = {};
+			clog(debug, timer, `${type}`, temp, 'getCustomizationTypeTotal()');
+			temp.result = _.chain(customizations)
 				.map(c => {
 					const typematch = type => c.type == type ? c.rank : 0;
 					return typematch(type);
 				})
 				.reduce((memo, num) => { return memo + num; }, 0)
 				.value();
-			clog(debug, timer, `${type}`, result, 'getCustomizationTypeTotal()');
-			return result;
+			return temp.result;
+		}
+		
+		function getCustomizationsTotal(debug, timer, attrdb, rowID) {
+			const temp = { customizations: [], enhancements: 0, limiters: 0 };
+			clog(debug, timer, '', temp, 'getCustomizationsTotal()');
+			temp.customizations = _.find(attrdb, a => {
+				if (a.source === rowID) return a.customizations;
+			});
+			temp.enhancements += 
+				getCustomizationTypeTotal(debug, timer, temp.customizations, 'enhancement');
+			temp.limiters += 
+				getCustomizationTypeTotal(debug, timer, temp.customizations, 'limiter');
+			return temp.enhancements - temp.limiters;
 		}
 		
 		function setEffectiveLevelByCustomization(debug, timer, value, rowID, setObj) {
@@ -14408,18 +14556,18 @@
 		function getCV(debug, timer, value, attrdb, setObj, type, focus = 'unarmed') {
 			clog(debug, timer, 'focus =', focus, 'getCV()');
 			const mastery = 
-				(type == 'acv') ? getSumOfActiveAttrLevels(attrdb, 'attackmastery') :
-				(type == 'dcv') ? getSumOfActiveAttrLevels(attrdb, 'defensemastery') : 
+				(type == 'acv') ? getSumOfActiveAttrLevels(debug, timer, attrdb, 'attackmastery') :
+				(type == 'dcv') ? getSumOfActiveAttrLevels(debug, timer, attrdb, 'defensemastery') : 
 				0;
 			clog(debug, timer, 'mastery =', mastery);
 			const isMelee = 
 				getIsMelee(debug, timer, focus);
 			clog(debug, timer, 'isMelee =', isMelee);
 			const specialty = 
-				(isMelee && type == 'acv') ? getSumOfActiveAttrLevels(attrdb, 'meleeattack', focus) * 2 :
-				(isMelee && type == 'dcv') ? getSumOfActiveAttrLevels(attrdb, 'meleedefense', focus) * 2 :
-				(!isMelee && type == 'acv') ? getSumOfActiveAttrLevels(attrdb, 'rangedattack', focus) * 2 :
-				(!isMelee && type == 'dcv') ? getSumOfActiveAttrLevels(attrdb, 'rangeddefense', focus) * 2 : 
+				(isMelee && type == 'acv') ? getSumOfActiveAttrLevels(debug, timer, attrdb, 'meleeattack', focus) * 2 :
+				(isMelee && type == 'dcv') ? getSumOfActiveAttrLevels(debug, timer, attrdb, 'meleedefense', focus) * 2 :
+				(!isMelee && type == 'acv') ? getSumOfActiveAttrLevels(debug, timer, attrdb, 'rangedattack', focus) * 2 :
+				(!isMelee && type == 'dcv') ? getSumOfActiveAttrLevels(debug, timer, attrdb, 'rangeddefense', focus) * 2 : 
 				0;
 			clog(debug, timer, 'specialty =', specialty);
 			const state = 
@@ -15203,89 +15351,111 @@
 			return lastAttackerObj;
 		}
 		*/
-		async function doCombatReactRoll(debug, timer, eventInfo, value, attrdb, setObj) {
-			const temp = {};
-			clog(debug, timer, '', temp, 'doDefenseRoll()');
-			//const besmdb_id = await getBesmdbID(debug, timer, value);
-			const roll = {
-				attacker: {},
-				character: { name: value.charactername, pronoun: value.pronoun },
-				maneuver: { emote: '', name: '', type: 0 }, 
-				mod: { edge: 0, obstacle: 0 }, 
-				outcome: {},
-				protection: {
-					forcefield: { ar: 0 },
-					shield: { ar: 0 },
-					armor1: { ar: 0 },
-					armor2: { ar: 0 },
-					armor3: { ar: 0 },
-					mindshield: { ar: 0 },
-					absorption1: { ar: 0 },
-					absorption2: { ar: 0 },
-					conversion: { level: 0 }
-				},
-				results: { cv: 0, emote: '', total: 0 }, 
-				template: '&{template:besm} ',
-				weapon: {}
+		async function getStatSelection(debug, timer, temp) {
+			const statsObj = {
+				'body': '|Body,body',
+				'mind': '|Mind,mind',
+				'soul': '|Soul,soul'
 			};
-			clog(debug, timer, 'roll', roll);
-			roll.attacker = rollEscape.unescape(eventInfo.originalRollId);
-			
-			buildWeaponList(debug, timer, value, roll);
-			await buildAvailableManeuvers(debug, timer, attrdb, value, roll);
-			await buildActiveWeapon(debug, timer, roll, value, attrdb);
-		
-			roll.maneuver.titlecase = capital(roll.maneuver.selected);
-			roll.maneuver.name = removeWhiteSpace(roll.maneuver.selected);
-			roll.maneuver.type = 
-				attack_manuevers_array.indexOf(roll.maneuver.name) !== -1 ? 1 : 
-				defense_manuevers_array.indexOf(roll.maneuver.name) !== -1 ||
-					roll.maneuver.name === 'doesnothing' ? 2 :
-				3;
-			
-			roll.target = roll.maneuver.name === 'defendother' ? await getTarget(debug, timer, roll) : '';
-		
-			if(roll.attacker.weapon.spreading) roll.mod.obstacle += 2;
-			if(roll.attacker.weapon.quake) roll.mod.edge += 2;
-			if(roll.attacker.weapon.balanced) roll.mod.edge += parseInt(roll.attacker.weapon.balanced);
-			if(roll.attacker.weapon.unbalanced) roll.mod.obstacle += parseInt(roll.attacker.weapon.unbalanced);
-		
-			setCV(debug, timer, roll, value, attrdb, setObj);
-			setRollMod(debug, timer, roll);
-			buildEmote(debug, timer, roll);
-			
-			if(roll.maneuver.name === 'doesnothing') {
-				roll.template += `{{doesnothing=1}} {{title=Does Nothing}} {{maneuver=does nothing}} ` +
-						`{{roll1=[[0d6]]}}`;
-			} else {
-				roll.template += `{{emote=${roll.maneuver.emote}}}`;
-		
-				roll.template += ` {{reaction=0}} {{succeed=0}} {{title=DEFENSE}} {{color=#786DA1}}` +
-				`{{background=#bfb7df}} {{cvtype=DCV}} {{cv=[[0d6 + ${roll.results.cv}]]}} ` +
-				`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
-				`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
-				`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
-			}
-		
-			roll.resulttemplate = '&{template:besm-result}';
-		
-			temp.defenseRoll = await startRoll(roll.template);
-				roll.outcome.roll1 = parseInt(temp.defenseRoll.results.roll1.result) + roll.results.cv;
-				roll.outcome.succeed = roll.outcome.roll1 > roll.attacker.results.total;
-				if (!roll.outcome.succeed) {
-					setProtectionValues(debug, timer, roll, value, attrdb);
-					await calculateDamage(debug, timer, roll, value, attrdb);
+			temp.getstats = '! {{statselection=[[0[?{Select Stat';
+			_.each(allaspects_stats_array, stat => {
+				if (temp.stats.indexOf(stat) === -1) {
+					temp.getstats += statsObj[stat];
 				}
-			finishRoll(temp.defenseRoll.rollId,{
-				roll1: roll.outcome.roll1,
 			});
+			temp.getstats += '}] ]]}}';
+			
+			temp.statselection = await startRoll(temp.getstats);
+			const selectedStat = 
+				temp.statselection.results.statselection.expression.match(rxGrab)[1];
+			finishRoll(temp.statselection.rollId);
+			return selectedStat;
+		}
 		
-			roll.resulttemplate += roll.outcome.succeed ? ' {{succeed=[[1d1]]}}' : ''; 
+		async function doStatRoll(debug, timer, passthrudata, value, attrdb) {
+			const temp = {
+				stats: [],
+				statsvalue: [],
+			};
+			clog(debug, timer, '', temp, 'doStatRoll()');
+			const roll = passthrudata.originalRollId !== undefined ?
+				rollEscape.unescape(passthrudata.originalRollId) : passthrudata;
+			clog(debug, timer, 'roll', roll);
+		
+			temp.whichStats = `! {{statrolltype=[[0[?{Stat Roll vs. ${capital(roll.statroll.vs)}` +
+			'|Single Stat,1|Average 2 Stats,2|Average All Stats,3}] ]]}}';
+			temp.chooseStatRollType = await startRoll(temp.whichStats);
+			temp.statRollType = parseInt(temp.chooseStatRollType.results.statrolltype.expression.match(rxGrab)[1]);
+			finishRoll(temp.chooseStatRollType.rollId);
+		
+			if(temp.statRollType !== 3) {
+				for(let i = 0; i < temp.statRollType; i++) {
+					temp.stats[i] = await getStatSelection(debug, timer, temp);
+				}
+			} else {
+				temp.stats = allaspects_stats_array;
+			}
+			_.each(temp.stats, (stat, i) => {
+				temp.statsvalue[i] = 
+					parseInt(value[`static_stat_base_${stat}`]) || 0;
+				temp.statsvalue[i] += 
+					getSumOfActiveAttrLevels(debug, timer, attrdb, 'augmented', stat) || 0;
+			});
+			//build temp.query here//
+			temp.numberator = _.reduce(temp.statsvalue, function(memo, num){ return memo + num; }, 0);
+			temp.denominator = temp.stats.length;
+			temp.base = Math.round(temp.numberator/temp.denominator) + (roll.statroll.bonus || 0);
+			temp.query = `&{template:besm-result} {{top-continue=1}}`;
+			temp.query += ` {{rolltotal=[[ ?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
+			`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
+			`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]} + [[${temp.base}]] ]] }}` +
+			` {{rollbase=$[[1]]}} {{statroll=$[[0]]}} {{target=[[${roll.statroll.tn}]]}}`;
+			
+			temp.query += roll.statroll.vs !== 'opposedroll' ?
+				` {{statrolltn=[[${roll.statroll.tn}]]}} {{statroll-header=Stat vs ${capital(roll.statroll.vs)}}}` :
+				` {{opposedroll=[[12]]}} {{statroll-header=Stat vs Opposed Roll}}`;
+			/*
+				temp.emoteStat = temp.stats.length === 1 ? '' : 'Average of';
+			*/
+			_.each(temp.stats, (stat,i) => {
+				temp.emoteStat += `${i === 1 ? '' : ','} ${capital(stat)}`;
+				/*
+				if (i === 1) {
+					temp.emoteStat += ` ${capital(stat)}`;
+				} else {
+					temp.emoteStat += `, ${capital(stat)}`;
+				}
+				*/
+			});
+			//temp.query += ` {{emote=${temp.emoteStat} vs ${capital(roll.statroll.vs) || 'Opposed Roll'}}}`;
+			temp.statRoll = await startRoll(temp.query);
+			roll.statroll.result = temp.statRoll.results.statroll.result + temp.base;
+			finishRoll(temp.statRoll.rollId);
+		
+			switch(roll.statroll.vs) {
+				case 'blight':
+					temp.resumetemplate = '&{template:besm-result}' +
+						' {{resume=1}} {{bottom-continue=1}}';
+					switch(roll.attacker.weapon.blightappliesto) {
+						case "Damage":
+							temp.resumetemplate += ` {{wounds=${temp.damage}}}`;
+							temp.damage = roll.statroll.result >= roll.statroll.tn ?
+								Math.round(roll.outcome.damage/5) : roll.outcome.damage*2;
+						break;
+					}
+					temp.resumeRoll = await startRoll(temp.resumetemplate);
+					finishRoll(temp.resumeRoll.rollId);
+				break;
+			}
+		}
+		
+		async function buildCombatResultTempate(debug, timer, roll, temp, value, attrdb) {
+			roll.resulttemplate += roll.outcome.defended ? ' {{defended=[[1d1]]}}' : ''; 
 			roll.resulttemplate += ` {{result-header=${roll.attacker.character.name} vs ${roll.character.name}}}`;
 		
 			roll.outcome.attackdifference = Math.max(roll.attacker.results.total - roll.outcome.roll1, 1);
 			
-			if (!roll.outcome.succeed) {
+			if (!roll.outcome.defended) {
 				roll.resulttemplate += roll.attacker.results.critical === 'hit' ? 
 					' {{emote=Critical Hit!!!}}' :
 					' {{emote=Attack Succeeded!}}';
@@ -15308,10 +15478,19 @@
 										` {{autofire=${temp.autofirehits}}}` : '';
 							break;
 							case 'blight':
+								if (roll.outcome.damage === 0 && roll.attacker.weapon.blightappliesto === "Damage") return;
 								temp.blighttn = customization.rank === 3 ? 18 :
 									customization.rank === 2 ? 15 :
 									customization.rank === 1 ? 12 : 0;
-								roll.resulttemplate += ` {{blight=${temp.blighttn}}}`;
+								roll.resulttemplate += 
+									` {{reactbutton1name=Stat Roll vs. Blight}} ` +
+									` {{reactbutton1label=L}} {{react=1}} {{roll1data=[[0]]}}` +
+									` {{roll1link=static_button_roll_stat}}` +
+									` {{blight=${temp.blighttn}}}`;
+								roll.statroll.tn = temp.blighttn;
+								roll.statroll.vs = customization.name;
+								roll.statroll.bonus = 
+									getSumOfActiveAttrLevels(debug, timer, attrdb, 'immutable') * 2 || 0;
 							break;
 							/*
 							case 'continuing':
@@ -15548,12 +15727,96 @@
 					`${temp.pastTenseManeuvers[roll.maneuver.name]} ` +
 					`${roll.attacker.character.name}'s attack!}}`
 			}
+		}
 		
-			roll.resulttemplate += ` {{damagetaken=${roll.attacker.damage.total}}}`;
+		async function doCombatReactRoll(debug, timer, eventInfo, value, attrdb, setObj) {
+			const temp = {};
+			clog(debug, timer, '', temp, 'doCombatReactRoll()');
+			//const besmdb_id = await getBesmdbID(debug, timer, value);
+			const roll = {
+				attacker: {},
+				character: { name: value.charactername, pronoun: value.pronoun },
+				maneuver: { emote: '', name: '', type: 0 }, 
+				mod: { edge: 0, obstacle: 0 }, 
+				outcome: { commit: {}, },
+				protection: {
+					forcefield: { ar: 0 },
+					shield: { ar: 0 },
+					armor1: { ar: 0 },
+					armor2: { ar: 0 },
+					armor3: { ar: 0 },
+					mindshield: { ar: 0 },
+					absorption1: { ar: 0 },
+					absorption2: { ar: 0 },
+					conversion: { level: 0 }
+				},
+				results: { cv: 0, emote: '', total: 0 }, 
+				statroll: {
+					tn: {},
+					vs: [],
+					bonus: {}
+				},
+				template: '&{template:besm} ',
+				weapon: {}
+			};
+			clog(debug, timer, 'roll', roll);
+			roll.attacker = rollEscape.unescape(eventInfo.originalRollId);
+			
+			buildWeaponList(debug, timer, value, roll);
+			await buildAvailableManeuvers(debug, timer, attrdb, value, roll);
+			await buildActiveWeapon(debug, timer, roll, value, attrdb);
+		
+			roll.maneuver.titlecase = capital(roll.maneuver.selected);
+			roll.maneuver.name = removeWhiteSpace(roll.maneuver.selected);
+			roll.maneuver.type = 
+				attack_manuevers_array.indexOf(roll.maneuver.name) !== -1 ? 1 : 
+				defense_manuevers_array.indexOf(roll.maneuver.name) !== -1 ||
+					roll.maneuver.name === 'doesnothing' ? 2 :
+				3;
+			
+			roll.target = roll.maneuver.name === 'defendother' ? await getTarget(debug, timer, roll) : '';
+		
+			if(roll.attacker.weapon.spreading) roll.mod.obstacle += 2;
+			if(roll.attacker.weapon.quake) roll.mod.edge += 2;
+			if(roll.attacker.weapon.balanced) roll.mod.edge += parseInt(roll.attacker.weapon.balanced);
+			if(roll.attacker.weapon.unbalanced) roll.mod.obstacle += parseInt(roll.attacker.weapon.unbalanced);
+		
+			setCV(debug, timer, roll, value, attrdb, setObj);
+			setRollMod(debug, timer, roll);
+			buildEmote(debug, timer, roll);
+			
+			if(roll.maneuver.name === 'doesnothing') {
+				roll.template += `{{doesnothing=1}} {{title=Does Nothing}} {{maneuver=does nothing}} ` +
+						`{{roll1=[[0d6]]}}`;
+			} else {
+				roll.template += `{{emote=${roll.maneuver.emote}}}`;
+		
+				roll.template += ` {{reaction=0}} {{defended=0}} {{title=DEFENSE}} {{color=#786DA1}}` +
+				`{{background=#bfb7df}} {{cvtype=DCV}} {{cv=[[0d6 + ${roll.results.cv}]]}} ` +
+				`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
+				`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
+				`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}}`;
+			}
+			temp.defenseRoll = await startRoll(roll.template);
+				roll.outcome.roll1 = parseInt(temp.defenseRoll.results.roll1.result) + roll.results.cv;
+			finishRoll(temp.defenseRoll.rollId,{
+				roll1: roll.outcome.roll1,
+			});
+			
+			roll.resulttemplate = '&{template:besm-result}';
+			roll.outcome.defended = roll.outcome.roll1 > roll.attacker.results.total;
+			if (!roll.outcome.defended) {
+				setProtectionValues(debug, timer, roll, value, attrdb);
+				await buildCombatResultTempate(debug, timer, roll, temp, value, attrdb);
+				await calculateDamage(debug, timer, roll, temp, value, attrdb);
+			}
 			
 			temp.resultRoll = await startRoll(roll.resulttemplate);
-			finishRoll(temp.resultRoll.rollId);
+			finishRoll(temp.resultRoll.rollId,{
+				roll1data: rollEscape.escape(roll),
+			});
 		}
+		
 		/*
 		async function buildManeuverOptions(debug, timer, roll, attrdb) {
 			const maneuverObj = {
@@ -15722,6 +15985,7 @@
 				mod: { edge: 0, obstacle: 0 }, 
 				outcome: {},
 				results: { critical: '', cv: 0, emote: '', total: 0 }, 
+				statroll: {},
 				target: {},
 				template: '&{template:besm} ',
 				weapon: {}
@@ -15894,43 +16158,47 @@
 			return temp.label;
 		}
 		
-		async function calculateDamage(debug, timer, roll, value, attrdb) {
+		async function calculateDamage(debug, timer, roll, temp, value, attrdb) {
+			//const temp = {};
+			clog(debug, timer, '', temp, 'calculateDamage()');
 			roll.outcome.damage = roll.attacker.damage.total || 0;
-			roll.outcome.damagetaken = roll.outcome.damage;
+			roll.resulttemplate += ` {{damage=${roll.attacker.damage.total || 0}}}`;
 			roll.outcome.converted = 0;
-			clog(debug, timer, 'roll.outcome.damage =', roll.outcome.damage, 'calculateDamage()');
 			
 			if(roll.outcome.damage !== 0) await applyForcefieldToDamage(debug, timer, roll, value);
 			if(roll.outcome.damage !== 0) applyShieldToDamage(debug, timer, roll);
 			if(roll.outcome.damage !== 0) applyArmorToDamage(debug, timer, roll);
 			if(roll.outcome.damage !== 0) applyMindShieldToDamage(debug, timer, roll);
 			if(roll.outcome.damage !== 0) await applyAbsorptionToDamage(debug, timer, roll, value);
-			if(roll.protection.conversion.type === 0) await applyConversionToDamage(debug, timer, value);
+			if(roll.protection.conversion.type === 0) await applyConversionToDamage(debug, timer, roll, value);
+			roll.outcome.damage *= temp.autofirehits || 1;
 			
 			if(roll.outcome.damage !== 0) {
-				const wounds = parseInt(value.static_stat_total_wounds) + roll.outcome.damage;
-				const shockValue = getShockValue(debug, timer, value, attrdb);
-				const seriousInjuries = parseInt(value.stat_total_seriousinjuries) || 0;
-				const seriousInjury = 
-					roll.attacker.weapon.isstun ? 0 + seriousInjuries : 
-					roll.outcome.damage > shockValue ? 
-						seriousInjuries + 1 : 0 + seriousInjuries;
+				temp.wounds = parseInt(value.static_stat_total_wounds) + roll.outcome.damage;
+				temp.shockValue = getShockValue(debug, timer, value, attrdb);
+				temp.seriousInjuries = parseInt(value.stat_total_seriousinjuries) || 0;
+				temp.seriousInjury = 
+					roll.attacker.weapon.isstun ? 0 + temp.seriousInjuries : 
+					roll.outcome.damage > temp.shockValue ? 
+						temp.seriousInjuries + 1 : 0 + temp.seriousInjuries;
 				/*
 				const shockTN = outcome.damage > (shockValue * 2) ? 18 :
 					outcome.damage > shockValue ? 12 : 0;
 				*/
-				const hasSeriousInjury = seriousInjury !== 0 ? 1 : 0;
-				roll.outcome.shocktn = roll.outcome.damage > (shockValue * 2) ? 18 : 
-					roll.outcome.damage > shockValue ? 12 : 0;
+				temp.hasSeriousInjury = temp.seriousInjury !== 0 ? 1 : 0;
+				roll.outcome.shocktn = roll.outcome.damage > (temp.shockValue * 2) ? 18 : 
+					roll.outcome.damage > temp.shockValue ? 12 : 0;
 		
 				//commits.outcome = outcome;
-				roll.outcome.static_stat_total_wounds = wounds;
-				roll.outcome.stat_total_seriousinjuries = seriousInjury;
-				roll.outcome.showseriousinjury_sheetonly = hasSeriousInjury;
-				roll.outcome.seriousinjurystate_sheetonly = hasSeriousInjury;
+				roll.outcome.commit.static_stat_total_wounds = temp.wounds;
+				roll.outcome.commit.stat_total_seriousinjuries = temp.seriousInjury;
+				roll.outcome.commit.showseriousinjury_sheetonly = temp.hasSeriousInjury;
+				roll.outcome.commit.seriousinjurystate_sheetonly = temp.hasSeriousInjury;
 				//const keys = ['static_stat_total_wounds','stat_total_seriousinjuries'];
 				//const values = [wounds, seriousInjury];
 			}
+		
+			roll.resulttemplate += ` {{wounds=${roll.outcome.damage}}}`;
 		
 			//roll.outcome = Object.assign(roll.outcome, outcome);
 			//return false;
@@ -15955,15 +16223,14 @@
 			return isStun;
 		}
 		
-		async function applyConversionToDamage(debug, timer, value) {
-			const convertedDamage = Math.floor((roll.outcome.damage + roll.outcome.converted) /10) || 0;
-			const convertedCP = (parseInt(value.protection_conversion1_cp) || 0) + convertedDamage;
-			clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
-			clog(debug, timer, 'convertedCP =', convertedCP);
+		async function applyConversionToDamage(debug, timer, roll, value) {
+			const temp = {};
+			clog(debug, timer, '', temp, 'applyConversionToDamage()');
+			temp.convertedDamage = Math.floor((roll.outcome.damage + roll.outcome.converted) /10) || 0;
+			temp.convertedCP = (parseInt(value.protection_conversion1_cp) || 0) + temp.convertedDamage;
 			//setObj[`repeating_active_${conversion.activeid}_pointvalue`] = convertedDamage;
 			//await commitChanges(debug, timer, value, ['protection_conversion1_cp'], [convertedCP]);
-			await commitChanges(debug, timer, value, { protection_conversion1_cp: convertedCP });
-			//clog(debug, timer, 'convertedDamage =', convertedDamage, 'applyConversionToDamage()');
+			await commitChanges(debug, timer, value, { protection_conversion1_cp: temp.convertedCP });
 		}
 		
 		async function applyAbsorptionToDamage(debug, timer, roll, value) {
@@ -16025,7 +16292,9 @@
 						temp[`isSpecialized${i}`] === 2 && temp[`armorDamageType${i}`] !== temp[`weaponDamageType${i}`] ?
 							0 :
 						temp[`baseAR${i}`];
-		
+					temp[`realAR${i}`] = roll.attacker.weapon.penetrating ?
+						Math.max(temp[`realAR${i}`] - roll.attacker.weapon.penetrating*10, 0) :
+						temp[`realAR${i}`];
 					temp.damageRemainder = roll.outcome.damage < temp[`realAR${i}`] ?
 						0 : roll.outcome.damage - temp[`realAR${i}`];
 					if(roll.protection.conversion.type === 0 && roll.protection.conversion.hasescalate) {
@@ -16081,6 +16350,9 @@
 							2 : 0 : 
 						1;
 				temp.actualAR = roll.protection.forcefield.ar * temp.isSpecific;
+				temp.actualAR = roll.attacker.weapon.piercing ?
+						Math.max(temp.actualAR - roll.attacker.weapon.piercing*10, 0) :
+						temp.actualAR;
 				temp.damageRemainder = roll.outcome.damage < temp.actualAR ? 0 : 
 					roll.outcome.damage - temp.actualAR;
 				if(temp.damageRemainder > 0) {
@@ -16211,9 +16483,9 @@
 				roll.damage.base = 0;
 			} else {
 				temp.massivedamage = 
-					getSumOfActiveAttrLevels(attrdb, 'massivedamage', roll.weapon.weaponclass) || 0;
+					getSumOfActiveAttrLevels(debug, timer, attrdb, 'massivedamage', roll.weapon.weaponclass) || 0;
 				temp.superstrength = 
-					getSumOfActiveAttrLevels(attrdb, 'superstrength') || 0;
+					getSumOfActiveAttrLevels(debug, timer, attrdb, 'superstrength') || 0;
 				roll.damage.base = 
 					roll.weapon.level === -1 ? 0 :
 					roll.weapon.swarm ?
@@ -16551,6 +16823,9 @@
 					roll.weapon[c.name] = c.rank;
 				});
 			}
+			if (roll.weapon.blight) {
+				roll.weapon.blightappliesto = value[`repeating_attr_${temp.activeWeaponID}_blight`];
+			}
 		}
 		
 		function setCombatRoll(debug, timer, value, attrdb, rowID, sourceAttr, setObj, invertState = false) {
@@ -16594,9 +16869,9 @@
 				isMelee > 0 ? 1 :
 				_.find(weapon.customizations, o => { if (o.name == 'muscle') return 1; }) || 0;
 			const massivedamage = 
-				getSumOfActiveAttrLevels(attrdb, 'massivedamage', weaponclass) || 0;
+				getSumOfActiveAttrLevels(debug, timer, attrdb, 'massivedamage', weaponclass) || 0;
 			const superstrength = 
-				getSumOfActiveAttrLevels(attrdb, 'superstrength') || 0;
+				getSumOfActiveAttrLevels(debug, timer, attrdb, 'superstrength') || 0;
 			const maneuverSelected =_.isString(setObj.static_weapon_maneuver_name) ? 
 				setObj.static_weapon_maneuver_name : 
 				value.static_weapon_maneuver_name;
@@ -17377,9 +17652,10 @@
 			const statButtons = getStatButtons().concat(getSkillStatButtons()),
 				buttonsToRegister = [
 					//"repeating_active",
-					"repeating_attr:setlock",
 					"repeating_attr:activate",
+					"repeating_attr:configureblight",
 					"repeating_attr:options",
+					"repeating_attr:setlock",
 					"repeating_attr:unaffected",
 					"repeating_skilltemplate:addskill",
 					"repeating_extraarm:armedstate",
@@ -17388,6 +17664,7 @@
 					"static_button_forcefield_regenerate",
 					"static_button_combat_roll",
 					"static_button_combat_react",
+					"static_button_roll_stat",
 					"static_button_ammo_reload",
 					"static_button_targeted_rushdamage",
 					"static_button_targeted_damage",
@@ -17642,7 +17919,12 @@
 								type:`${customizationType}`
 							} :
 							undefined;
-						sourceAttr = isCustomization ? 'customization' : sourceAttr;
+						const isConfigure = sourceAttr.indexOf('configure') !== -1;
+						const configureAttr = isConfigure ? sourceAttr.replace('configure', '') : '';
+						sourceAttr = 
+							isCustomization ? 'customization' : 
+							isConfigure ? 'configure' : 
+							sourceAttr;
 		
 						switch (sectionName) {
 							case `attr`:
@@ -17682,7 +17964,7 @@
 										//setAttrCostByLevelChange(debug, timer, attrdb, eventInfo, value, attrIDs, sectionName, rowID, sourceAttr, setObj);
 										setAttrCost(debug, timer, value, rowID, setObj);
 										setAttrGroupCost(debug, timer, attrIDs, attrdb, value, rowID, sourceAttr, setObj);
-										setEffectiveLevelByLevelChange(debug, timer, eventInfo, value, sectionName, rowID, sourceAttr, setObj);
+										setEffectiveLevelByLevelChange(debug, timer, eventInfo, value, attrdb, sectionName, rowID, setObj);
 										setAttrCharacteristic(debug, timer, value, rowID, setObj);
 									break;
 									case `activate`:
@@ -17729,6 +18011,9 @@
 											setAttrCost(debug, timer, value, rowID, setObj) :
 											false;
 										*/
+									break;
+									case 'configure':
+										await configureAttrSetting(debug, timer, value, configureAttr, rowID, setObj);
 									break;
 									case 'unaffected':
 										setStatButtonStatsAndRolls(debug, timer, eventInfo, value, rowID, sourceAttr, setObj);
@@ -17915,6 +18200,9 @@
 											setObj.showseriousinjury = 0;
 											setObj.stat_total_seriousinjuries = 0;
 										}
+									break;
+									case 'stat':
+										doStatRoll(debug, timer, eventInfo, value, attrdb);
 									break;
 								}
 							break;
