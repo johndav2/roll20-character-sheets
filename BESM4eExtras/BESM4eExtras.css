@@ -2357,8 +2357,8 @@ div.flex-skillchild-button {
 .sheet-rolltemplate-besm-result {
     position:relative;
 }
-.sheet-rolltemplate-besm-result:not(:first-child) .sheet-body.sheet-bottom {
-    margin-top: -32px;
+.sheet-rolltemplate-besm-result:not(:first-child) .sheet-besm-result-outer {
+    margin-top: -17%;
 }
 
 .sheet-rolltemplate-besm .sheet-besm-outer {
@@ -2421,6 +2421,7 @@ div.flex-skillchild-button {
     line-height: 1.3em;
     background: #5f5f5f;
 	text-align: center;
+	color: #fff;
 }
 
 .sheet-rolltemplate-besm .sheet-besm-outer.sheet-action .sheet-grid-besmrt:nth-child(even) {
@@ -2468,6 +2469,7 @@ div.flex-skillchild-button {
 }
 
 .sheet-rolltemplate-besm .sheet-mouseover-hideroll,
+.sheet-rolltemplate-besm-result .sheet-mouseover-hideroll,
 .sheet-rolltemplate-besm-statroll .sheet-mouseover-hideroll {
     pointer-events: none;
 }
@@ -5670,16 +5672,18 @@ div.screen-rolls {
 .sheet-rolltemplate-besm .sheet-besm-react-outer .sheet-besm-react-button,
 .sheet-rolltemplate-besm-result .sheet-besm-react-outer .sheet-besm-react-button {
 	font-family: dicefontd6;
-	font-weight: 900;
-	color: #0038ac;
-	border: 2px solid #305679;
-	background-color: #f2fffe;
-	border-radius: 10px;
-	font-size: 1.6em;
-	padding: 0% 6px 0% 6px;
-	line-height:1.1em;
+	font-weight: 450;
+	font-size: 2em;
 }
 .sheet-besm-react-button a[href*="apply"] {
 	font-family: 'pictos';
 	font-weight: 300;
+}
+
+.sheet-rolltemplate-besm .sheet-besm-react-outer .sheet-besm-row .sheet-besm-react-button a[href^="~"]{
+    background-color: #94b1cc;
+    padding: 5px;
+    color: #4f4f4f;
+    display: inline-block;
+    border: none;
 }

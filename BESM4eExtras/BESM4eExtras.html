@@ -290,7 +290,7 @@
 								</span>
 								<div class="padb"></div>
 								<div class="flex-container-evenlyspace">
-									<div class="flex-3-10 center">Wounds<input type="number" class="border" name="attr_static_stat_total_wounds" value=0 /></div>
+									<div class="flex-3-10 center">Damage<input type="number" class="border" name="attr_static_stat_total_wounds" value=0 /></div>
 									<div class="flex-3-10 center">Health<input type="number" class="border" name="attr_stat_total_health" value=0 readonly /></div>
 									<div class="flex-3-10 center">Temp<input type="number" class="border" name="attr_static_stat_temp_health" value=0 /></div>
 									<input type="hidden" name="attr_stat_adj_health" value=0 />
@@ -8818,13 +8818,17 @@
 					<div class="besmrt-key">Blight!</div>
 					<div class="besmrt-value mouseover-hideroll">TN {{blight}}</div>
 				</div>
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Blight Applies To</div>
+					<div class="besmrt-value mouseover-hideroll">{{blightappliesto}}</div>
+				</div>
 				{{/blight}} {{#statroll}}
 				<div class="grid-besmrt">
 					<div class="besmrt-key">Stat Roll Base</div>
 					<div class="besmrt-value mouseover-hideroll">{{rollbase}}</div>
 				</div>
 				<div class="grid-besmrt">
-					<div class="besmrt-key">Stat Roll Total</div>
+					<div class="besmrt-key">Stat Roll</div>
 					<div class="besmrt-value">{{statroll}}</div>
 				</div>
 				<div class="grid-besmrt">
@@ -8835,11 +8839,6 @@
 					<div class="besmrt-key">Stat Roll Result</div>
 					<div class="besmrt-value mouseover-hideroll">{{#^rollLess() rolltotal target}}Success{{/^rollLess() rolltotal target}}{{#rollLess() rolltotal target}}Failed{{/rollLess() rolltotal target}}</div>
 				</div>
-				<!--<div class="grid-besmrt">
-					<div>roll0 = {{roll0}}</div>
-					<div>roll1 = {{roll1}}</div>
-					<div>roll2 = {{roll2}}</div>
-				</div>-->
 				{{/statroll}} {{^blight}} {{#seriouswound}}
 				<div class="sheet-result-fail grid-besmrt center">
 					<span>Seriously Wounded!!!</span>
@@ -8849,12 +8848,26 @@
 					<div class="besmrt-key">Damage Taken</div>
 					<div class="besmrt-value mouseover-hideroll">+{{wounds}}</div>
 				</div>
-				{{/wounds}} {{#shocktn}}
+				{{#catastrophictn}} 
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Catastrophic Damage!!!</div>
+					<div class="besmrt-value mouseover-hideroll">TN {{catastrophictn}}</div>
+				</div>
+				{{/catastrophictn}} {{/wounds}} {{#shocktn}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">System Shock</div>
 					<div class="besmrt-value mouseover-hideroll">TN {{shocktn}}</div>
 				</div>
-				{{/shocktn}} {{/blight}} {{#reactvalue1}}
+				{{/shocktn}} {{/blight}} {{#shock}} 
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">{{shockoutcome}}</div>
+					<div class="besmrt-value mouseover-hideroll">{{shockrounds}}</div>
+				</div>
+				{{/shock}} {{#catastrophic}} 
+				<div class="besm-emote">
+					<span>{{catastrophicoutcome}}</span>
+				</div>
+				{{/catastrophic}} {{#reactvalue1}}
 				<div class="sheet-result-{{#defended}}succeed{{/defended}}{{^defended}}fail{{/defended}} grid-besmrt">
 					<div class="besmrt-key">{{reactkey1}}</div>
 					<div class="besmrt-value mouseover-hideroll">{{reactvalue1}}</div>
@@ -8925,7 +8938,7 @@
 				</div>
 				<!--{{#reactbutton1label}}-->
 				<div class="sheet-besm-react-button">
-					[{{reactbutton1label}}](~selected|{{roll1link}}||{{computed::roll1data}})
+					<span>[{{reactbutton1label}}](~selected|{{roll1link}}||{{computed::roll1data}})</span>
 				</div>
 				<!--{{/reactbutton1label}}-->
 			</div>
@@ -11110,13 +11123,14 @@
 		}
 		
 		function getShockValue(debug, timer, value, attrdb) {
-			const health = parseInt(value.stat_total_health);
-			const hardboiled = 
+			const temp = {};
+			clog(debug, timer, '', temp, 'getShockValue()');
+			temp.health = parseInt(value.stat_total_health);
+			temp.hardboiled = 
 				getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'hardboiled') || 0;
-			const shock = Math.round(health / 5) + (hardboiled * 10);
-			const shockValue = shock > Math.round(health/2) ? health : shock;
-			clog(debug, timer, 'shockValue =', shockValue, 'getShockValue()');
-			return shockValue;
+			temp.shock = Math.round(temp.health / 5) + (temp.hardboiled * 10);
+			temp.shockValue = temp.shock > Math.round(temp.health/2) ? temp.health : temp.shock;
+			return temp.shockValue;
 		}
 		
 		function getShortcomingRank(debug, timer, attrdb, value, stat) {
@@ -11164,54 +11178,42 @@
 			value[lowerkey] = result;
 		}
 		
-		//async function commitChanges(debug, timer, value, keys, values, isSilent = true) {
 		async function commitChanges(debug, timer, value, commits, isSilent = true) {
-			const keys = _.keys(commits);
-			const values = _.values(commits);
-			const commitObj = {};
-			//clog(debug, timer, 'keys:', keys, 'commitChanges()');
-			//clog(debug, timer, 'values:', values);
-			if(keys.length !== values.length) {
-				clog(debug, timer, 'keys and values length are not equal, exiting.', '', 'commitChanges()');
+			const temp = {};
+			clog(debug, timer, '', temp, 'commitChanges()');
+			temp.keys = _.keys(commits);
+			temp.values = _.values(commits);
+			temp.commits = {};
+			if(temp.keys.length !== temp.values.length) {
+				clog(debug, timer, 'keys and values length are not equal, aborting commits.', '');
 				return;
 			}
-			const validKeys = 
-				_.map(keys, key => {
-					//clog(debug, timer, 'key =', key);
+			temp.validKeys = 
+				_.map(temp.keys, key => {
 					const definedKeys = 
 						key === undefined ? false :
 						key === "" ? false :
 						key.indexOf('undefined') !== -1 ? false :
 						key.indexOf('__') !== -1 ? false :
 						key;
-					//clog(debug, timer, 'definedKeys =', definedKeys);
 					return definedKeys;
 				});
-			//clog(debug, timer, 'validKeys:', validKeys);
-			const validValues =
-				_.map(values, v => {
-					//clog(debug, timer, 'v =', v);
+			temp.validValues =
+				_.map(temp.values, v => {
 					const definedValues =
 						v === undefined ? false : v;
-					//clog(debug, timer, 'definedValues =', definedValues);
 					return definedValues;
 				});
-			//clog(debug, timer, 'validValues:', validValues);
-			_.each(validKeys, (key, i) => {
-				if(key !== false && validValues[i] !== false) {
-					//clog(debug, timer, 'key =', key);//, 'commitChanges()');
-					//clog(debug, timer, 'value =', values[i]);
+			_.each(temp.validKeys, (key, i) => {
+				if(key !== false && temp.validValues[i] !== false) {
 					const sheetOnly = key.indexOf('_sheetonly') !== -1;
 					const keyLowerCase = sheetOnly ? 
 						key.slice(0, key.length - 10).toLowerCase() : key.toLowerCase();
-					//const keyLowerCase = key.toLowerCase();
-					//clog(debug, timer, 'keyLowerCase =', keyLowerCase);
-					commitObj[`${keyLowerCase}`] = validValues[i];
-					if(!sheetOnly) value[`${keyLowerCase}`] = validValues[i];
+						temp.commits[`${keyLowerCase}`] = temp.validValues[i];
+					if(!sheetOnly) value[`${keyLowerCase}`] = temp.validValues[i];
 				}
 			})
-			clog(debug, timer, 'commitObj:', commitObj, 'commitChanges()');
-			if(commitObj.length !== 0) await asw.setAttrs(commitObj,{silent:isSilent});
+			if(temp.commits.length !== 0) await asw.setAttrs(temp.commits,{silent:isSilent});
 		}
 		
 		function setAllAspectStats(debug, timer, eventInfo, attrdb, value, setObj, stat) {
@@ -15372,17 +15374,17 @@
 			return selectedStat;
 		}
 		
-		async function doStatRoll(debug, timer, passthrudata, value, attrdb) {
+		async function doStatRoll(debug, timer, passthrudata, value, attrdb, setObj) {
 			const temp = {
-				stats: [],
-				statsvalue: [],
+				stats: [0],
+				statsvalue: [0],
 			};
 			clog(debug, timer, '', temp, 'doStatRoll()');
 			const roll = passthrudata.originalRollId !== undefined ?
 				rollEscape.unescape(passthrudata.originalRollId) : passthrudata;
 			clog(debug, timer, 'roll', roll);
 		
-			temp.whichStats = `! {{statrolltype=[[0[?{Stat Roll vs. ${capital(roll.statroll.vs)}` +
+			temp.whichStats = `! {{statrolltype=[[0[?{Stat Roll vs. ${capital(roll.statroll.vs[roll.statroll.react])}` +
 			'|Single Stat,1|Average 2 Stats,2|Average All Stats,3}] ]]}}';
 			temp.chooseStatRollType = await startRoll(temp.whichStats);
 			temp.statRollType = parseInt(temp.chooseStatRollType.results.statrolltype.expression.match(rxGrab)[1]);
@@ -15404,15 +15406,15 @@
 			//build temp.query here//
 			temp.numberator = _.reduce(temp.statsvalue, function(memo, num){ return memo + num; }, 0);
 			temp.denominator = temp.stats.length;
-			temp.base = Math.round(temp.numberator/temp.denominator) + (roll.statroll.bonus || 0);
+			temp.base = Math.round(temp.numberator/temp.denominator) + (roll.statroll.bonus[roll.statroll.react] || 0);
 			temp.query = `&{template:besm-result} {{top-continue=1}}`;
 			temp.query += ` {{rolltotal=[[ ?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
 			`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
 			`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]} + [[${temp.base}]] ]] }}` +
-			` {{rollbase=$[[1]]}} {{statroll=$[[0]]}} {{target=[[${roll.statroll.tn}]]}}`;
+			` {{rollbase=$[[1]]}} {{statroll=$[[0]]}} {{target=[[${roll.statroll.tn[roll.statroll.react]}]]}}`;
 			
 			temp.query += roll.statroll.vs !== 'opposedroll' ?
-				` {{statrolltn=[[${roll.statroll.tn}]]}} {{statroll-header=Stat vs ${capital(roll.statroll.vs)}}}` :
+				` {{statrolltn=[[${roll.statroll.tn[roll.statroll.react]}]]}} {{statroll-header=Stat vs ${capital(roll.statroll.vs[roll.statroll.react])}}}` :
 				` {{opposedroll=[[12]]}} {{statroll-header=Stat vs Opposed Roll}}`;
 			/*
 				temp.emoteStat = temp.stats.length === 1 ? '' : 'Average of';
@@ -15432,19 +15434,87 @@
 			roll.statroll.result = temp.statRoll.results.statroll.result + temp.base;
 			finishRoll(temp.statRoll.rollId);
 		
-			switch(roll.statroll.vs) {
+			switch(roll.statroll.vs[roll.statroll.react]) {
 				case 'blight':
 					temp.resumetemplate = '&{template:besm-result}' +
-						' {{resume=1}} {{bottom-continue=1}}';
+						' {{resume=1}} {{bottom-continue=1}} {{roll1data=[[0]]}}';
 					switch(roll.attacker.weapon.blightappliesto) {
 						case "Damage":
-							temp.resumetemplate += ` {{wounds=${temp.damage}}}`;
-							temp.damage = roll.statroll.result >= roll.statroll.tn ?
+							temp.damage = roll.statroll.result >= roll.statroll.tn[roll.statroll.react] ?
 								Math.round(roll.outcome.damage/5) : roll.outcome.damage*2;
+							temp.resumetemplate += ` {{wounds=${temp.damage}}}`;
+							temp.totalwounds = 
+								parseInt(value[`static_stat_total_wounds`]) + temp.damage;
+							//setObj[`static_stat_total_wounds`] = temp.totalwounds;
+							await applyDamage(debug, timer, roll, temp, value, attrdb, setObj);
 						break;
 					}
 					temp.resumeRoll = await startRoll(temp.resumetemplate);
+					finishRoll(temp.resumeRoll.rollId,{
+						roll1data: rollEscape.escape(roll),
+					});
+				break;
+				case 'Shock':
+					temp.statRollResults = {};
+						temp.statRollResults.difference = roll.statroll.result - roll.statroll.tn[roll.statroll.react];
+						temp.statRollResults.outcome = 
+							temp.statRollResults.difference >= 0 ? 'conscious':
+							(temp.statRollResults.difference*-1) > temp.base ? 'unconscious':
+							'stunned';
+						if (roll.attacker.weapon.isstun && statRollResults.outcome === 'stunned') {
+							temp.statRollResults.outcome = 'unconscious';
+						}
+						if (temp.statRollResults.outcome !== 'conscious') {
+							setObj[`${temp.statRollResults.outcome}state`] = 1;
+						}
+						temp.bodyBase = parseInt(value.static_stat_base_body);
+						temp.bodyAugmented = getSumOfActiveAttrLevels(debug, timer, attrdb, 'augmented', 'body');
+						temp.statRollResults.unconsciousRounds = temp.statRollResults.outcome === 'unconscious' ?
+							8 - (Math.max(temp.bodyBase + 
+								temp.bodyAugmented || 0, 1)) : 0;
+						temp.statRollResults.unconscious = 
+							temp.statRollResults.outcome === 'unconscious' ?
+								temp.statRollResults.unconsciousRounds === 1 ? 
+									'1 Round' :
+									`${temp.statRollResults.unconsciousRounds} Rounds` :
+								'';
+					temp.resumetemplate = '&{template:besm-result}' +
+						' {{resume=1}} {{bottom-continue=1}}';
+					temp.resumetemplate += temp.statRollResults.outcome !== 'conscious' ?
+						` {{shock=1}}` +
+						` {{shockoutcome=${capital(temp.statRollResults.outcome)}}}` +
+						` {{shockrounds=${temp.statRollResults.unconscious}}}` : '';
+					temp.resumeRoll = await startRoll(temp.resumetemplate);
 					finishRoll(temp.resumeRoll.rollId);
+				break;
+				case 'Death':
+					temp.resumetemplate = '&{template:besm-result}' +
+					' {{resume=1}} {{bottom-continue=1}} {{catastrophic=1}}';	
+					temp.statRollResults = {};
+					temp.statRollResults.outcome = roll.statroll.result >= roll.statroll.tn[roll.statroll.react];
+					if (!temp.statRollResults.outcome) { 
+						setObj.deadstate = 1;
+					} else if (roll.outcome.shocktn !== 0) {
+						roll.statroll.react = roll.statroll.vs.length;
+						temp.resumetemplate += 
+							` {{reactbutton1name=Stat Roll vs. Shock}} ` +
+							` {{reactbutton1label=IJ}} {{react=1}} {{roll1data=[[0]]}}` +
+							` {{roll1link=static_button_roll_stat}}` +
+							` {{shocktn=${roll.outcome.shocktn}}}`;
+						roll.statroll.tn[roll.statroll.react] = roll.outcome.shocktn;
+						roll.statroll.vs[roll.statroll.react] = 'Shock';
+						roll.statroll.bonus[roll.statroll.react] = Math.min(
+							getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'hardboiled') * 10 || 0,
+							Math.round(parseInt(value.stat_total_health) / 2));
+					}
+					temp.resumetemplate += temp.statRollResults.outcome ?
+						` {{catastrophicoutcome=${roll.character.name} manages to cling to life!}}` :
+						` {{catastrophicoutcome=${roll.character.name} succumbs to` +
+						` ${roll.character.pronoun} wounds and is dead or dying.}}`;
+					temp.resumeRoll = await startRoll(temp.resumetemplate);
+					finishRoll(temp.resumeRoll.rollId,{
+						roll1data: rollEscape.escape(roll),
+					});
 				break;
 			}
 		}
@@ -15478,18 +15548,20 @@
 										` {{autofire=${temp.autofirehits}}}` : '';
 							break;
 							case 'blight':
-								if (roll.outcome.damage === 0 && roll.attacker.weapon.blightappliesto === "Damage") return;
+								//if (roll.outcome.damage === 0 && roll.attacker.weapon.blightappliesto === "Damage") return;
+								roll.statroll.react = roll.statroll.vs.length;
 								temp.blighttn = customization.rank === 3 ? 18 :
 									customization.rank === 2 ? 15 :
 									customization.rank === 1 ? 12 : 0;
 								roll.resulttemplate += 
 									` {{reactbutton1name=Stat Roll vs. Blight}} ` +
-									` {{reactbutton1label=L}} {{react=1}} {{roll1data=[[0]]}}` +
+									` {{reactbutton1label=IJ}} {{react=${roll.statroll.react}}} {{roll1data=[[0]]}}` +
 									` {{roll1link=static_button_roll_stat}}` +
-									` {{blight=${temp.blighttn}}}`;
-								roll.statroll.tn = temp.blighttn;
-								roll.statroll.vs = customization.name;
-								roll.statroll.bonus = 
+									` {{blight=${temp.blighttn}}}` +
+									` {{blightappliesto=${roll.attacker.weapon.blightappliesto}}}`;
+								roll.statroll.tn[roll.statroll.react] = temp.blighttn;
+								roll.statroll.vs[roll.statroll.react] = customization.name;
+								roll.statroll.bonus[roll.statroll.react] = 
 									getSumOfActiveAttrLevels(debug, timer, attrdb, 'immutable') * 2 || 0;
 							break;
 							/*
@@ -15752,9 +15824,10 @@
 				},
 				results: { cv: 0, emote: '', total: 0 }, 
 				statroll: {
-					tn: {},
+					bonus: [],
+					react: 0,
+					tn: [],
 					vs: [],
-					bonus: {}
 				},
 				template: '&{template:besm} ',
 				weapon: {}
@@ -15808,7 +15881,10 @@
 			if (!roll.outcome.defended) {
 				setProtectionValues(debug, timer, roll, value, attrdb);
 				await buildCombatResultTempate(debug, timer, roll, temp, value, attrdb);
-				await calculateDamage(debug, timer, roll, temp, value, attrdb);
+				await calculateDamage(debug, timer, roll, temp, value, attrdb, setObj);
+				if (roll.statroll.vs.indexOf('blight') === -1) {
+					await applyDamage(debug, timer, roll, temp, value, attrdb, setObj);
+				}
 			}
 			
 			temp.resultRoll = await startRoll(roll.resulttemplate);
@@ -16049,7 +16125,7 @@
 					`{{roll1=?{Roll is|Normal, [[${setDice(roll.mod)}]]` +
 					`|Minor Edge, [[${setDice(roll.mod, 1)}]]|Minor Obstacle, [[${setDice(roll.mod, -1)}]]` +
 					`|Major Edge, [[${setDice(roll.mod, 2)}]]|Major Obstacle, [[${setDice(roll.mod, -2)}]]}}} ` +
-					`{{roll1data=[[0]]}} {{reactbutton1label=L}} ` +
+					`{{roll1data=[[0]]}} {{reactbutton1label=IJ}} ` +
 					`{{roll1link=static_button_combat_react}} {{roll1target=${roll.target.id}}}`;
 		
 					if (roll.weapon.backblast) roll.template += 
@@ -16158,22 +16234,23 @@
 			return temp.label;
 		}
 		
-		async function calculateDamage(debug, timer, roll, temp, value, attrdb) {
+		async function calculateDamage(debug, timer, roll, temp, value, attrdb, setObj) {
 			//const temp = {};
 			clog(debug, timer, '', temp, 'calculateDamage()');
 			roll.outcome.damage = roll.attacker.damage.total || 0;
 			roll.resulttemplate += ` {{damage=${roll.attacker.damage.total || 0}}}`;
 			roll.outcome.converted = 0;
 			
-			if(roll.outcome.damage !== 0) await applyForcefieldToDamage(debug, timer, roll, value);
+			if(roll.outcome.damage !== 0) await applyForcefieldToDamage(debug, timer, roll, value, setObj);
 			if(roll.outcome.damage !== 0) applyShieldToDamage(debug, timer, roll);
 			if(roll.outcome.damage !== 0) applyArmorToDamage(debug, timer, roll);
 			if(roll.outcome.damage !== 0) applyMindShieldToDamage(debug, timer, roll);
 			if(roll.outcome.damage !== 0) await applyAbsorptionToDamage(debug, timer, roll, value);
 			if(roll.protection.conversion.type === 0) await applyConversionToDamage(debug, timer, roll, value);
 			roll.outcome.damage *= temp.autofirehits || 1;
-			
+			/*
 			if(roll.outcome.damage !== 0) {
+				applyDamage(debug, timer, roll, temp, value, attrdb);
 				temp.wounds = parseInt(value.static_stat_total_wounds) + roll.outcome.damage;
 				temp.shockValue = getShockValue(debug, timer, value, attrdb);
 				temp.seriousInjuries = parseInt(value.stat_total_seriousinjuries) || 0;
@@ -16181,27 +16258,84 @@
 					roll.attacker.weapon.isstun ? 0 + temp.seriousInjuries : 
 					roll.outcome.damage > temp.shockValue ? 
 						temp.seriousInjuries + 1 : 0 + temp.seriousInjuries;
-				/*
-				const shockTN = outcome.damage > (shockValue * 2) ? 18 :
-					outcome.damage > shockValue ? 12 : 0;
-				*/
+		
 				temp.hasSeriousInjury = temp.seriousInjury !== 0 ? 1 : 0;
 				roll.outcome.shocktn = roll.outcome.damage > (temp.shockValue * 2) ? 18 : 
 					roll.outcome.damage > temp.shockValue ? 12 : 0;
 		
-				//commits.outcome = outcome;
 				roll.outcome.commit.static_stat_total_wounds = temp.wounds;
 				roll.outcome.commit.stat_total_seriousinjuries = temp.seriousInjury;
 				roll.outcome.commit.showseriousinjury_sheetonly = temp.hasSeriousInjury;
 				roll.outcome.commit.seriousinjurystate_sheetonly = temp.hasSeriousInjury;
-				//const keys = ['static_stat_total_wounds','stat_total_seriousinjuries'];
-				//const values = [wounds, seriousInjury];
 			}
 		
 			roll.resulttemplate += ` {{wounds=${roll.outcome.damage}}}`;
+			*/
+		}
 		
-			//roll.outcome = Object.assign(roll.outcome, outcome);
-			//return false;
+		async function applyDamage(debug, timer, roll, temp, value, attrdb, setObj) {
+			temp.damage = temp.damage !== undefined ? temp.damage : roll.outcome.damage
+			temp.wounds = parseInt(value.static_stat_total_wounds) + temp.damage;
+			temp.shockValue = getShockValue(debug, timer, value, attrdb);
+			temp.seriousInjuries = parseInt(value.stat_total_seriousinjuries) || 0;
+			temp.seriousInjury = 
+				roll.attacker.weapon.isstun ? 0 + temp.seriousInjuries : 
+				temp.damage >= temp.shockValue ? 
+					temp.seriousInjuries + 1 : 0 + temp.seriousInjuries;
+			temp.hasSeriousInjury = temp.seriousInjury !== 0 ? 1 : 0;
+			roll.outcome.catastrophic = temp.damage >= parseInt(value.stat_total_health);
+			roll.outcome.shocktn = temp.damage > (temp.shockValue * 2) ? 18 : 
+				temp.damage > temp.shockValue ? 12 : 0;
+			if (temp.hasSeriousInjury) {
+				if (roll.statroll.vs.indexOf('blight') === -1) {
+					roll.resulttemplate += ` {{seriouswound=${temp.seriousInjury}}}`;
+				} else {
+					temp.resumetemplate += ` {{seriouswound=${temp.seriousInjury}}}`;
+				}
+				setObj[`stat_total_seriousinjuries`] = temp.seriousInjury;
+				setObj[`showseriousinjury`] = temp.hasSeriousInjury;
+				setObj[`seriousinjurystate`] = temp.hasSeriousInjury;
+			}
+			if (roll.outcome.catastrophic) {
+				if (roll.statroll.vs.indexOf('blight') === -1) {
+					roll.resulttemplate += 
+						` {{reactbutton1name=Stat Roll vs. Death}} ` +
+						` {{reactbutton1label=IJ}} {{react=1}} {{roll1data=[[0]]}}` +
+						` {{roll1link=static_button_roll_stat}}` +
+						` {{catastrophictn=12}}`;
+				} else {
+					temp.resumetemplate += 
+						` {{reactbutton1name=Stat Roll vs. Death}} ` +
+						` {{reactbutton1label=IJ}} {{react=1}} {{roll1data=[[0]]}}` +
+						` {{roll1link=static_button_roll_stat}}` +
+						` {{catastrophictn=12}}`;
+				}
+				roll.statroll.tn[roll.statroll.react] = 12;
+				roll.statroll.vs[roll.statroll.react] = 'Death';
+				roll.statroll.bonus[roll.statroll.react] = 0;
+			} else if (roll.outcome.shocktn !== 0) {
+				if (roll.statroll.vs.indexOf('blight') === -1) {
+					roll.resulttemplate += 
+						` {{reactbutton1name=Stat Roll vs. Shock}} ` +
+						` {{reactbutton1label=IJ}} {{react=1}} {{roll1data=[[0]]}}` +
+						` {{roll1link=static_button_roll_stat}}` +
+						` {{shocktn=${roll.outcome.shocktn}}}`;
+				} else {
+					temp.resumetemplate += 
+						` {{reactbutton1name=Stat Roll vs. Shock}} ` +
+						` {{reactbutton1label=IJ}} {{react=1}} {{roll1data=[[0]]}}` +
+						` {{roll1link=static_button_roll_stat}}` +
+						` {{shocktn=${roll.outcome.shocktn}}}`;
+				}
+				roll.statroll.tn[roll.statroll.react] = roll.outcome.shocktn;
+				roll.statroll.vs[roll.statroll.react] = 'Shock';
+				roll.statroll.bonus[roll.statroll.react] = Math.min(
+					getSumOfActiveSubAttrRanks(attrdb, 'combattechnique', 'hardboiled') * 10 || 0,
+					Math.round(parseInt(value.stat_total_health) / 2));
+			}
+			roll.resulttemplate += ` {{wounds=${temp.damage}}}`;
+			//setObj[`static_stat_total_wounds`] = temp.wounds;
+			await commitChanges(debug, timer, value, { static_stat_total_wounds: temp.wounds }, false)
 		}
 		
 		function getIsStun(debug, timer, roll, value, attrdb, isNaturalWeapon, weapon) {
@@ -16230,7 +16364,8 @@
 			temp.convertedCP = (parseInt(value.protection_conversion1_cp) || 0) + temp.convertedDamage;
 			//setObj[`repeating_active_${conversion.activeid}_pointvalue`] = convertedDamage;
 			//await commitChanges(debug, timer, value, ['protection_conversion1_cp'], [convertedCP]);
-			await commitChanges(debug, timer, value, { protection_conversion1_cp: temp.convertedCP });
+			//await commitChanges(debug, timer, value, { protection_conversion1_cp: temp.convertedCP });
+			setObj.protection_conversion1_cp = temp.convertedCP;
 		}
 		
 		async function applyAbsorptionToDamage(debug, timer, roll, value) {
@@ -16330,7 +16465,7 @@
 			return isBlocked;
 		}
 		
-		async function applyForcefieldToDamage(debug, timer, roll, value) {
+		async function applyForcefieldToDamage(debug, timer, roll, value, setObj) {
 			const temp = {};
 			clog(debug, timer, '', temp, 'applyForcefieldToDamage()');
 			if(roll.protection.forcefield.ar !== 0) {
@@ -16359,7 +16494,8 @@
 					roll.resulttemplate += ` {{forcefield=${roll.outcome.damage - temp.damageRemainder}}}`;
 					temp.newForcefieldAR = 
 						roll.protection.forcefield.ar - 10;
-					await commitChanges(debug, timer, value, { protection_forcefield_ar: temp.newForcefieldAR });
+					//await commitChanges(debug, timer, value, { protection_forcefield_ar: temp.newForcefieldAR });
+					setObj.protection_forcefield_ar = temp.newForcefieldAR;
 					if(roll.protection.conversion.type === 0 && roll.protection.conversion.hasescalate) {
 						roll.outcome.converted += roll.outcome.damage - temp.damageRemainder;
 					}
@@ -18202,7 +18338,7 @@
 										}
 									break;
 									case 'stat':
-										doStatRoll(debug, timer, eventInfo, value, attrdb);
+										await doStatRoll(debug, timer, eventInfo, value, attrdb, setObj);
 									break;
 								}
 							break;
