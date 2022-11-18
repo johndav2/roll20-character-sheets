@@ -8813,7 +8813,12 @@
 					<div class="besmrt-key">{{conversionname}} Converted</div>
 					<div class="besmrt-value mouseover-hideroll">{{conversion}}</div>
 				</div>
-				{{/conversion}} {{#blight}}
+				{{/conversion}} {{#continuing}}
+				<div class="sheet-result-fail grid-besmrt">
+					<div class="besmrt-key">Continuing Damage (+{{continuing}})</div>
+					<div class="besmrt-value mouseover-hideroll">{{continuingrounds}} Rounds</div>
+				</div>
+				{{/continuing}} {{#blight}}
 				<div class="sheet-result-fail grid-besmrt">
 					<div class="besmrt-key">Blight!</div>
 					<div class="besmrt-value mouseover-hideroll">TN {{blight}}</div>
@@ -15565,12 +15570,15 @@
 									getSumOfActiveAttrLevels(debug, timer, attrdb, 'immutable') * 2 || 0;
 							break;
 							/*
+							contact
+							contageous
+							*/
 							case 'continuing':
-								const continuingDamage = ;
-								roll.resulttemplate += ` {{continuing=${blighttn}}}`;
-								result = `${result} {{${customization.name}=${customization.rank}}} {{continuing2=${Math.round((damage * 0.25)/5)}}} {{continuing3=${Math.round((damage * 0.35)/5)}}} {{continuing4=${Math.round((damage * 0.45)/5)}}} {{continuing5=${Math.round((damage * 0.55)/5)}}} {{continuing6=${Math.round((damage * 0.65)/5)}}} {{continuing7=${Math.round((damage * 0.75)/5)}}} {{continuing8=${Math.round((damage * 0.9)/5)}}} {{continuing9=${Math.round((damage * 1.05)/5)}}} {{continuing10=${Math.round((damage * 1.2)/5)}}} {{continuing11=${Math.round((damage * 1.35)/5)}}} {{continuing12=${Math.round((damage * 1.5)/5)}}}`;
+								//const continuingDamage = ;
+								//roll.resulttemplate += ` {{continuing=${blighttn}}}`;
+								//result = `${result} {{${customization.name}=${customization.rank}}} {{continuing2=${Math.round((damage * 0.25)/5)}}} {{continuing3=${Math.round((damage * 0.35)/5)}}} {{continuing4=${Math.round((damage * 0.45)/5)}}} {{continuing5=${Math.round((damage * 0.55)/5)}}} {{continuing6=${Math.round((damage * 0.65)/5)}}} {{continuing7=${Math.round((damage * 0.75)/5)}}} {{continuing8=${Math.round((damage * 0.9)/5)}}} {{continuing9=${Math.round((damage * 1.05)/5)}}} {{continuing10=${Math.round((damage * 1.2)/5)}}} {{continuing11=${Math.round((damage * 1.35)/5)}}} {{continuing12=${Math.round((damage * 1.5)/5)}}}`;
 							break;
-							
+							/*
 							case 'drain':
 								const draintype = value[`repeating_attr_${rowID}_draintype`] || '';
 								result = `${result} {{${customization.name}=${customization.rank}}} {{draintype=${draintype}}}`;
@@ -15788,7 +15796,7 @@
 				temp.pastTenseManeuvers = {
 					'deflect': 'deflected',
 					//'dodged',
-					'parry': 'parried',
+					'defend': 'parried',
 					'personal': 'found cover from',
 					'movement': 'out maneuvered',
 					'evade': 'evaded',
@@ -15878,9 +15886,9 @@
 			
 			roll.resulttemplate = '&{template:besm-result}';
 			roll.outcome.defended = roll.outcome.roll1 > roll.attacker.results.total;
+			await buildCombatResultTempate(debug, timer, roll, temp, value, attrdb);
 			if (!roll.outcome.defended) {
 				setProtectionValues(debug, timer, roll, value, attrdb);
-				await buildCombatResultTempate(debug, timer, roll, temp, value, attrdb);
 				await calculateDamage(debug, timer, roll, temp, value, attrdb, setObj);
 				if (roll.statroll.vs.indexOf('blight') === -1) {
 					await applyDamage(debug, timer, roll, temp, value, attrdb, setObj);
@@ -16286,6 +16294,11 @@
 			roll.outcome.catastrophic = temp.damage >= parseInt(value.stat_total_health);
 			roll.outcome.shocktn = temp.damage > (temp.shockValue * 2) ? 18 : 
 				temp.damage > temp.shockValue ? 12 : 0;
+			if (roll.attacker.weapon.continuing && temp.damage !== 0) {
+				roll.resulttemplate += ` {{continuing=${Math.max(Math.round(roll.outcome.damage/5),1)}}}` +
+					` {{continuingrounds=${roll.attacker.weapon.continuing}}}`;
+				setObj.continuingstate = 1;
+			}
 			if (temp.hasSeriousInjury) {
 				if (roll.statroll.vs.indexOf('blight') === -1) {
 					roll.resulttemplate += ` {{seriouswound=${temp.seriousInjury}}}`;
