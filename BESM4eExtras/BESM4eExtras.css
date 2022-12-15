@@ -44,6 +44,7 @@ input[type=number] {
 	padding: 2px 4px;
 	color: white;
 	font-weight: bold;
+	background-color: #FF3F3F;
 }
 
 button.d6button[type=action]{
@@ -697,7 +698,8 @@ input.limitertab{
 /***************** Themes *****************/
 
 /* Titles */
-.theme-title-red,
+.theme-title-red
+/*
 input.theme[value="1"]:checked ~ div,
 input.theme[value="1"]:checked ~ div > h3,
 input.theme[value="1"]:checked ~ div > div > div > div > span,
@@ -712,6 +714,7 @@ input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div >
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div > div > h3
+*/
 {
 
 	background: #c94c4c;
@@ -720,8 +723,9 @@ input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div >
 	color: #fff;
 	font-weight: bold;
 	text-align: center;
+	border-radius: 5px;
 }
-.theme-title-orange,
+.theme-title-orange/*,
 input.theme[value="2"]:checked ~ div,
 input.theme[value="2"]:checked ~ div > h3,
 input.theme[value="2"]:checked ~ div > div > div > div > span,
@@ -735,7 +739,7 @@ input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div >
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div > div > h3
-{
+*/{
 	margin: auto;
 	background: #ED7D31;
 	border-width: 3px;
@@ -744,6 +748,7 @@ input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: bold;
 	text-align: center;
 }
+.theme-title-yellow/*,
 input.theme[value="3"]:checked ~ div,
 input.theme[value="3"]:checked ~ div > h3,
 input.theme[value="3"]:checked ~ div > div > div > div > span,
@@ -757,7 +762,7 @@ input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div >
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div > div > h3
-{
+*/{
 	margin: auto;
 	background: #FFC000;
 	border-width: 3px;
@@ -766,6 +771,7 @@ input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: bold;
 	text-align: center;
 }
+.theme-title-green/*,
 input.theme[value="4"]:checked ~ div,
 input.theme[value="4"]:checked ~ div > h3,
 input.theme[value="4"]:checked ~ div > div > div > div > span,
@@ -779,7 +785,7 @@ input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div >
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div > div > h3
-{
+*/{
 	margin: auto;
 	background: #70AD47;
 	border-width: 3px;
@@ -788,6 +794,7 @@ input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: bold;
 	text-align: center;
 }
+.theme-title-blue/*,
 input.theme[value="5"]:checked ~ div,
 input.theme[value="5"]:checked ~ div > h3,
 input.theme[value="5"]:checked ~ div > div > div > div > span,
@@ -801,7 +808,7 @@ input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div >
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div > div > h3
-{
+*/{
 	margin: auto;
 	background: #4472C4;
 	border-width: 3px;
@@ -810,6 +817,7 @@ input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: bold;
 	text-align: center;
 }
+.theme-title-purple/*,
 input.theme[value="6"]:checked ~ div,
 input.theme[value="6"]:checked ~ div > h3,
 input.theme[value="6"]:checked ~ div > div > div > div > span,
@@ -823,7 +831,7 @@ input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div >
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div > div > h3
-{
+*/{
 	margin: auto;
 	background: #7030A0;
 	border-width: 3px;
@@ -832,6 +840,7 @@ input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: bold;
 	text-align: center;
 }
+.theme-title-grey/*,
 input.theme[value="7"]:checked ~ div,
 input.theme[value="7"]:checked ~ div > h3,
 input.theme[value="7"]:checked ~ div > div > div > div > span,
@@ -845,7 +854,7 @@ input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div >
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div > div > h3
-{
+*/{
 	margin: auto;
 	background: #767171;
 	border-width: 3px;
@@ -854,6 +863,7 @@ input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: bold;
 	text-align: center;
 }
+.theme-title-dark/*,
 input.theme[value="8"]:checked ~ div,
 input.theme[value="8"]:checked ~ div > h3,
 input.theme[value="8"]:checked ~ div > div > div > div > span,
@@ -867,7 +877,7 @@ input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div >
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div > div > h3
-{
+*/{
 	margin: auto;
 	background: #0D0D0D;
 	border-width: 3px;
@@ -876,6 +886,7 @@ input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: bold;
 	text-align: center;
 }
+.theme-title-light/*,
 input.theme[value="9"]:checked ~ div,
 input.theme[value="9"]:checked ~ div > h3,
 input.theme[value="9"]:checked ~ div > div > div > div > span,
@@ -889,7 +900,7 @@ input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div >
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h3,
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div > div > h3
-{
+*/{
 	margin: auto;
 	background: #BFBFBF;
 	border-width: 3px;
@@ -900,9 +911,10 @@ input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div >
 }
 
 /* Background */
+.theme-background-red/*,
 input.theme[value="1"]:checked ~ div > div,
 input.theme[value="1"]:checked ~ div > div > div,
-input.theme[value="1"]:checked ~ div > div > div > div,
+
 input.theme[value="1"]:checked ~ div > div > div > div > div > div,
 input.theme[value="1"]:checked ~ div > div > div > h5 > div > div > div,
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > div,
@@ -911,11 +923,13 @@ input.theme[value="1"]:checked ~ div > div > div > div > h4 > div > div > div,
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > div > div,
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div,
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div
-{
+*/{
 	background: #eea29a;
 	border-width: 1px;
 	border-color: #c94c4c;
+	border-radius: 5px;
 }
+.theme-background-orange/*,
 input.theme[value="2"]:checked ~ div > div,
 input.theme[value="2"]:checked ~ div > div > div,
 input.theme[value="2"]:checked ~ div > div > div > div,
@@ -927,11 +941,12 @@ input.theme[value="2"]:checked ~ div > div > div > div > h4 > div > div > div,
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div > div > div > div,
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div,
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div
-{
+*/{
 	background: #F8CBAD;
 	border-width: 1px;
 	border-color: #ED7D31;
 }
+.theme-background-yellow/*,
 input.theme[value="3"]:checked ~ div > div,
 input.theme[value="3"]:checked ~ div > div > div,
 input.theme[value="3"]:checked ~ div > div > div > div,
@@ -943,11 +958,12 @@ input.theme[value="3"]:checked ~ div > div > div > div > h4 > div > div > div,
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div,
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div,
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div
-{
+*/{
 	background: #FFE699;
 	border-width: 1px;
 	border-color: #FFC000;
 }
+.theme-background-green/*,
 input.theme[value="4"]:checked ~ div > div,
 input.theme[value="4"]:checked ~ div > div > div,
 input.theme[value="4"]:checked ~ div > div > div > div,
@@ -959,11 +975,12 @@ input.theme[value="4"]:checked ~ div > div > div > div > h4 > div > div > div,
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div,
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div,
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div
-{
+*/{
 	background: #C5E0B4;
 	border-width: 1px;
 	border-color: #70AD47;
 }
+.theme-background-blue/*,
 input.theme[value="5"]:checked ~ div > div,
 input.theme[value="5"]:checked ~ div > div > div,
 input.theme[value="5"]:checked ~ div > div > div > div,
@@ -975,11 +992,12 @@ input.theme[value="5"]:checked ~ div > div > div > div > h4 > div > div > div,
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div,
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div,
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div
-{
+*/{
 	background: #B4C7E7;
 	border-width: 1px;
 	border-color: #4472C4;
 }
+.theme-background-purple/*,
 input.theme[value="6"]:checked ~ div > div,
 input.theme[value="6"]:checked ~ div > div > div,
 input.theme[value="6"]:checked ~ div > div > div > div,
@@ -991,11 +1009,12 @@ input.theme[value="6"]:checked ~ div > div > div > div > h4 > div > div > div,
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div,
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div,
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div
-{
+*/{
 	background: #BD92DE;
 	border-width: 1px;
 	border-color: #7030A0;
 }
+.theme-background-grey/*,
 input.theme[value="7"]:checked ~ div > div,
 input.theme[value="7"]:checked ~ div > div > div,
 input.theme[value="7"]:checked ~ div > div > div > div,
@@ -1007,11 +1026,12 @@ input.theme[value="7"]:checked ~ div > div > div > div > h4 > div > div > div,
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div,
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div,
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div
-{
+*/{
 	background: #D0CECE;
 	border-width: 1px;
 	border-color: #767171;
 }
+.theme-background-dark/*,
 input.theme[value="8"]:checked ~ div > div,
 input.theme[value="8"]:checked ~ div > div > div,
 input.theme[value="8"]:checked ~ div > div > div > div,
@@ -1023,11 +1043,12 @@ input.theme[value="8"]:checked ~ div > div > div > div > h4 > div > div > div,
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div,
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div,
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div
-{
+*/{
 	background: #7F7F7F;
 	border-width: 1px;
 	border-color: #0D0D0D;
 }
+.theme-background-light/*,
 input.theme[value="9"]:checked ~ div > div,
 input.theme[value="9"]:checked ~ div > div > div,
 input.theme[value="9"]:checked ~ div > div > div > div,
@@ -1039,7 +1060,7 @@ input.theme[value="9"]:checked ~ div > div > div > div > h4 > div > div > div,
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div,
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div,
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > div > div
-{
+*/{
 	background: #F2F2F2;
 	border-width: 1px;
 	border-color: #BFBFBF;
@@ -1153,6 +1174,8 @@ input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div >
 	border-color: #ED7D31;
 	color: #333333;
 }
+.theme-input-yellow
+/*
 input.theme[value="3"]:checked ~ div > div > div > div > h4,
 input.theme[value="3"]:checked ~ div > div > div > div > div > h4,
 input.theme[value="3"]:checked ~ div > div > div > div > div > h3 > span,
@@ -1168,7 +1191,7 @@ input.theme[value="3"]:checked ~ div > div > div > h5 > div > div > div > div > 
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > h4,
 input.theme[value="3"]:checked ~ div > div > div > div > h4 > div > div > div > div > span,
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > span,
-/*Skill Template Tooltip*/
+
 input.theme[value="3"]:checked ~ div > div > div > h5 > div > div > div > div > div > h3 > div > div > div > div > h3 > span,
 input.theme[value="3"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > span,
 input.theme[value="3"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div,
@@ -1200,6 +1223,7 @@ input.theme[value="3"]:checked ~ div > div > div > div > div > div > h4 > div > 
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="action"],
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"]
+*/
 {
 	background: #FFD966;
 	border-width: 1px;
@@ -1208,6 +1232,8 @@ input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-input-green
+/*
 input.theme[value="4"]:checked ~ div > div > div > div > h4,
 input.theme[value="4"]:checked ~ div > div > div > div > div > h4,
 input.theme[value="4"]:checked ~ div > div > div > div > div > h3 > span,
@@ -1223,7 +1249,7 @@ input.theme[value="4"]:checked ~ div > div > div > h5 > div > div > div > div > 
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > h4,
 input.theme[value="4"]:checked ~ div > div > div > div > h4 > div > div > div > div > span,
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > span,
-/*Skill Template Tooltip*/
+
 input.theme[value="4"]:checked ~ div > div > div > h5 > div > div > div > div > div > h3 > div > div > div > div > h3 > span,
 input.theme[value="4"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > span,
 input.theme[value="4"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div,
@@ -1255,6 +1281,7 @@ input.theme[value="4"]:checked ~ div > div > div > div > div > div > h4 > div > 
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="action"],
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"]
+*/
 {
 	background: #A9D18E;
 	border-width: 1px;
@@ -1263,6 +1290,8 @@ input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-input-blue
+/*
 input.theme[value="5"]:checked ~ div > div > div > div > h4,
 input.theme[value="5"]:checked ~ div > div > div > div > div > h4,
 input.theme[value="5"]:checked ~ div > div > div > div > div > h3 > span,
@@ -1278,7 +1307,7 @@ input.theme[value="5"]:checked ~ div > div > div > h5 > div > div > div > div > 
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > h4,
 input.theme[value="5"]:checked ~ div > div > div > div > h4 > div > div > div > div > span,
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > span,
-/*Skill Template Tooltip*/
+
 input.theme[value="5"]:checked ~ div > div > div > h5 > div > div > div > div > div > h3 > div > div > div > div > h3 > span,
 input.theme[value="5"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > span,
 input.theme[value="5"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div,
@@ -1310,6 +1339,7 @@ input.theme[value="5"]:checked ~ div > div > div > div > div > div > h4 > div > 
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="action"],
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"]
+*/
 {
 	background: #8FAADC;
 	border-width: 1px;
@@ -1318,6 +1348,8 @@ input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-input-purple
+/*
 input.theme[value="6"]:checked ~ div > div > div > div > h4,
 input.theme[value="6"]:checked ~ div > div > div > div > div > h4,
 input.theme[value="6"]:checked ~ div > div > div > div > div > h3 > span,
@@ -1333,7 +1365,7 @@ input.theme[value="6"]:checked ~ div > div > div > h5 > div > div > div > div > 
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > h4,
 input.theme[value="6"]:checked ~ div > div > div > div > h4 > div > div > div > div > span,
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > span,
-/*Skill Template Tooltip*/
+
 input.theme[value="6"]:checked ~ div > div > div > h5 > div > div > div > div > div > h3 > div > div > div > div > h3 > span,
 input.theme[value="6"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > span,
 input.theme[value="6"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div,
@@ -1365,6 +1397,7 @@ input.theme[value="6"]:checked ~ div > div > div > div > div > div > h4 > div > 
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="action"],
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"]
+*/
 {
 	background: #A162D0;
 	border-width: 1px;
@@ -1373,6 +1406,8 @@ input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-input-grey
+/*
 input.theme[value="7"]:checked ~ div > div > div > div > h4,
 input.theme[value="7"]:checked ~ div > div > div > div > div > h4,
 input.theme[value="7"]:checked ~ div > div > div > div > div > h3 > span,
@@ -1388,7 +1423,7 @@ input.theme[value="7"]:checked ~ div > div > div > h5 > div > div > div > div > 
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > h4,
 input.theme[value="7"]:checked ~ div > div > div > div > h4 > div > div > div > div > span,
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > span,
-/*Skill Template Tooltip*/
+
 input.theme[value="7"]:checked ~ div > div > div > h5 > div > div > div > div > div > h3 > div > div > div > div > h3 > span,
 input.theme[value="7"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > span,
 input.theme[value="7"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div,
@@ -1420,6 +1455,7 @@ input.theme[value="7"]:checked ~ div > div > div > div > div > div > h4 > div > 
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="action"],
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"]
+*/
 {
 	background: #AFABAB;
 	border-width: 1px;
@@ -1428,6 +1464,8 @@ input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-input-dark
+/*
 input.theme[value="8"]:checked ~ div > div > div > div > h4,
 input.theme[value="8"]:checked ~ div > div > div > div > div > h4,
 input.theme[value="8"]:checked ~ div > div > div > div > div > h3 > span,
@@ -1443,7 +1481,7 @@ input.theme[value="8"]:checked ~ div > div > div > h5 > div > div > div > div > 
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > h4,
 input.theme[value="8"]:checked ~ div > div > div > div > h4 > div > div > div > div > span,
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > span,
-/*Skill Template Tooltip*/
+
 input.theme[value="8"]:checked ~ div > div > div > h5 > div > div > div > div > div > h3 > div > div > div > div > h3 > span,
 input.theme[value="8"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > span,
 input.theme[value="8"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div,
@@ -1475,6 +1513,7 @@ input.theme[value="8"]:checked ~ div > div > div > div > div > div > h4 > div > 
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="action"],
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"]
+*/
 {
 	background: #595959;
 	border-width: 1px;
@@ -1483,6 +1522,8 @@ input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-input-light
+/*
 input.theme[value="9"]:checked ~ div > div > div > div > h4,
 input.theme[value="9"]:checked ~ div > div > div > div > div > h4,
 input.theme[value="9"]:checked ~ div > div > div > div > div > h3 > span,
@@ -1498,7 +1539,7 @@ input.theme[value="9"]:checked ~ div > div > div > h5 > div > div > div > div > 
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > h4,
 input.theme[value="9"]:checked ~ div > div > div > div > h4 > div > div > div > div > span,
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > span,
-/*Skill Template Tooltip*/
+
 input.theme[value="9"]:checked ~ div > div > div > h5 > div > div > div > div > div > h3 > div > div > div > div > h3 > span,
 input.theme[value="9"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > span,
 input.theme[value="9"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div,
@@ -1530,6 +1571,7 @@ input.theme[value="9"]:checked ~ div > div > div > div > div > div > h4 > div > 
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="action"],
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > div > button[type="action"]
+*/
 {
 	background: #D9D9D9;
 	border-width: 1px;
@@ -1540,6 +1582,7 @@ input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div >
 }
 
 /* Roll Buttons */
+.theme-button-red/*,
 .theme[value="1"] + .theme-action,
 input.theme[value="1"]:checked ~ div > div > div > div > div > button[type="roll"],
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > button[type="roll"],
@@ -1551,7 +1594,7 @@ input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > h4 > 
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.theme[value="1"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="roll"]
-{
+*/{
 	background: #c94c4c;
 	border-width: 1px;
 	border-color: #000;
@@ -1559,6 +1602,7 @@ input.theme[value="1"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-button-orange/*,
 input.theme[value="2"]:checked ~ div > div > div > div > div > button[type="roll"],
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > button[type="roll"],
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div > button[type="roll"],
@@ -1568,7 +1612,7 @@ input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > h4 > 
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.theme[value="2"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="roll"]
-{
+*/{
 	background: #ED7D31;
 	border-width: 1px;
 	border-color: #000;
@@ -1576,6 +1620,7 @@ input.theme[value="2"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-button-yellow/*,
 input.theme[value="3"]:checked ~ div > div > div > div > div > button[type="roll"],
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > button[type="roll"],
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > button[type="roll"],
@@ -1585,7 +1630,7 @@ input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > h4 > 
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.theme[value="3"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="roll"]
-{
+*/{
 	background: #FFC000;
 	border-width: 1px;
 	border-color: #000;
@@ -1593,6 +1638,7 @@ input.theme[value="3"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-button-green/*,
 input.theme[value="4"]:checked ~ div > div > div > div > div > button[type="roll"],
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > button[type="roll"],
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > button[type="roll"],
@@ -1602,7 +1648,7 @@ input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > h4 > 
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.theme[value="4"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="roll"]
-{
+*/{
 	background: #70AD47;
 	border-width: 1px;
 	border-color: #000;
@@ -1610,6 +1656,7 @@ input.theme[value="4"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-button-blue/*,
 input.theme[value="5"]:checked ~ div > div > div > div > div > button[type="roll"],
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > button[type="roll"],
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > button[type="roll"],
@@ -1619,7 +1666,7 @@ input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > h4 > 
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.theme[value="5"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="roll"]
-{
+*/{
 	background: #4472C4;
 	border-width: 1px;
 	border-color: #000;
@@ -1627,6 +1674,7 @@ input.theme[value="5"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-button-purple/*,
 input.theme[value="6"]:checked ~ div > div > div > div > div > button[type="roll"],
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > button[type="roll"],
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > button[type="roll"],
@@ -1636,7 +1684,7 @@ input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > h4 > 
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.theme[value="6"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="roll"]
-{
+*/{
 	background: #7030A0;
 	border-width: 1px;
 	border-color: #000;
@@ -1644,6 +1692,7 @@ input.theme[value="6"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-button-grey/*,
 input.theme[value="7"]:checked ~ div > div > div > div > div > button[type="roll"],
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > button[type="roll"],
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > button[type="roll"],
@@ -1653,7 +1702,7 @@ input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > h4 > 
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.theme[value="7"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="roll"]
-{
+*/{
 	background: #767171;
 	border-width: 1px;
 	border-color: #000;
@@ -1661,6 +1710,7 @@ input.theme[value="7"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-button-dark/*,
 input.theme[value="8"]:checked ~ div > div > div > div > div > button[type="roll"],
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > button[type="roll"],
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > button[type="roll"],
@@ -1670,7 +1720,7 @@ input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > h4 > 
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.theme[value="8"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="roll"]
-{
+*/{
 	background: #0D0D0D;
 	border-width: 1px;
 	border-color: #000;
@@ -1678,6 +1728,7 @@ input.theme[value="8"]:checked ~ div > div > div > div > div > div > div > div >
 	font-weight: normal;
 	border-radius: 5px;
 }
+.theme-button-light/*,
 input.theme[value="9"]:checked ~ div > div > div > div > div > button[type="roll"],
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > button[type="roll"],
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > button[type="roll"],
@@ -1687,7 +1738,7 @@ input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > h4 > 
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > h4 > span > div > div > button[type="roll"],
 input.theme[value="9"]:checked ~ div > div > div > div > h4 > div > div > div > div > div > div > div > div > div > div > button[type="action"],
 input.theme[value="9"]:checked ~ div > div > div > div > div > div > div > div > div > h4 > div > div > button[type="roll"]
-{
+*/{
 	background: #BFBFBF;
 	border-width: 1px;
 	border-color: #7F7F7F;
@@ -1811,6 +1862,24 @@ input.activate[value="9"] + button.activate > span.theme-light {
 	text-align: center;
     display: inline-block;
 	color: #7F7F7F;
+}
+
+/* ICONS & COLOURS*/
+
+i.ro img {
+	width: 1.3em;
+	max-width: 2em;
+}
+
+/* DROP DOWN TRANSITION EFFECT */
+.war-group button[name*="options-btn"] .cog img {
+    transition: transform 1s;
+    transform: rotate(0deg);
+	transition-timing-function: ease-out;
+	width: 1em;
+}
+input[name*="options-flag"][value="1"] ~ button[name*="options-btn"] .cog img {
+	transform: rotate(180deg)
 }
 
 /* Hide actual checkbox */
